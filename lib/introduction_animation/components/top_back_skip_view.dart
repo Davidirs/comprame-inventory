@@ -68,7 +68,7 @@ class TopBackSkipView extends StatelessWidget {
                   position: _skipAnimation,
                   child: IconButton(
                     onPressed: onSkipClick,
-                    icon: Text('Skip'),
+                    icon: Text('Saltar'),
                   ),
                 ),
               ],

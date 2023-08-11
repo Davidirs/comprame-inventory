@@ -16,6 +16,12 @@ class AddProductScreen extends StatefulWidget {
   _AddProductScreenState createState() => _AddProductScreenState();
 }
 
+final _nameCtrl = TextEditingController();
+final _unidCtrl = TextEditingController();
+final _buyCtrl = TextEditingController();
+final _saleCtrl = TextEditingController();
+final _descCtrl = TextEditingController();
+
 class _AddProductScreenState extends State<AddProductScreen>
     with TickerProviderStateMixin {
   Animation<double>? topBarAnimation;
@@ -64,12 +70,6 @@ class _AddProductScreenState extends State<AddProductScreen>
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  final _nameCtrl = TextEditingController();
-  final _unidCtrl = TextEditingController();
-  final _buyCtrl = TextEditingController();
-  final _saleCtrl = TextEditingController();
-  final _descCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -267,87 +267,87 @@ class _AddProductScreenState extends State<AddProductScreen>
                             right: 16,
                             top: 16 - 8.0 * topBarOpacity,
                             bottom: 12 - 8.0 * topBarOpacity),
-                        child: Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: CompraMeInventoryTheme.nearlyWhite,
-                                    shape: BoxShape.circle,
-                                    boxShadow: <BoxShadow>[
-                                      BoxShadow(
-                                          color: CompraMeInventoryTheme
-                                              .nearlyBlack
-                                              .withOpacity(0.4),
-                                          offset: Offset(8.0, 8.0),
-                                          blurRadius: 8.0),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Icon(
-                                      Icons.arrow_left,
-                                      color: HexColor("#6F56E8"),
-                                      size: 44,
-                                    ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              /* Container(
+                                decoration: BoxDecoration(
+                                  color: CompraMeInventoryTheme.nearlyWhite,
+                                  shape: BoxShape.circle,
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: CompraMeInventoryTheme
+                                            .nearlyBlack
+                                            .withOpacity(0.4),
+                                        offset: Offset(8.0, 8.0),
+                                        blurRadius: 8.0),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: Icon(
+                                    Icons.arrow_left,
+                                    color: HexColor("#6F56E8"),
+                                    size: 44,
                                   ),
                                 ),
-                                Text(
-                                  'AGREGAR',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontFamily: CompraMeInventoryTheme.fontName,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22 + 6 - 6 * topBarOpacity,
-                                    letterSpacing: 1.2,
-                                    color: CompraMeInventoryTheme.darkerText,
-                                  ),
+                              ), */
+                              Text(
+                                'AGREGAR',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: CompraMeInventoryTheme.fontName,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 22 + 6 - 6 * topBarOpacity,
+                                  letterSpacing: 1.2,
+                                  color: CompraMeInventoryTheme.darkerText,
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: CompraMeInventoryTheme.nearlyWhite,
-                                    shape: BoxShape.circle,
-                                    boxShadow: <BoxShadow>[
-                                      BoxShadow(
-                                          color: CompraMeInventoryTheme
-                                              .nearlyBlack
-                                              .withOpacity(0.4),
-                                          offset: Offset(8.0, 8.0),
-                                          blurRadius: 8.0),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: IconButton(
-                                        onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            final product = Product(
-                                              id: productList.length,
-                                              name: _nameCtrl.text,
-                                              units: int.parse(_unidCtrl.text),
-                                              buy: num.parse(_buyCtrl.text),
-                                              sale: num.parse(_saleCtrl.text),
-                                            );
-                                            db().insertProduct(product);
-                                            // Process data.
-                                            printMsg(
-                                                '¡Producto agregado exitosamente!',
-                                                context);
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.done,
-                                          color: HexColor("#6F56E8"),
-                                          size: 30,
-                                        )),
-                                  ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: CompraMeInventoryTheme.nearlyWhite,
+                                  shape: BoxShape.circle,
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: CompraMeInventoryTheme
+                                            .nearlyBlack
+                                            .withOpacity(0.4),
+                                        offset: Offset(8.0, 8.0),
+                                        blurRadius: 8.0),
+                                  ],
                                 ),
-                              ],
-                            ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: IconButton(
+                                      onPressed: () {
+                                        print(productList.length);
+                                        if (_formKey.currentState!.validate()) {
+                                          final product = Product(
+                                            id: productList.length == 0
+                                                ? 0
+                                                : productList.last.id + 1,
+                                            name: _nameCtrl.text,
+                                            units: int.parse(_unidCtrl.text),
+                                            buy: num.parse(_buyCtrl.text),
+                                            sale: num.parse(_saleCtrl.text),
+                                          );
+                                          db().insertProduct(product);
+                                          // Process data.
+                                          printMsg(
+                                              '¡Producto agregado exitosamente!',
+                                              context);
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.done,
+                                        color: HexColor("#6F56E8"),
+                                        size: 30,
+                                      )),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       )
@@ -361,4 +361,12 @@ class _AddProductScreenState extends State<AddProductScreen>
       ],
     );
   }
+}
+
+limpiarValores() {
+  _nameCtrl.text = "";
+  _unidCtrl.text = "0";
+  _buyCtrl.text = "0";
+  _saleCtrl.text = "0";
+  _descCtrl.text = "";
 }

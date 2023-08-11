@@ -1,4 +1,5 @@
 import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'model/homelist.dart';
 
@@ -34,9 +35,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
-    return Scaffold(
+    /*  var brightness = MediaQuery.of(context).platformBrightness;
+     bool isLightMode = brightness == Brightness.light; */
+    return Column(
+      children: [
+        /* 
+        appBar(), */
+        Expanded(child: CompraMeInventoryHomeScreen()),
+      ],
+    );
+
+    /* Scaffold(
       backgroundColor:
           isLightMode == true ? AppTheme.white : AppTheme.nearlyBlack,
       body: FutureBuilder<bool>(
@@ -112,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           }
         },
       ),
-    );
+    ); */
   }
 
   Widget appBar() {

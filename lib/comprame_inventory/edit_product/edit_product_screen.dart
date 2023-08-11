@@ -8,15 +8,18 @@ import 'package:flutter/material.dart';
 import '../comprame_inventory_theme.dart';
 
 class EditProductScreen extends StatefulWidget {
-  const EditProductScreen(
-      {Key? key, required this.animationController, required this.idProduct})
+  EditProductScreen(
+      {Key? key, required this.idProduct, required this.voidCallback})
       : super(key: key);
 
-  final AnimationController animationController;
   final int idProduct;
+  final VoidCallback voidCallback;
+
   @override
   _EditProductScreenState createState() => _EditProductScreenState();
 }
+
+AnimationController? animationController;
 
 class _EditProductScreenState extends State<EditProductScreen>
     with TickerProviderStateMixin {
@@ -25,12 +28,13 @@ class _EditProductScreenState extends State<EditProductScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
-
   @override
   void initState() {
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
-            parent: widget.animationController,
+            parent: animationController!,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
 
     scrollController.addListener(() {
@@ -79,10 +83,13 @@ class _EditProductScreenState extends State<EditProductScreen>
     _buyCtrl.text = "${product.buy ?? 0}";
     _saleCtrl.text = "${product.sale ?? 0}";
     _descCtrl.text = "Descripción";
+
+    print(product.units);
   }
 
   @override
   Widget build(BuildContext context) {
+    print("dibujando");
     return Container(
       color: CompraMeInventoryTheme.background,
       child: Scaffold(
@@ -101,7 +108,7 @@ class _EditProductScreenState extends State<EditProductScreen>
   }
 
   Widget getMainListViewUI() {
-    widget.animationController.forward();
+    animationController!.forward();
 
     return Container(
       padding: EdgeInsets.only(
@@ -121,10 +128,10 @@ class _EditProductScreenState extends State<EditProductScreen>
               subTxt: 'Detalles',
               animation: Tween<double>(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(
-                      parent: widget.animationController,
+                      parent: animationController!,
                       curve: Interval((1 / 5) * 0, 1.0,
                           curve: Curves.fastOutSlowIn))),
-              animationController: widget.animationController,
+              animationController: animationController,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -165,10 +172,10 @@ class _EditProductScreenState extends State<EditProductScreen>
               subTxt: 'Detalles',
               animation: Tween<double>(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(
-                      parent: widget.animationController,
+                      parent: animationController!,
                       curve: Interval((1 / 5) * 0, 1.0,
                           curve: Curves.fastOutSlowIn))),
-              animationController: widget.animationController,
+              animationController: animationController,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -242,7 +249,7 @@ class _EditProductScreenState extends State<EditProductScreen>
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: widget.animationController,
+          animation: animationController!,
           builder: (BuildContext context, Widget? child) {
             return FadeTransition(
               opacity: topBarAnimation!,
@@ -304,7 +311,11 @@ class _EditProductScreenState extends State<EditProductScreen>
                                       size: 30,
                                     ),
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      setState(() {
+                                        widget.voidCallback();
+                                      });
+                                      /* 
+                                      Navigator.pop(context); */
                                     },
                                   ),
                                 ),
@@ -352,6 +363,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                                           printMsg(
                                               '¡Producto actualizdo satisfactoriamente!',
                                               context);
+                                          widget.voidCallback();
                                         }
                                       },
                                       icon: Icon(

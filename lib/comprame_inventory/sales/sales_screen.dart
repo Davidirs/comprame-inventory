@@ -202,6 +202,9 @@ class _SalesScreenState extends State<SalesScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+                            SizedBox(
+                              width: 40,
+                            ),
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),

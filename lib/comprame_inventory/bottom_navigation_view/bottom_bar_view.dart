@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:best_flutter_ui_templates/comprame_inventory/add_product/add_product_screen.dart';
 import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:best_flutter_ui_templates/comprame_inventory/models/tabIcon_data.dart';
 import 'package:best_flutter_ui_templates/main.dart';
@@ -164,8 +165,10 @@ class _BottomBarViewState extends State<BottomBarView>
                           focusColor: Colors.transparent,
                           onTap: () {
                             buttonAdd();
-                            widget.changeIndex!(
-                                4); /* 
+                            widget.changeIndex!(4);
+
+                            limpiarValores();
+                            /* 
                             widget.addClick; */
                           },
                           child: Icon(

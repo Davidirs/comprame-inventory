@@ -6,7 +6,6 @@ import 'package:best_flutter_ui_templates/comprame_inventory/models/products.dar
 
 class db {
   final String _tableName = "products";
-  final String _tableVentas = "products";
 
   Future<Database> getDataBase() async {
     return openDatabase(
@@ -16,11 +15,6 @@ class db {
         await db.execute(
           "CREATE TABLE $_tableName (id INTEGER PRIMARY KEY, name TEXT, units INTEGER, buy REAL, sale REAL)",
         );
-        /*  await db.execute(
-          "CREATE TABLE $_tableVentas (id INTEGER PRIMARY KEY, 
-          fecha TEXT, details TEXT, monto REAL, 
-          ganancia REAL, mode TEXT,)",
-        ); */
       },
       version: 1,
     );
@@ -83,20 +77,35 @@ class db {
     Database db = await getDataBase();
     db.rawDelete("DELETE FROM $_tableName WHERE id ='$productID'");
   }
-  //Insert/Add Method:
-
-  Future<int> insertVenta(Venta product) async {
-    int productId = 0;
-    Database db = await getDataBase();
-    await db.insert(_tableName, product.toMap()).then((value) {
-      productId = value;
-    });
-    return productId;
-  }
-
 //####################################################################
 //######################REGISTRO DE VENTAS############################
 //####################################################################
+
+  final String _tableVentas = "sales";
+
+  Future<Database> getDBVentas() async {
+    return openDatabase(
+      join(
+          await getDatabasesPath(), "productsDatabase.db"), //primaryDatabase.db
+      onCreate: (db, version) async {
+        await db.execute(
+          "CREATE TABLE $_tableVentas (id INTEGER PRIMARY KEY, fecha TEXT, details TEXT, total REAL, profit REAL, method TEXT)",
+        );
+      },
+      version: 1,
+    );
+  }
+  //Insert/Add Method:
+
+  Future<int> insertVenta(Venta venta) async {
+    int ventaId = 0;
+    Database db = await getDataBase();
+    await db.insert(_tableName, venta.toMap()).then((value) {
+      ventaId = value;
+    });
+    return ventaId;
+  }
+
 //Get All Method:
 
   Future<List<Venta>> getAllVentas() async {

@@ -1,3 +1,4 @@
+import 'package:best_flutter_ui_templates/comprame_inventory/models/venta.dart';
 import 'package:best_flutter_ui_templates/db/db.dart';
 import 'package:best_flutter_ui_templates/comprame_inventory/ui_view/title_view.dart';
 import 'package:best_flutter_ui_templates/main.dart';
@@ -401,8 +402,11 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ), */
+                              SizedBox(
+                                width: 40,
+                              ),
                               Text(
-                                'REALIZAR VENTA',
+                                'Vender',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontFamily: CompraMeInventoryTheme.fontName,
@@ -571,6 +575,16 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
           actions: <Widget>[
             ElevatedButton(
                 onPressed: () {
+                  final _venta = Venta(
+                    id: factura.length == 0 ? 0 : factura.last.id! + 1,
+                    fecha: DateTime.now(),
+                    details: "details",
+                    total: 0,
+                    profit: 1,
+                    method: 2,
+                  );
+                  db().insertVenta(_venta);
+
                   Navigator.of(context).pop();
                   printMsg('Venta realizada exitosamente!', context);
                   limpiarValores();

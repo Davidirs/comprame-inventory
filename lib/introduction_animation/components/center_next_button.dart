@@ -94,7 +94,7 @@ class CenterNextButton extends StatelessWidget {
                     },
                     child: _signUpMoveAnimation.value > 0.7
                         ? InkWell(
-                            key: ValueKey('Sign Up button'),
+                            key: ValueKey('Registrate gratis'),
                             onTap: onNextClick,
                             child: Padding(
                               padding: EdgeInsets.only(left: 16.0, right: 16.0),
@@ -103,7 +103,7 @@ class CenterNextButton extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Sign Up',
+                                    'Registrate gratis',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 18,
@@ -138,21 +138,24 @@ class CenterNextButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Already have an account? ',
+                    '¿Ya tienes una cuenta? ',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-                  Text(
-                    'Login',
-                    style: TextStyle(
-                      color: Color(0xff132137),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  InkWell(
+                    onTap: () {},
+                    child: Text(
+                      'Inicia sesión',
+                      style: TextStyle(
+                        color: Color(0xff132137),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:best_flutter_ui_templates/comprame_inventory/models/products.dar
 import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:best_flutter_ui_templates/comprame_inventory/models/tabIcon_data.dart';
 import 'package:best_flutter_ui_templates/db/db.dart';
+import 'package:best_flutter_ui_templates/global.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -25,6 +26,11 @@ class _InventoryScreenState extends State<InventoryScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
+  int _idproduct = 0;
+
+  bool salirEdit(editando) {
+    return false;
+  }
 
   @override
   void initState() {
@@ -55,11 +61,12 @@ class _InventoryScreenState extends State<InventoryScreen>
         }
       }
     });
+    cargarProductos();
     super.initState();
   }
 
   Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 500));
+    await Future<dynamic>.delayed(const Duration(milliseconds: 1000));
     return true;
   }
 
@@ -74,21 +81,27 @@ class _InventoryScreenState extends State<InventoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    cargarProductos();
-
     return Container(
       color: CompraMeInventoryTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
-        ),
+        body: editando
+            ? EditProductScreen(
+                idProduct: _idproduct,
+                voidCallback: () {
+                  setState(() {
+                    editando = false;
+                  });
+                })
+            : Stack(
+                children: <Widget>[
+                  getMainListViewUI(),
+                  getAppBarUI(),
+                  SizedBox(
+                    height: MediaQuery.of(context).padding.bottom,
+                  )
+                ],
+              ),
       ),
     );
   }
@@ -194,19 +207,10 @@ class _InventoryScreenState extends State<InventoryScreen>
                             } else {
                               print("Editar");
                               setState(() {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditProductScreen(
-                                        animationController:
-                                            AnimationController(
-                                                duration: const Duration(
-                                                    milliseconds: 600),
-                                                vsync: this),
-                                        idProduct: productList[index].id!,
-                                      ),
-                                    ));
+                                _idproduct = productList[index].id!;
+                                editando = true;
                               });
+
                               return false;
                             }
                           },
@@ -302,6 +306,9 @@ class _InventoryScreenState extends State<InventoryScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
+                            SizedBox(
+                              width: 40,
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(

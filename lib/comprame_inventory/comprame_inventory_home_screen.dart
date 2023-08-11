@@ -15,15 +15,15 @@ class CompraMeInventoryHomeScreen extends StatefulWidget {
       _CompraMeInventoryHomeScreenState();
 }
 
+Widget tabBody = Container(
+  color: CompraMeInventoryTheme.background,
+);
+
+AnimationController? animationController;
+
 class _CompraMeInventoryHomeScreenState
     extends State<CompraMeInventoryHomeScreen> with TickerProviderStateMixin {
-  AnimationController? animationController;
-
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
-
-  Widget tabBody = Container(
-    color: CompraMeInventoryTheme.background,
-  );
 
   @override
   void initState() {
@@ -145,14 +145,16 @@ class _CompraMeInventoryHomeScreenState
                       animationController: animationController);
                 });
               });
-            } /*  else if (index == 5) {
+            } /* else if (index == 5) {
               animationController?.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }
                 setState(() {
                   tabBody = EditProductScreen(
-                      animationController: animationController!);
+                    animationController: animationController!,
+                    idProduct: idproductedit,
+                  );
                 });
               });
             } */

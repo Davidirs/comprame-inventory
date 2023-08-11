@@ -169,28 +169,33 @@ class _DrawerUserControllerState extends State<DrawerUserController>
                         child: SizedBox(
                           width: AppBar().preferredSize.height - 8,
                           height: AppBar().preferredSize.height - 8,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(
-                                  AppBar().preferredSize.height),
-                              child: Center(
-                                // if you use your own menu view UI you add form initialization
-                                child: widget.menuView != null
-                                    ? widget.menuView
-                                    : AnimatedIcon(
-                                        color: isLightMode
-                                            ? AppTheme.dark_grey
-                                            : AppTheme.white,
-                                        icon: widget.animatedIconData ??
-                                            AnimatedIcons.arrow_menu,
-                                        progress: iconAnimationController!),
+                          child: Container(
+                            margin: EdgeInsets.only(top: 20),
+
+                            ///agregado para bajar el boton del drawer
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(
+                                    AppBar().preferredSize.height),
+                                child: Center(
+                                  // if you use your own menu view UI you add form initialization
+                                  child: widget.menuView != null
+                                      ? widget.menuView
+                                      : AnimatedIcon(
+                                          color: isLightMode
+                                              ? AppTheme.dark_grey
+                                              : AppTheme.white,
+                                          icon: widget.animatedIconData ??
+                                              AnimatedIcons.arrow_menu,
+                                          progress: iconAnimationController!),
+                                ),
+                                onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  onDrawerClick();
+                                },
                               ),
-                              onTap: () {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                onDrawerClick();
-                              },
                             ),
                           ),
                         ),
