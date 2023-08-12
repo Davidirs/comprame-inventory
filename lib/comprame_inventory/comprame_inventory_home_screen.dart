@@ -1,7 +1,7 @@
 import 'package:best_flutter_ui_templates/comprame_inventory/add_product/add_product_screen.dart';
+import 'package:best_flutter_ui_templates/comprame_inventory/sales/sales_screen%20copy.dart';
 import 'package:best_flutter_ui_templates/comprame_inventory/models/tabIcon_data.dart';
 import 'package:best_flutter_ui_templates/comprame_inventory/sale/sale.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/sales/sales_screen.dart';
 import 'package:best_flutter_ui_templates/comprame_inventory/training/training_screen.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';

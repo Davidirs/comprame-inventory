@@ -1,10 +1,10 @@
 class Venta {
   final int? id;
-  final DateTime? fecha;
+  final String? fecha;
   final String? details;
   final num? total;
   final num? profit;
-  final num? method;
+  final String? method; //int? method;
 
   const Venta({
     this.id,

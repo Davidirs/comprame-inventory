@@ -60,11 +60,14 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   List<Product> productList = [];
 
   List<int> sItems = [];
-  List factura = []; //producto,cantidad,subtotal,total
+  List lineasProductos = []; //producto,cantidad,subtotal,total
 
   List<num> subTotales = [];
+  List<num> ganancias = [];
   List<TextEditingController> _controllers = [];
   num total = 0;
+  num ganancia = 0;
+  String detalles = "";
 
   List<DropdownMenuItem<dynamic>> items = [];
   cargarProductos() async {
@@ -505,27 +508,33 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   } */
   calcularTotal() {
     total = 0;
-    factura = [];
+    ganancia = 0;
+    lineasProductos = [];
     subTotales = [];
+    ganancias = [];
 
     for (var i = 0; i < sItems.length; i++) {
       try {
         //calcular subtotal
         subTotales.add(
             productList[sItems[i]].sale! * num.parse(_controllers[i].text));
+        ganancias.add(
+            (productList[sItems[i]].sale! - productList[sItems[i]].buy!) *
+                num.parse(_controllers[i].text));
       } catch (e) {
         subTotales.add(0);
+        ganancias.add(0);
         print("$e: Cantidad debe ser un número");
       }
       //calcular total
       total += num.parse(subTotales[i].toStringAsFixed(2));
-      //llenar factura
+      ganancia += num.parse(ganancias[i].toStringAsFixed(2));
+      //llenar lineasProductos
 
-      factura.add([
+      lineasProductos.add([
         productList[sItems[i]],
         _controllers[i].text,
-        subTotales[i].toStringAsFixed(2),
-        DateTime.now()
+        subTotales[i].toStringAsFixed(2)
       ]
           /*  "${_controllers[i].text} " + //cantidad,
               "${productList[sItems[i]].name} X " + //producto
@@ -542,7 +551,25 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
     );
   }
 
+//creo lista vacia
+  List<Venta> ventaList = [];
+  //llamo a la base de datos y le paso los valores a la lista
+  cargarVentas() async {
+    List<Venta> auxVenta = await db().getAllVentas();
+
+    print(auxVenta);
+    ventaList = auxVenta;
+  }
+
   confirmarVenta() async {
+    cargarVentas();
+    detalles = "";
+    for (var i = 0; i < lineasProductos.length; i++) {
+      detalles += "${lineasProductos[i][1]} " +
+          "${lineasProductos[i][0].name} x " +
+          "${lineasProductos[i][0].sale} \$ = " +
+          "${lineasProductos[i][2]} \$ \n";
+    }
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -554,15 +581,10 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
               children: [
                 Container(
                   height: 120,
-                  child: ListView.builder(
-                      itemCount: factura.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return //Text("${factura[index][0].name}");
-                            Text("${factura[index][1]} " +
-                                "${factura[index][0].name} x " +
-                                "${factura[index][0].sale} \$ = " +
-                                "${factura[index][2]} \$");
-                      }),
+                  child: ListView(children: [
+                    Text(detalles)
+                  ] //Text("${lineasProductos[index][0].name}");
+                      ),
                 ),
                 Text(
                   "Total: $total \$",
@@ -575,13 +597,16 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
           actions: <Widget>[
             ElevatedButton(
                 onPressed: () {
+                  print("${lineasProductos.length} index en lineasProductos");
+
                   final _venta = Venta(
-                    id: factura.length == 0 ? 0 : factura.last.id! + 1,
-                    fecha: DateTime.now(),
-                    details: "details",
-                    total: 0,
-                    profit: 1,
-                    method: 2,
+                    id: ventaList.length == 0 ? 0 : ventaList.last.id! + 1,
+                    fecha: DateTime.now().toString(),
+                    details: detalles,
+                    total: total,
+                    profit: ganancia,
+                    method:
+                        "2", //0 efectivo, 1 pagomovil,  2 biopago, punto de venta
                   );
                   db().insertVenta(_venta);
 

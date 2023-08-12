@@ -7,6 +7,8 @@ import 'package:best_flutter_ui_templates/comprame_inventory/models/products.dar
 class db {
   final String _tableName = "products";
 
+  final String _tableVentas = "sales";
+
   Future<Database> getDataBase() async {
     return openDatabase(
       join(
@@ -14,6 +16,9 @@ class db {
       onCreate: (db, version) async {
         await db.execute(
           "CREATE TABLE $_tableName (id INTEGER PRIMARY KEY, name TEXT, units INTEGER, buy REAL, sale REAL)",
+        );
+        await db.execute(
+          "CREATE TABLE $_tableVentas (id INTEGER PRIMARY KEY, fecha TEXT, details TEXT, total REAL, profit REAL, method TEXT)",
         );
       },
       version: 1,
@@ -81,18 +86,16 @@ class db {
 //######################REGISTRO DE VENTAS############################
 //####################################################################
 
-  final String _tableVentas = "sales";
-
   Future<Database> getDBVentas() async {
     return openDatabase(
       join(
           await getDatabasesPath(), "productsDatabase.db"), //primaryDatabase.db
       onCreate: (db, version) async {
         await db.execute(
-          "CREATE TABLE $_tableVentas (id INTEGER PRIMARY KEY, fecha TEXT, details TEXT, total REAL, profit REAL, method TEXT)",
+          "CREATE TABLE $_tableVentas (id INTEGER PRIMARY KEY, fecha TEXT, details TEXT, total REAL, profit REAL, method TEXT)", //method INTEGER
         );
       },
-      version: 1,
+      version: 2,
     );
   }
   //Insert/Add Method:
@@ -100,9 +103,10 @@ class db {
   Future<int> insertVenta(Venta venta) async {
     int ventaId = 0;
     Database db = await getDataBase();
-    await db.insert(_tableName, venta.toMap()).then((value) {
+    await db.insert(_tableVentas, venta.toMap()).then((value) {
       ventaId = value;
     });
+    print("venta guardada");
     return ventaId;
   }
 
@@ -112,6 +116,7 @@ class db {
     Database db = await getDataBase();
     List<Map<String, dynamic>> ventasMap = await db.query(_tableVentas);
     return List.generate(ventasMap.length, (index) {
+      print("todo bien");
       return Venta(
         id: ventasMap[index]['id'],
         fecha: ventasMap[index]['fecha'],
