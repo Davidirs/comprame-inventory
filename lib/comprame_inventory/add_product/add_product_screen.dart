@@ -236,46 +236,32 @@ class _AddProductScreenState extends State<AddProductScreen>
   Widget getAppBarUI() {
     return Column(
       children: <Widget>[
-        AnimatedBuilder(
-          animation: widget.animationController!,
-          builder: (BuildContext context, Widget? child) {
-            return FadeTransition(
-              opacity: topBarAnimation!,
-              child: Transform(
-                transform: Matrix4.translationValues(
-                    0.0, 30 * (1.0 - topBarAnimation!.value), 0.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: CompraMeInventoryTheme.background
-                        .withOpacity(topBarOpacity),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(32.0),
-                      bottomRight: Radius.circular(32.0),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: CompraMeInventoryTheme.grey
-                              .withOpacity(0.4 * topBarOpacity),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
-                    ],
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: MediaQuery.of(context).padding.top,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            top: 16 - 8.0 * topBarOpacity,
-                            bottom: 20 - 8.0 * topBarOpacity),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            /* Container(
+        Container(
+          decoration: BoxDecoration(
+            color: CompraMeInventoryTheme.white,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(32.0),
+              bottomRight: Radius.circular(32.0),
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: CompraMeInventoryTheme.grey.withOpacity(0.4),
+                  offset: const Offset(1.1, 1.1),
+                  blurRadius: 10.0),
+            ],
+          ),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).padding.top,
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    /* Container(
                               decoration: BoxDecoration(
                                 color: CompraMeInventoryTheme.nearlyWhite,
                                 shape: BoxShape.circle,
@@ -297,71 +283,66 @@ class _AddProductScreenState extends State<AddProductScreen>
                                 ),
                               ),
                             ), */
-                            SizedBox(
-                              width: 40,
-                            ),
-                            Text(
-                              'Agregar',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontFamily: CompraMeInventoryTheme.fontName,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 22 + 6 - 6 * topBarOpacity,
-                                letterSpacing: 1.2,
-                                color: CompraMeInventoryTheme.darkerText,
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: CompraMeInventoryTheme.nearlyWhite,
-                                shape: BoxShape.circle,
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: CompraMeInventoryTheme.nearlyBlack
-                                          .withOpacity(0.4),
-                                      offset: Offset(8.0, 8.0),
-                                      blurRadius: 8.0),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: IconButton(
-                                    onPressed: () {
-                                      print(productList.length);
-                                      if (_formKey.currentState!.validate()) {
-                                        final product = Product(
-                                          id: productList.length == 0
-                                              ? 0
-                                              : productList.last.id + 1,
-                                          name: _nameCtrl.text,
-                                          units: int.parse(_unidCtrl.text),
-                                          buy: num.parse(_buyCtrl.text),
-                                          sale: num.parse(_saleCtrl.text),
-                                        );
-                                        db().insertProduct(product);
-                                        // Process data.
-                                        printMsg(
-                                            '¡Producto agregado exitosamente!',
-                                            context);
-                                      }
-                                    },
-                                    icon: Icon(
-                                      Icons.done,
-                                      color: HexColor("#ff6600"),
-                                      size: 30,
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Text(
+                      'Agregar',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: CompraMeInventoryTheme.fontName,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 22 + 6 - 6 * topBarOpacity,
+                        letterSpacing: 1.2,
+                        color: CompraMeInventoryTheme.darkerText,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: CompraMeInventoryTheme.nearlyWhite,
+                        shape: BoxShape.circle,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: CompraMeInventoryTheme.nearlyBlack
+                                  .withOpacity(0.4),
+                              offset: Offset(8.0, 8.0),
+                              blurRadius: 8.0),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: IconButton(
+                            onPressed: () {
+                              print(productList.length);
+                              if (_formKey.currentState!.validate()) {
+                                final product = Product(
+                                  id: productList.length == 0
+                                      ? 0
+                                      : productList.last.id + 1,
+                                  name: _nameCtrl.text,
+                                  units: int.parse(_unidCtrl.text),
+                                  buy: num.parse(_buyCtrl.text),
+                                  sale: num.parse(_saleCtrl.text),
+                                );
+                                db().insertProduct(product);
+                                // Process data.
+                                printMsg('¡Producto agregado exitosamente!',
+                                    context);
+                              }
+                            },
+                            icon: Icon(
+                              Icons.done,
+                              color: HexColor("#ff6600"),
+                              size: 30,
+                            )),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            );
-          },
-        )
+              )
+            ],
+          ),
+        ),
       ],
     );
   }

@@ -222,63 +222,51 @@ class _SalesScreenState extends State<SalesScreen>
   Widget getAppBarUI() {
     return Column(
       children: <Widget>[
-        AnimatedBuilder(
-          animation: widget.animationController!,
-          builder: (BuildContext context, Widget? child) {
-            return FadeTransition(
-              opacity: topBarAnimation!,
-              child: Transform(
-                transform: Matrix4.translationValues(
-                    0.0, 30 * (1.0 - topBarAnimation!.value), 0.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color:
-                        CompraMeInventoryTheme.white.withOpacity(topBarOpacity),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(32.0),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: CompraMeInventoryTheme.grey
-                              .withOpacity(0.4 * topBarOpacity),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
-                    ],
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: MediaQuery.of(context).padding.top,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            top: 16 - 8.0 * topBarOpacity,
-                            bottom: 20 - 8.0 * topBarOpacity),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            /* 
+        Container(
+          decoration: BoxDecoration(
+            color: CompraMeInventoryTheme.white,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(32.0),
+              bottomRight: Radius.circular(32.0),
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: CompraMeInventoryTheme.grey.withOpacity(0.4),
+                  offset: const Offset(1.1, 1.1),
+                  blurRadius: 10.0),
+            ],
+          ),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).padding.top,
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    /* 
                             SizedBox(
                               width: 40,
                             ), */
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Ventas',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: CompraMeInventoryTheme.fontName,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 20 + 6 - 6 * topBarOpacity,
-                                  //Cambié de 22 a 20
-                                  letterSpacing: 1.2,
-                                  color: CompraMeInventoryTheme.darkerText,
-                                ),
-                              ),
-                            ),
-                            /*  Container(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Ventas',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: CompraMeInventoryTheme.fontName,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 26,
+                          //Cambié de 22 a 20
+                          letterSpacing: 1.2,
+                          color: CompraMeInventoryTheme.darkerText,
+                        ),
+                      ),
+                    ),
+                    /*  Container(
                               decoration: BoxDecoration(
                                 color: CompraMeInventoryTheme.nearlyWhite,
                                 shape: BoxShape.circle,
@@ -308,16 +296,12 @@ class _SalesScreenState extends State<SalesScreen>
                                     )),
                               ),
                             ), */
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                  ],
                 ),
-              ),
-            );
-          },
-        )
+              )
+            ],
+          ),
+        ),
       ],
     );
   }
