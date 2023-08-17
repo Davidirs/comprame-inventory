@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/main.dart';
+import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 import '../comprame_inventory_theme.dart';
 
@@ -26,7 +26,7 @@ class WorkoutView extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
                     CompraMeInventoryTheme.nearlyDarkBlue,
-                    HexColor("#6F56E8")
+                    Color.fromARGB(255, 159, 18, 1),
                   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(8.0),
@@ -47,7 +47,7 @@ class WorkoutView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Next workout',
+                        'Nuevas',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontFamily: CompraMeInventoryTheme.fontName,
@@ -60,7 +60,7 @@ class WorkoutView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: const Text(
-                          'Legs Toning and\nGlutes Workout at Home',
+                          'Infórmate sobre lo que\nha sucedido hasta ahora',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontFamily: CompraMeInventoryTheme.fontName,
@@ -121,7 +121,7 @@ class WorkoutView extends StatelessWidget {
                                 padding: const EdgeInsets.all(0.0),
                                 child: Icon(
                                   Icons.arrow_right,
-                                  color: HexColor("#6F56E8"),
+                                  color: HexColor("#ff6600"),
                                   size: 44,
                                 ),
                               ),

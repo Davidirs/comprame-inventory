@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class InviteFriend extends StatefulWidget {
@@ -29,12 +29,12 @@ class _InviteFriendState extends State<InviteFriend> {
                     top: MediaQuery.of(context).padding.top,
                     left: 16,
                     right: 16),
-                child: Image.asset('assets/images/inviteImage.png'),
+                child: Image.asset('assets/images/inviteImage.jpg'),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  'Invite Your Friends',
+                  'Invita a tus amigos',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -45,7 +45,7 @@ class _InviteFriendState extends State<InviteFriend> {
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
-                  'Are you one of those who makes everything\n at the last moment?',
+                  '¿Eres de los que hace todo\n en el último momento?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -92,7 +92,7 @@ class _InviteFriendState extends State<InviteFriend> {
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: Text(
-                                    'Share',
+                                    'Compartir',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: isLightMode

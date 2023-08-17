@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         top: MediaQuery.of(context).padding.top,
                         left: 16,
                         right: 16),
-                    child: Image.asset('assets/images/feedbackImage.png'),
+                    child: Image.asset('assets/images/feedbackImage.jpg'),
                   ),
                   Container(
                     padding: const EdgeInsets.only(top: 8),
@@ -48,7 +48,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   Container(
                     padding: const EdgeInsets.only(top: 16),
                     child: Text(
-                      'Give your best time for this moment.',
+                      'Tómate tu tieempo para este momento.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 16,
@@ -63,7 +63,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         width: 120,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: isLightMode ? Colors.blue : Colors.white,
+                          color: isLightMode ? Color(0xfff15c22) : Colors.white,
                           borderRadius:
                               const BorderRadius.all(Radius.circular(4.0)),
                           boxShadow: <BoxShadow>[
@@ -83,7 +83,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  'Send',
+                                  'Enviar',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: isLightMode
@@ -138,10 +138,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   fontSize: 16,
                   color: AppTheme.dark_grey,
                 ),
-                cursorColor: Colors.blue,
+                cursorColor: Color(0xfff15c22),
                 decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Enter your feedback...'),
+                    hintText: 'Escribe tu feedback...'),
               ),
             ),
           ),

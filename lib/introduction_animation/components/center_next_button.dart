@@ -74,7 +74,7 @@ class CenterNextButton extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
                         8 + 32 * (1 - _signUpMoveAnimation.value)),
-                    color: Color(0xff132137),
+                    color: Color(0xffF15C22),
                   ),
                   child: PageTransitionSwitcher(
                     duration: Duration(milliseconds: 480),

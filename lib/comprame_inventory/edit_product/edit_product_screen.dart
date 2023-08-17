@@ -1,8 +1,8 @@
-import 'package:best_flutter_ui_templates/comprame_inventory/models/products.dart';
-import 'package:best_flutter_ui_templates/db/db.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/ui_view/title_view.dart';
-import 'package:best_flutter_ui_templates/main.dart';
-import 'package:best_flutter_ui_templates/utils.dart';
+import 'package:comprame_inventory/comprame_inventory/models/products.dart';
+import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
+import 'package:comprame_inventory/main.dart';
+import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../comprame_inventory_theme.dart';
@@ -213,11 +213,16 @@ class _EditProductScreenState extends State<EditProductScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 24, top: 24),
-                    height: 100,
-                    width: 100,
-                    child: Placeholder(),
+                  InkWell(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 24, top: 24),
+                      height: 100,
+                      width: 100,
+                      child: Image.asset("assets/img/placeholders.png"),
+                    ),
+                    onTap: () {
+                      printMsg("Proximamente seleccionar imagen", context);
+                    },
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width - 24 - 100,
@@ -283,7 +288,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                             left: 16,
                             right: 16,
                             top: 16 - 8.0 * topBarOpacity,
-                            bottom: 12 - 8.0 * topBarOpacity),
+                            bottom: 20 - 8.0 * topBarOpacity),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -337,7 +342,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                                     },
                                     icon: Icon(
                                       Icons.done,
-                                      color: HexColor("#6F56E8"),
+                                      color: HexColor("#ff6600"),
                                       size: 30,
                                     )),
                               ),

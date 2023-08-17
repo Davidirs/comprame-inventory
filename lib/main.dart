@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'navigation_home_screen.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(
-      title: 'Flutter UI',
+      title: 'CompraMe Inventory',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,

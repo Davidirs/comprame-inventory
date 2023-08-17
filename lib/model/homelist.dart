@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_home_screen.dart';
+import 'package:comprame_inventory/comprame_inventory/comprame_inventory_home_screen.dart';
 import 'package:flutter/widgets.dart';
 
 class HomeList {

@@ -1,10 +1,10 @@
-import 'package:best_flutter_ui_templates/introduction_animation/components/care_view.dart';
-import 'package:best_flutter_ui_templates/introduction_animation/components/center_next_button.dart';
-import 'package:best_flutter_ui_templates/introduction_animation/components/mood_diary_vew.dart';
-import 'package:best_flutter_ui_templates/introduction_animation/components/relax_view.dart';
-import 'package:best_flutter_ui_templates/introduction_animation/components/splash_view.dart';
-import 'package:best_flutter_ui_templates/introduction_animation/components/top_back_skip_view.dart';
-import 'package:best_flutter_ui_templates/introduction_animation/components/welcome_view.dart';
+import 'package:comprame_inventory/introduction_animation/components/care_view.dart';
+import 'package:comprame_inventory/introduction_animation/components/center_next_button.dart';
+import 'package:comprame_inventory/introduction_animation/components/mood_diary_vew.dart';
+import 'package:comprame_inventory/introduction_animation/components/relax_view.dart';
+import 'package:comprame_inventory/introduction_animation/components/splash_view.dart';
+import 'package:comprame_inventory/introduction_animation/components/top_back_skip_view.dart';
+import 'package:comprame_inventory/introduction_animation/components/welcome_view.dart';
 import 'package:flutter/material.dart';
 
 class IntroductionAnimationScreen extends StatefulWidget {
@@ -39,7 +39,7 @@ class _IntroductionAnimationScreenState
   Widget build(BuildContext context) {
     print(_animationController?.value);
     return Scaffold(
-      backgroundColor: Color(0xffF7EBE1),
+      backgroundColor: Color(0xffffffff),
       body: ClipRect(
         child: Stack(
           children: [

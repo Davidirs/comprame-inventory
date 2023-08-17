@@ -1,5 +1,5 @@
-import 'package:best_flutter_ui_templates/app_theme.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_home_screen.dart';
+import 'package:comprame_inventory/app_theme.dart';
+import 'package:comprame_inventory/comprame_inventory/comprame_inventory_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'model/homelist.dart';
 

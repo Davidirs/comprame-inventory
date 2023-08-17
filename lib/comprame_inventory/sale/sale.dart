@@ -1,10 +1,10 @@
-import 'package:best_flutter_ui_templates/comprame_inventory/models/venta.dart';
-import 'package:best_flutter_ui_templates/db/db.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/ui_view/title_view.dart';
-import 'package:best_flutter_ui_templates/main.dart';
+import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
+import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 import 'package:search_choices/search_choices.dart';
-import 'package:best_flutter_ui_templates/utils.dart';
+import 'package:comprame_inventory/utils.dart';
 
 import '../comprame_inventory_theme.dart';
 import '../models/products.dart';
@@ -68,6 +68,11 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   num total = 0;
   num ganancia = 0;
   String detalles = "";
+  int method = 0;
+  bool isCash = true;
+  bool isMovil = false;
+  bool isAny = false;
+  bool isCard = false;
 
   List<DropdownMenuItem<dynamic>> items = [];
   cargarProductos() async {
@@ -106,9 +111,6 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
           children: <Widget>[
             getMainListViewUI(),
             getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
           ],
         ),
       ),
@@ -221,7 +223,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                           bottom: BorderSide(color: Colors.teal, width: 3.0))),
                 ), */
                 iconDisabledColor: Colors.brown,
-                iconEnabledColor: Colors.indigo,
+                iconEnabledColor: Color(0xFFF15C22),
                 dropDownDialogPadding: EdgeInsets.symmetric(
                   vertical: 0,
                   horizontal: 0,
@@ -235,15 +237,89 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
         //LISTA DE PRODUCTOS
         Container(
           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
-          child: TitleView(
-            titleTxt: 'Lista de productos',
-            subTxt: 'Total: $total \$',
-            animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                    parent: widget.animationController!,
-                    curve: Interval((1 / 5) * 0, 1.0,
-                        curve: Curves.fastOutSlowIn))),
-            animationController: widget.animationController!,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //Text("Efectivo"),
+                    Container(
+                        height: 30,
+                        width: 30,
+                        child: Image.asset("assets/img/cash.png")),
+                    Checkbox(
+                      checkColor: Colors.white,
+                      value: isCash,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          method = 0;
+                          CambiarCheckBock();
+                        });
+                      },
+                    ),
+                    //Text("Pagomovil"),
+                    Container(
+                        height: 30,
+                        width: 30,
+                        child: Image.asset("assets/img/movil.png")),
+                    Checkbox(
+                      checkColor: Colors.white,
+                      value: isMovil,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          method = 1;
+                          CambiarCheckBock();
+                        });
+                      },
+                    ),
+                    //Text("Biopago"),
+                    Container(
+                        height: 30,
+                        width: 30,
+                        child: Image.asset("assets/img/any.png")),
+                    Checkbox(
+                      checkColor: Colors.white,
+                      value: isAny,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          method = 2;
+
+                          CambiarCheckBock();
+                        });
+                      },
+                    ),
+                    //Text("Tarjeta"),
+                    Container(
+                        height: 30,
+                        width: 30,
+                        child: Image.asset("assets/img/card.png")),
+                    Checkbox(
+                      checkColor: Colors.white,
+                      value: isCard,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          method = 3;
+
+                          CambiarCheckBock();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              TitleView(
+                titleTxt: 'Lista de productos',
+                subTxt: 'Total: $total \$',
+                animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                        parent: widget.animationController!,
+                        curve: Interval((1 / 5) * 0, 1.0,
+                            curve: Curves.fastOutSlowIn))),
+                animationController: widget.animationController!,
+              ),
+            ],
           ),
         ),
         //#############################   LISTADOS DE PRODUCTOS
@@ -252,7 +328,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
             bottom: 62 + MediaQuery.of(context).padding.bottom,
           ),
           margin: EdgeInsets.only(
-              top: (MediaQuery.of(context).size.height / 3) + 35),
+              top: (MediaQuery.of(context).size.height / 3) + 60),
           child: sItems.length == 0
               ? noProduct()
               : ListView.builder(
@@ -377,89 +453,85 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                             left: 16,
                             right: 16,
                             top: 16 - 8.0 * topBarOpacity,
-                            bottom: 12 - 8.0 * topBarOpacity),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              /* Container(
-                                decoration: BoxDecoration(
-                                  color: CompraMeInventoryTheme.nearlyWhite,
-                                  shape: BoxShape.circle,
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                        color: CompraMeInventoryTheme
-                                            .nearlyBlack
-                                            .withOpacity(0.4),
-                                        offset: Offset(8.0, 8.0),
-                                        blurRadius: 8.0),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: Icon(
-                                    Icons.arrow_left,
-                                    color: HexColor("#6F56E8"),
-                                    size: 44,
-                                  ),
-                                ),
-                              ), */
-                              SizedBox(
-                                width: 40,
+                            bottom: 20 - 8.0 * topBarOpacity),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            /* Container(
+                              decoration: BoxDecoration(
+                                color: CompraMeInventoryTheme.nearlyWhite,
+                                shape: BoxShape.circle,
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: CompraMeInventoryTheme
+                                          .nearlyBlack
+                                          .withOpacity(0.4),
+                                      offset: Offset(8.0, 8.0),
+                                      blurRadius: 8.0),
+                                ],
                               ),
-                              Text(
-                                'Vender',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: CompraMeInventoryTheme.fontName,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 22 + 6 - 6 * topBarOpacity,
-                                  letterSpacing: 1.2,
-                                  color: CompraMeInventoryTheme.darkerText,
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Icon(
+                                  Icons.arrow_left,
+                                  color: HexColor("#ff6600"),
+                                  size: 44,
                                 ),
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: CompraMeInventoryTheme.nearlyWhite,
-                                  shape: BoxShape.circle,
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                        color: CompraMeInventoryTheme
-                                            .nearlyBlack
-                                            .withOpacity(0.4),
-                                        offset: Offset(8.0, 8.0),
-                                        blurRadius: 8.0),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: IconButton(
-                                      onPressed: () {
-                                        // Process data.
-                                        var vacios = false;
-                                        for (var i = 0;
-                                            i < subTotales.length;
-                                            i++) {
-                                          if (subTotales[i] == 0.00) {
-                                            vacios = true;
-                                          }
+                            ), */
+                            SizedBox(
+                              width: 40,
+                            ),
+                            Text(
+                              'Vender',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontFamily: CompraMeInventoryTheme.fontName,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 22 + 6 - 6 * topBarOpacity,
+                                letterSpacing: 1.2,
+                                color: CompraMeInventoryTheme.darkerText,
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: CompraMeInventoryTheme.nearlyWhite,
+                                shape: BoxShape.circle,
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: CompraMeInventoryTheme.nearlyBlack
+                                          .withOpacity(0.4),
+                                      offset: Offset(8.0, 8.0),
+                                      blurRadius: 8.0),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: IconButton(
+                                    onPressed: () {
+                                      // Process data.
+                                      var vacios = true;
+                                      for (var i = 0;
+                                          i < subTotales.length;
+                                          i++) {
+                                        if (subTotales[i] != 0.00) {
+                                          vacios = false;
                                         }
-                                        vacios
-                                            ? printMsg(
-                                                "Requiere productos y cantidades",
-                                                context)
-                                            : confirmarVenta();
-                                      },
-                                      icon: Icon(
-                                        Icons.done,
-                                        color: HexColor("#6F56E8"),
-                                        size: 30,
-                                      )),
-                                ),
+                                      }
+                                      vacios || sItems.length == 0
+                                          ? printMsg(
+                                              "Requiere productos y cantidades",
+                                              context)
+                                          : confirmarVenta();
+                                    },
+                                    icon: Icon(
+                                      Icons.done,
+                                      color: HexColor("#ff6600"),
+                                      size: 30,
+                                    )),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       )
                     ],
@@ -578,17 +650,25 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
           content: Container(
             height: 150,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 120,
+                  height: 110,
                   child: ListView(children: [
-                    Text(detalles)
+                    Text(detalles),
                   ] //Text("${lineasProductos[index][0].name}");
                       ),
                 ),
-                Text(
-                  "Total: $total \$",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(height: 40, width: 40, child: iconMethod()),
+                    Text(
+                      "Total: ${num.parse(total.toStringAsFixed(2))} \$",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 )
               ],
             ),
@@ -603,10 +683,10 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                     id: ventaList.length == 0 ? 0 : ventaList.last.id! + 1,
                     fecha: DateTime.now().toString(),
                     details: detalles,
-                    total: total,
-                    profit: ganancia,
-                    method:
-                        "2", //0 efectivo, 1 pagomovil,  2 biopago, punto de venta
+                    total: num.parse(total.toStringAsFixed(2)),
+                    profit: num.parse(ganancia.toStringAsFixed(2)),
+                    method: method
+                        .toString(), //0 efectivo, 1 pagomovil,  2 biopago, punto de venta
                   );
                   db().insertVenta(_venta);
 
@@ -631,5 +711,43 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
     total = 0;
     _controllers = [];
     setState(() {});
+  }
+
+  void CambiarCheckBock() {
+    isCash = false;
+    isMovil = false;
+    isAny = false;
+    isCard = false;
+    switch (method) {
+      case 0:
+        isCash = true;
+        break;
+      case 1:
+        isMovil = true;
+        break;
+      case 2:
+        isAny = true;
+        break;
+      default:
+        isCard = true;
+    }
+  }
+
+  Widget iconMethod() {
+    var ruta = "assets/img/cash.png";
+    switch (method) {
+      case 0:
+        ruta = "assets/img/cash.png";
+        break;
+      case 1:
+        ruta = "assets/img/movil.png";
+        break;
+      case 2:
+        ruta = "assets/img/any.png";
+        break;
+      default:
+        ruta = "assets/img/card.png";
+    }
+    return Image.asset(ruta);
   }
 }

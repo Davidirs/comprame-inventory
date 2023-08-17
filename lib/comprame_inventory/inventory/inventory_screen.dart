@@ -1,9 +1,10 @@
-import 'package:best_flutter_ui_templates/comprame_inventory/edit_product/edit_product_screen.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/models/products.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/models/tabIcon_data.dart';
-import 'package:best_flutter_ui_templates/db/db.dart';
-import 'package:best_flutter_ui_templates/global.dart';
+import 'package:comprame_inventory/comprame_inventory/edit_product/edit_product_screen.dart';
+import 'package:comprame_inventory/comprame_inventory/models/products.dart';
+import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
+import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/global.dart';
+import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -224,11 +225,21 @@ class _InventoryScreenState extends State<InventoryScreen>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text("#${productList[index].id}"),
-                                Text("${productList[index].units} uds."),
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  child:
+                                      Image.asset("assets/img/placeholder.png"),
+                                ),
                               ],
                             ),
-                            title: Text("${productList[index].name}"),
+                            title: Text("${productList[index].name}",
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold)),
                             subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Row(
                                   children: [
@@ -236,14 +247,26 @@ class _InventoryScreenState extends State<InventoryScreen>
                                     Text("${productList[index].sale} \$"),
                                   ],
                                 ),
-                                Text("Descripción"),
+                                Text(
+                                  "Descripción",
+                                ),
                               ],
                             ),
                             isThreeLine: true,
                             trailing: Container(
                               height: 60,
                               width: 60,
-                              child: Placeholder(),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("${productList[index].units}",
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("Unidades",
+                                      style: TextStyle(fontSize: 12.0)),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -302,7 +325,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                             left: 16,
                             right: 16,
                             top: 16 - 8.0 * topBarOpacity,
-                            bottom: 12 - 8.0 * topBarOpacity),
+                            bottom: 20 - 8.0 * topBarOpacity),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -404,11 +427,13 @@ class _InventoryScreenState extends State<InventoryScreen>
                                 child: IconButton(
                                     onPressed: () {
                                       // Process data.
-                                      setState(() {});
+                                      setState(() {
+                                        printMsg("Tabla actualizada", context);
+                                      });
                                     },
                                     icon: Icon(
                                       Icons.refresh,
-                                      color: HexColor("#6F56E8"),
+                                      color: HexColor("#ff6600"),
                                       size: 30,
                                     )),
                               ),

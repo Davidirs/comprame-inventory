@@ -1,8 +1,8 @@
 import 'dart:math' as math;
-import 'package:best_flutter_ui_templates/comprame_inventory/add_product/add_product_screen.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/models/tabIcon_data.dart';
-import 'package:best_flutter_ui_templates/main.dart';
+import 'package:comprame_inventory/comprame_inventory/add_product/add_product_screen.dart';
+import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
+import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 
 class BottomBarView extends StatefulWidget {
@@ -144,7 +144,8 @@ class _BottomBarViewState extends State<BottomBarView>
                         gradient: LinearGradient(
                             colors: [
                               CompraMeInventoryTheme.nearlyDarkBlue,
-                              HexColor('#6A88E5'),
+                              /*  HexColor('#6F56E8'),*/
+                              Color.fromARGB(255, 159, 18, 1),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight),

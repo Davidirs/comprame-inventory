@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class HelpScreen extends StatefulWidget {
@@ -30,12 +30,12 @@ class _HelpScreenState extends State<HelpScreen> {
                     top: MediaQuery.of(context).padding.top,
                     left: 16,
                     right: 16),
-                child: Image.asset('assets/images/helpImage.png'),
+                child: Image.asset('assets/images/helpImage.jpg'),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  'How can we help you?',
+                  '¿Cómo podemos ayudarte?',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -45,7 +45,7 @@ class _HelpScreenState extends State<HelpScreen> {
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
-                  'It looks like you are experiencing problems\nwith our sign up process. We are here to\nhelp so please get in touch with us',
+                  'Parece que tienes problemas\ncon nuestro servicio. Estamos aquí para\nayudar, así que póngase en contacto con nosotros',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 16,
@@ -60,7 +60,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       width: 140,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: isLightMode ? Colors.blue : Colors.white,
+                        color: isLightMode ? Color(0xfff15c22) : Colors.white,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(4.0)),
                         boxShadow: <BoxShadow>[
@@ -78,7 +78,7 @@ class _HelpScreenState extends State<HelpScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Text(
-                                'Chat with Us',
+                                'Escríbenos',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color:

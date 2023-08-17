@@ -1,4 +1,4 @@
-import 'package:best_flutter_ui_templates/comprame_inventory/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:flutter/material.dart';
 
 class TitleView extends StatelessWidget {

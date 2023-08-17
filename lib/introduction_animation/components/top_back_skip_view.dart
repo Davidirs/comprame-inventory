@@ -51,28 +51,28 @@ class TopBackSkipView extends StatelessWidget {
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Container(
           height: 58,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // SlideTransition(
-                //   position: _backAnimation,
-                //   child:
-                IconButton(
-                  onPressed: onBackClick,
-                  icon: Icon(Icons.arrow_back_ios_new_rounded),
-                  //   ),
-                ),
-                SlideTransition(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // SlideTransition(
+              //   position: _backAnimation,
+              //   child:
+              IconButton(
+                onPressed: onBackClick,
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
+                //   ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(right: 10.0),
+                child: SlideTransition(
                   position: _skipAnimation,
                   child: IconButton(
                     onPressed: onSkipClick,
-                    icon: Text('Saltar'),
+                    icon: Text('Salir'),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

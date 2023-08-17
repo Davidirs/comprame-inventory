@@ -69,7 +69,7 @@ class _SplashViewState extends State<SplashView> {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(38.0),
-                    color: Color(0xff132137),
+                    color: Color(0xfff15c22),
                   ),
                   child: Text(
                     "Comencemos",

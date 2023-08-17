@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 import '../comprame_inventory_theme.dart';
 
-class RunningView extends StatelessWidget {
+class RunningView extends StatefulWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
+  final List values;
 
-  const RunningView({Key? key, this.animationController, this.animation})
+  const RunningView(
+      {Key? key,
+      this.animationController,
+      this.animation,
+      required this.values})
       : super(key: key);
 
   @override
+  State<RunningView> createState() => _RunningViewState();
+}
+
+class _RunningViewState extends State<RunningView> {
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController!,
+      animation: widget.animationController!,
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
-          opacity: animation!,
+          opacity: widget.animation!,
           child: new Transform(
             transform: new Matrix4.translationValues(
-                0.0, 30 * (1.0 - animation!.value), 0.0),
+                0.0, 30 * (1.0 - widget.animation!.value), 0.0),
             child: Column(
               children: <Widget>[
                 Padding(
@@ -47,18 +57,17 @@ class RunningView extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.topLeft,
                             children: <Widget>[
-                              ClipRRect(
+                              /*  ClipRRect(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8.0)),
                                 child: SizedBox(
                                   height: 74,
                                   child: AspectRatio(
                                     aspectRatio: 1.714,
-                                    child: Image.asset(
-                                        "assets/comprame_inventory/back.png"),
+                                    child: Image.asset("assets/img/back.png"),
                                   ),
                                 ),
-                              ),
+                              ), */
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -66,12 +75,12 @@ class RunningView extends StatelessWidget {
                                     children: <Widget>[
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                          left: 100,
+                                          left: 115,
                                           right: 16,
                                           top: 16,
                                         ),
                                         child: Text(
-                                          "You're doing great!",
+                                          "¡Lo estás haciendo genial!",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontFamily:
@@ -88,13 +97,13 @@ class RunningView extends StatelessWidget {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 100,
+                                      left: 115,
                                       bottom: 12,
                                       top: 4,
                                       right: 16,
                                     ),
                                     child: Text(
-                                      "Keep it up\nand stick to your plan!",
+                                      "Hoy: ${widget.values[0]} \nVentas Totales: ${widget.values[1]} \nGanancias Totales: ${widget.values[2]}",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily:
@@ -119,8 +128,7 @@ class RunningView extends StatelessWidget {
                         child: SizedBox(
                           width: 110,
                           height: 110,
-                          child: Image.asset(
-                              "assets/comprame_inventory/runner.png"),
+                          child: Image.asset("assets/img/great.png"),
                         ),
                       )
                     ],

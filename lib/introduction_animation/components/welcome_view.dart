@@ -63,7 +63,8 @@ class WelcomeView extends StatelessWidget {
               SlideTransition(
                 position: _welcomeImageAnimation,
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 350, maxHeight: 350),
+                  width: MediaQuery.of(context).size.width,
+                  //constraints: BoxConstraints(maxWidth: 350, maxHeight: 350),
                   child: Image.asset(
                     'assets/introduction_animation/welcome.png',
                     fit: BoxFit.contain,

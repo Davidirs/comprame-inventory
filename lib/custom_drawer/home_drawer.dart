@@ -1,4 +1,5 @@
-import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:comprame_inventory/app_theme.dart';
+import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -226,12 +227,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           height: 24,
                           child: Image.asset(listData.imageName,
                               color: widget.screenIndex == listData.index
-                                  ? Colors.blue
+                                  ? CompraMeInventoryTheme.nearlyDarkBlue
                                   : AppTheme.nearlyBlack),
                         )
                       : Icon(listData.icon?.icon,
                           color: widget.screenIndex == listData.index
-                              ? Colors.blue
+                              ? CompraMeInventoryTheme.nearlyDarkBlue
                               : AppTheme.nearlyBlack),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
@@ -268,7 +269,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             width: MediaQuery.of(context).size.width * 0.75,
                             height: 46,
                             decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.2),
+                              color: CompraMeInventoryTheme.nearlyDarkBlue
+                                  .withOpacity(0.2),
                               borderRadius: new BorderRadius.only(
                                 topLeft: Radius.circular(0),
                                 topRight: Radius.circular(28),

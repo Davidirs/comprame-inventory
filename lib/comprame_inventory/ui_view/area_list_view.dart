@@ -17,10 +17,16 @@ class _AreaListViewState extends State<AreaListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
   List<String> areaListData = <String>[
-    'assets/comprame_inventory/area1.png',
-    'assets/comprame_inventory/area2.png',
-    'assets/comprame_inventory/area3.png',
-    'assets/comprame_inventory/area1.png',
+    'assets/img/cash.png',
+    'assets/img/placeholders.png',
+    'assets/img/placeholder.png',
+    'assets/img/placeholder.png',
+  ];
+  List<String> areaListName = <String>[
+    'Metodo más utilizado',
+    'Producto más vendido',
+    'Menor ganancia',
+    'Mayor ganancia',
   ];
 
   @override
@@ -70,6 +76,7 @@ class _AreaListViewState extends State<AreaListView>
                       animationController?.forward();
                       return AreaView(
                         imagepath: areaListData[index],
+                        imagename: areaListName[index],
                         animation: animation,
                         animationController: animationController!,
                       );
@@ -97,9 +104,11 @@ class AreaView extends StatelessWidget {
     this.imagepath,
     this.animationController,
     this.animation,
+    this.imagename,
   }) : super(key: key);
 
   final String? imagepath;
+  final String? imagename;
   final AnimationController? animationController;
   final Animation<double>? animation;
 
@@ -138,14 +147,21 @@ class AreaView extends StatelessWidget {
                   splashColor:
                       CompraMeInventoryTheme.nearlyDarkBlue.withOpacity(0.2),
                   onTap: () {},
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 16, left: 16, right: 16),
-                        child: Image.asset(imagepath!),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 6, left: 6, right: 6),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          imagename!,
+                          textAlign: TextAlign.center,
+                        ),
+                        Container(
+                          height: 100,
+                          width: 100,
+                          child: Image.asset(imagepath!),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

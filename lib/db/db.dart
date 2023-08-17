@@ -1,7 +1,7 @@
-import 'package:best_flutter_ui_templates/comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:best_flutter_ui_templates/comprame_inventory/models/products.dart';
+import 'package:comprame_inventory/comprame_inventory/models/products.dart';
 //import 'products.dart';
 
 class db {
