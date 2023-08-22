@@ -1,11 +1,9 @@
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/area_list_view.dart';
-import 'package:comprame_inventory/comprame_inventory/ui_view/running_view.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/workout_view.dart';
 import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 
 class StadisticScreen extends StatefulWidget {
@@ -345,6 +343,15 @@ class _StadisticScreenState extends State<StadisticScreen>
         ),
         Column(
           children: <Widget>[
+            WorkoutView(
+              animation: Tween<double>(begin: 1.0, end: 1.0).animate(
+                  //animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                      parent: widget.animationController!,
+                      curve: Interval((1 / 5) * 2, 1.0,
+                          curve: Curves.fastOutSlowIn))),
+              animationController: widget.animationController!,
+            ),
             Padding(
               padding:
                   const EdgeInsets.only(left: 24, right: 24, top: 0, bottom: 0),

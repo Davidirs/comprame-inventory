@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/comprame_inventory/ui_view/date_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 import '../comprame_inventory_theme.dart';
@@ -91,7 +92,7 @@ class WorkoutView extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(left: 4.0),
                               child: const Text(
-                                '68 min',
+                                'Linea de tiempo',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: CompraMeInventoryTheme.fontName,
@@ -119,10 +120,20 @@ class WorkoutView extends StatelessWidget {
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(0.0),
-                                child: Icon(
-                                  Icons.arrow_right,
+                                child: IconButton(
                                   color: HexColor("#ff6600"),
-                                  size: 44,
+                                  icon: Icon(
+                                    Icons.arrow_right,
+                                    size: 34,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DateView(),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             )
