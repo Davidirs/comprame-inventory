@@ -398,34 +398,18 @@ class _InventoryScreenState extends State<InventoryScreen>
                                 ),
                               ),
                             ), */
-                    Container(
-                      decoration: BoxDecoration(
-                        color: CompraMeInventoryTheme.nearlyWhite,
-                        shape: BoxShape.circle,
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: CompraMeInventoryTheme.nearlyBlack
-                                  .withOpacity(0.4),
-                              offset: Offset(8.0, 8.0),
-                              blurRadius: 8.0),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: IconButton(
-                            onPressed: () {
-                              // Process data.
-                              setState(() {
-                                printMsg("Tabla actualizada", context);
-                              });
-                            },
-                            icon: Icon(
-                              Icons.refresh,
-                              color: HexColor("#ff6600"),
-                              size: 30,
-                            )),
-                      ),
-                    ),
+                    IconButton(
+                        onPressed: () {
+                          // Process data.
+                          setState(() {
+                            printMsg("Tabla actualizada", context);
+                          });
+                        },
+                        icon: Icon(
+                          Icons.refresh,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
                   ],
                 ),
               )

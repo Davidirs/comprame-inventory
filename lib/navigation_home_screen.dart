@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/about_screen.dart';
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/custom_drawer/drawer_user_controller.dart';
 import 'package:comprame_inventory/custom_drawer/home_drawer.dart';
@@ -80,6 +81,11 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
         case DrawerIndex.Invite:
           setState(() {
             screenView = InviteFriend();
+          });
+          break;
+        case DrawerIndex.About:
+          setState(() {
+            screenView = AboutScreen();
           });
           break;
         default:

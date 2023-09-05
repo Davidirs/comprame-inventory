@@ -347,11 +347,10 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                           Row(
                             children: [
                               Container(
-                                height: 30,
-                                width: 30,
-                                child: ElevatedButton(
-                                    onPressed: () {}, child: Placeholder()),
-                              ),
+                                  height: 30,
+                                  width: 30,
+                                  child: Image.asset(
+                                      "assets/img/placeholder.png")),
                               SizedBox(
                                 width: 10,
                               ),
@@ -390,8 +389,9 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                               Container(
                                   width: 60,
                                   child: Text(
-                                    subTotales.isEmpty
-                                        ? "0"
+                                    subTotales.isEmpty ||
+                                            index > subTotales.length - 1
+                                        ? "0.00 \$"
                                         : "${subTotales[index].toStringAsFixed(2)} \$",
                                     //"${subtotal(index)} \$",
                                     textAlign: TextAlign.right,
@@ -479,41 +479,25 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                         color: CompraMeInventoryTheme.darkerText,
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: CompraMeInventoryTheme.nearlyWhite,
-                        shape: BoxShape.circle,
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: CompraMeInventoryTheme.nearlyBlack
-                                  .withOpacity(0.4),
-                              offset: Offset(8.0, 8.0),
-                              blurRadius: 8.0),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: IconButton(
-                            onPressed: () {
-                              // Process data.
-                              var vacios = true;
-                              for (var i = 0; i < subTotales.length; i++) {
-                                if (subTotales[i] != 0.00) {
-                                  vacios = false;
-                                }
-                              }
-                              vacios || sItems.length == 0
-                                  ? printMsg("Requiere productos y cantidades",
-                                      context)
-                                  : confirmarVenta();
-                            },
-                            icon: Icon(
-                              Icons.done,
-                              color: HexColor("#ff6600"),
-                              size: 30,
-                            )),
-                      ),
-                    ),
+                    IconButton(
+                        onPressed: () {
+                          // Process data.
+                          var vacios = true;
+                          for (var i = 0; i < subTotales.length; i++) {
+                            if (subTotales[i] != 0.00) {
+                              vacios = false;
+                            }
+                          }
+                          vacios || sItems.length == 0
+                              ? printMsg(
+                                  "Requiere productos y cantidades", context)
+                              : confirmarVenta();
+                        },
+                        icon: Icon(
+                          Icons.done,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
                   ],
                 ),
               )

@@ -16,6 +16,7 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
   @override
   void initState() {
     cargarVentas();
+    controller.text = today;
     super.initState();
   }
 
@@ -58,13 +59,10 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
           child: Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 16),
             child: Container(
+              padding: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: CompraMeInventoryTheme.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
-                    topRight: Radius.circular(8.0)),
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
                       color: CompraMeInventoryTheme.grey.withOpacity(0.4),
@@ -72,7 +70,7 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
                       blurRadius: 10.0),
                 ],
               ),
-              child: Text("hola mundo"),
+              child: Text("En desarrollo..."),
             ),
           ),
         ),

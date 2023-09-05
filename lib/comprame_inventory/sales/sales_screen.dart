@@ -85,8 +85,6 @@ class _SalesScreenState extends State<SalesScreen>
   //llamo a la base de datos y le paso los valores a la lista
   cargarVentas() async {
     List<Venta> auxVenta = await db().getAllVentas();
-
-    print(auxVenta);
     ventaList = auxVenta;
   }
 
@@ -147,7 +145,7 @@ class _SalesScreenState extends State<SalesScreen>
                     ),
                     itemCount: ventaList.length,
                     scrollDirection: Axis.vertical,
-                    reverse: true, //posible solucion
+                    //reverse: true, //posible solucion
                     itemBuilder: (BuildContext context, int index) {
                       widget.animationController?.forward();
 
@@ -160,13 +158,14 @@ class _SalesScreenState extends State<SalesScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("#${ventaList[index].id}"),
+                              Text(
+                                  "#${ventaList[ventaList.length - 1 - index].id}"),
 
-                              //Text("${ventaList[index].method}"),
+                              //Text("${ventaList[ventaList.length-index].method}"),
                             ],
                           ),
                           title: Text(
-                              "${ventaList[index].fecha!.substring(0, 16)}",
+                              "${ventaList[ventaList.length - 1 - index].fecha!.substring(0, 16)}",
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.bold)),
                           subtitle: Column(
@@ -175,18 +174,19 @@ class _SalesScreenState extends State<SalesScreen>
                               Row(
                                 children: [
                                   Text(
-                                      "Ganancia: ${ventaList[index].profit} \$ | ",
+                                      "Ganancia: ${ventaList[ventaList.length - 1 - index].profit} \$ | ",
                                       style: TextStyle(
                                         fontSize: 11.0,
                                       )),
                                   Text(
-                                      "Total: ${num.parse(ventaList[index].total!.toStringAsFixed(2))} \$ ",
+                                      "Total: ${num.parse(ventaList[ventaList.length - 1 - index].total!.toStringAsFixed(2))} \$ ",
                                       style: TextStyle(
                                           fontSize: 13.0,
                                           fontWeight: FontWeight.bold)),
                                 ],
                               ),
-                              Text("${ventaList[index].details}",
+                              Text(
+                                  "${ventaList[ventaList.length - 1 - index].details}",
                                   style: TextStyle(
                                       fontSize: 11.0,
                                       fontStyle: FontStyle.italic)),
@@ -196,8 +196,9 @@ class _SalesScreenState extends State<SalesScreen>
                           trailing: Container(
                             width: 40,
                             height: 40,
-                            child: Image.asset(
-                                imgMethod[int.parse(ventaList[index].method!)]),
+                            child: Image.asset(imgMethod[int.parse(
+                                ventaList[ventaList.length - 1 - index]
+                                    .method!)]),
                           ),
                         ),
                       );

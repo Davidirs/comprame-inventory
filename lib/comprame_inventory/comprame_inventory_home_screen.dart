@@ -30,11 +30,11 @@ class _CompraMeInventoryHomeScreenState
     tabIconsList.forEach((TabIconData tab) {
       tab.isSelected = false;
     });
-    tabIconsList[0].isSelected = true;
+    tabIconsList[3].isSelected = true;
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
-    tabBody = InventoryScreen(animationController: animationController);
+    tabBody = SaleScreen(animationController: animationController);
     super.initState();
   }
 

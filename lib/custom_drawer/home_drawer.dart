@@ -1,5 +1,6 @@
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -107,10 +108,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                     blurRadius: 8),
                               ],
                             ),
-                            child: ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.asset('assets/images/userImage.jpg'),
+                            child: InkWell(
+                              onTap: () {
+                                printMsg(
+                                    "Proximamente cambio de imagen.", context);
+                              },
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(60.0)),
+                                child:
+                                    Image.asset('assets/images/userImage.png'),
+                              ),
                             ),
                           ),
                         ),
@@ -119,12 +127,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8, left: 4),
-                    child: Text(
-                      'David Reyes',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: isLightMode ? AppTheme.grey : AppTheme.white,
-                        fontSize: 18,
+                    child: InkWell(
+                      onTap: () {
+                        printMsg("Proximamente cambio de Texto.", context);
+                      },
+                      child: Text(
+                        'Nombre de usuario o negocio',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: isLightMode ? AppTheme.grey : AppTheme.white,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ),
@@ -185,7 +198,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   void onTapped() {
-    print('Haciendo algo...'); // Print to console.
+    printMsg("Proximamente inicio de sessión.", context);
+    // Print to console.
   }
 
   Widget inkwell(DrawerList listData) {

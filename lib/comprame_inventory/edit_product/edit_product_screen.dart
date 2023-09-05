@@ -292,47 +292,30 @@ class _EditProductScreenState extends State<EditProductScreen>
                         color: CompraMeInventoryTheme.darkerText,
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: CompraMeInventoryTheme.nearlyWhite,
-                        shape: BoxShape.circle,
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: CompraMeInventoryTheme.nearlyBlack
-                                  .withOpacity(0.4),
-                              offset: Offset(8.0, 8.0),
-                              blurRadius: 8.0),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: IconButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                final product = Product(
-                                  id: widget.idProduct,
-                                  name: _nameCtrl.text,
-                                  units: int.parse(_unidCtrl.text),
-                                  buy: num.parse(_buyCtrl.text),
-                                  sale: num.parse(_saleCtrl.text),
-                                );
-                                db().updateProduct(product);
-                                // Process data.
+                    IconButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            final product = Product(
+                              id: widget.idProduct,
+                              name: _nameCtrl.text,
+                              units: int.parse(_unidCtrl.text),
+                              buy: num.parse(_buyCtrl.text),
+                              sale: num.parse(_saleCtrl.text),
+                            );
+                            db().updateProduct(product);
+                            // Process data.
 /* 
-                                        Navigator.pop(context); */
-                                printMsg(
-                                    '¡Producto actualizdo satisfactoriamente!',
-                                    context);
-                                widget.voidCallback();
-                              }
-                            },
-                            icon: Icon(
-                              Icons.done,
-                              color: HexColor("#ff6600"),
-                              size: 30,
-                            )),
-                      ),
-                    ),
+                                    Navigator.pop(context); */
+                            printMsg('¡Producto actualizdo satisfactoriamente!',
+                                context);
+                            widget.voidCallback();
+                          }
+                        },
+                        icon: Icon(
+                          Icons.done,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
                   ],
                 ),
               )

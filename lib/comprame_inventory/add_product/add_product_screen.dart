@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../comprame_inventory_theme.dart';
 import '../models/products.dart';
@@ -89,6 +92,23 @@ class _AddProductScreenState extends State<AddProductScreen>
         ),
       ),
     );
+  }
+
+  String imageProductPath = "null";
+// Método para seleccionar una imagen
+  Future selectImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // Aquí puedes manejar la imagen seleccionada
+      // En este ejemplo, solo mostraremos la ruta de la imagen
+      print(pickedFile.path);
+      imageProductPath = pickedFile.path;
+    } else {
+      printMsg("No se seleccionó ninguna imagen.", context);
+    }
+    setState(() {});
   }
 
   Widget getMainListViewUI() {
@@ -198,13 +218,16 @@ class _AddProductScreenState extends State<AddProductScreen>
                 children: [
                   InkWell(
                     child: Container(
-                      padding: EdgeInsets.only(left: 24, top: 24),
+                      margin: EdgeInsets.only(left: 24, top: 24),
                       height: 100,
                       width: 100,
-                      child: Image.asset("assets/img/placeholder.png"),
+                      color: CompraMeInventoryTheme.deactivatedText,
+                      child: imageProductPath == "null"
+                          ? Image.asset("assets/img/placeholder.png")
+                          : Image.file(File(imageProductPath.toString())),
                     ),
                     onTap: () {
-                      printMsg("Proximamente seleccionar imagen", context);
+                      selectImage();
                     },
                   ),
                   Container(
@@ -297,46 +320,30 @@ class _AddProductScreenState extends State<AddProductScreen>
                         color: CompraMeInventoryTheme.darkerText,
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: CompraMeInventoryTheme.nearlyWhite,
-                        shape: BoxShape.circle,
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: CompraMeInventoryTheme.nearlyBlack
-                                  .withOpacity(0.4),
-                              offset: Offset(8.0, 8.0),
-                              blurRadius: 8.0),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: IconButton(
-                            onPressed: () {
-                              print(productList.length);
-                              if (_formKey.currentState!.validate()) {
-                                final product = Product(
-                                  id: productList.length == 0
-                                      ? 0
-                                      : productList.last.id + 1,
-                                  name: _nameCtrl.text,
-                                  units: int.parse(_unidCtrl.text),
-                                  buy: num.parse(_buyCtrl.text),
-                                  sale: num.parse(_saleCtrl.text),
-                                );
-                                db().insertProduct(product);
-                                // Process data.
-                                printMsg('¡Producto agregado exitosamente!',
-                                    context);
-                              }
-                            },
-                            icon: Icon(
-                              Icons.done,
-                              color: HexColor("#ff6600"),
-                              size: 30,
-                            )),
-                      ),
-                    ),
+                    IconButton(
+                        onPressed: () {
+                          print(productList.length);
+                          if (_formKey.currentState!.validate()) {
+                            final product = Product(
+                              id: productList.length == 0
+                                  ? 0
+                                  : productList.last.id + 1,
+                              name: _nameCtrl.text,
+                              units: int.parse(_unidCtrl.text),
+                              buy: num.parse(_buyCtrl.text),
+                              sale: num.parse(_saleCtrl.text),
+                            );
+                            db().insertProduct(product);
+                            // Process data.
+                            printMsg(
+                                '¡Producto agregado exitosamente!', context);
+                          }
+                        },
+                        icon: Icon(
+                          Icons.done,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
                   ],
                 ),
               )

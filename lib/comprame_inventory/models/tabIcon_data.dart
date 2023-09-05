@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TabIconData {
   TabIconData({
     this.imagePath = '',
-    this.index = 0,
+    this.index = 4,
     this.selectedImagePath = '',
     this.isSelected = false,
     this.animationController,
