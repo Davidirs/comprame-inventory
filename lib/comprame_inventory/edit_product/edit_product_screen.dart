@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:comprame_inventory/comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../comprame_inventory_theme.dart';
 
@@ -72,7 +75,6 @@ class _EditProductScreenState extends State<EditProductScreen>
   final _saleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
   late Product product;
-
   cargarProductos() async {
     Product auxProduct = await db().getProduct(widget.idProduct);
 
@@ -85,6 +87,24 @@ class _EditProductScreenState extends State<EditProductScreen>
     _descCtrl.text = "Descripción";
 
     print(product.units);
+  }
+
+  var imageProductPath = null;
+// Método para seleccionar una imagen
+  Future selectImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // Aquí puedes manejar la imagen seleccionada
+      // En este ejemplo, solo mostraremos la ruta de la imagen
+      print(pickedFile.path);
+      imageProductPath = pickedFile.path;
+    } else {
+      imageProductPath = null;
+      printMsg("No se seleccionó ninguna imagen.", context);
+    }
+    setState(() {});
   }
 
   @override
@@ -218,10 +238,12 @@ class _EditProductScreenState extends State<EditProductScreen>
                       padding: EdgeInsets.only(left: 24, top: 24),
                       height: 100,
                       width: 100,
-                      child: Image.asset("assets/img/placeholders.png"),
+                      child: imageProductPath == null
+                          ? Image.asset("assets/img/placeholder.png")
+                          : Image.file(File(imageProductPath.toString())),
                     ),
                     onTap: () {
-                      printMsg("Proximamente seleccionar imagen", context);
+                      selectImage();
                     },
                   ),
                   Container(
@@ -301,6 +323,8 @@ class _EditProductScreenState extends State<EditProductScreen>
                               units: int.parse(_unidCtrl.text),
                               buy: num.parse(_buyCtrl.text),
                               sale: num.parse(_saleCtrl.text),
+                              img: imageProductPath,
+                              description: _descCtrl.text,
                             );
                             db().updateProduct(product);
                             // Process data.

@@ -15,13 +15,22 @@ class db {
           await getDatabasesPath(), "productsDatabase.db"), //primaryDatabase.db
       onCreate: (db, version) async {
         await db.execute(
-          "CREATE TABLE $_tableName (id INTEGER PRIMARY KEY, name TEXT, units INTEGER, buy REAL, sale REAL)",
+          "CREATE TABLE $_tableName (id INTEGER PRIMARY KEY, name TEXT, units INTEGER, buy REAL, sale REAL, img TEXT, description TEXT)",
         );
         await db.execute(
           "CREATE TABLE $_tableVentas (id INTEGER PRIMARY KEY, fecha TEXT, details TEXT, total REAL, profit REAL, method TEXT)",
         );
       },
-      version: 1,
+
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Aquí puedes agregar las sentencias SQL para actualizar la estructura de la tabla.
+        if (oldVersion < 2) {
+          await db.execute("ALTER TABLE $_tableName ADD COLUMN img TEXT");
+          await db
+              .execute("ALTER TABLE $_tableName ADD COLUMN description TEXT");
+        }
+      },
+      version: 2, // Incrementa la versión de la base de datos.
     );
   }
 
@@ -48,6 +57,8 @@ class db {
         units: productsMap[index]['units'],
         buy: productsMap[index]['buy'],
         sale: productsMap[index]['sale'],
+        img: productsMap[index]['img'],
+        description: productsMap[index]['description'],
       );
     });
   }
@@ -63,7 +74,9 @@ class db {
           name: product[0]["name"],
           units: product[0]["units"],
           buy: product[0]["buy"],
-          sale: product[0]["sale"]);
+          sale: product[0]["sale"],
+          img: product[0]["img"],
+          description: product[0]["description"]);
     } else {
       return const Product();
     }
@@ -73,7 +86,7 @@ class db {
   Future<void> updateProduct(Product product) async {
     Database db = await getDataBase();
     db.rawUpdate(
-        "UPDATE $_tableName SET name ='${product.name}', units ='${product.units}',buy ='${product.buy}',sale ='${product.sale}' WHERE id ='${product.id}'");
+        "UPDATE $_tableName SET name ='${product.name}', units ='${product.units}',buy ='${product.buy}',sale ='${product.sale}',img ='${product.img}',description ='${product.description}' WHERE id ='${product.id}'");
   }
 
   //delete method

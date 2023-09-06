@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:comprame_inventory/comprame_inventory/edit_product/edit_product_screen.dart';
 import 'package:comprame_inventory/comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
@@ -142,7 +144,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                       return Container(
                         margin:
                             EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                        color: CompraMeInventoryTheme.white,
+                        color: colorUnits(productList[index].units),
                         child: Dismissible(
                           background: Container(
                             color: Colors.green,
@@ -226,11 +228,18 @@ class _InventoryScreenState extends State<InventoryScreen>
                               children: [
                                 Text("#${productList[index].id}"),
                                 Container(
-                                  height: 40,
-                                  width: 40,
-                                  child:
-                                      Image.asset("assets/img/placeholder.png"),
-                                ),
+                                    height: 40,
+                                    width: 40,
+                                    child: comprobar(File(
+                                      productList[index].img.toString(),
+                                    )))
+                                /* productList[index].img == null ||
+                                            productList[index].img == 'null'
+                                        ? Image.asset(
+                                            "assets/img/placeholder.png")
+                                        : Image.file(File(productList[index]
+                                            .img
+                                            .toString()))), */
                               ],
                             ),
                             title: Text("${productList[index].name}",
@@ -248,7 +257,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                                   ],
                                 ),
                                 Text(
-                                  "Descripción",
+                                  "${productList[index].description} \$",
                                 ),
                               ],
                             ),
@@ -401,6 +410,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                     IconButton(
                         onPressed: () {
                           // Process data.
+                          cargarProductos();
                           setState(() {
                             printMsg("Tabla actualizada", context);
                           });
@@ -418,5 +428,25 @@ class _InventoryScreenState extends State<InventoryScreen>
         )
       ],
     );
+  }
+
+  Widget comprobar(File imageFile) {
+    if (imageFile.existsSync()) {
+      // El archivo existe, puedes mostrarlo
+      return Image.file(imageFile);
+    } else {
+      // El archivo no existe, puedes mostrar una imagen de respaldo o un mensaje de error
+      return Image.asset("assets/img/placeholder.png");
+    }
+  }
+
+  Color colorUnits(units) {
+    if (units < 1) {
+      return Colors.red.withOpacity(.2);
+    } else if (units < 5) {
+      return Colors.yellow.withOpacity(.2);
+    }
+
+    return CompraMeInventoryTheme.white;
   }
 }

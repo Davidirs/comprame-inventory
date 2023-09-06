@@ -94,7 +94,7 @@ class _AddProductScreenState extends State<AddProductScreen>
     );
   }
 
-  String imageProductPath = "null";
+  var imageProductPath = null;
 // Método para seleccionar una imagen
   Future selectImage() async {
     final picker = ImagePicker();
@@ -222,7 +222,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                       height: 100,
                       width: 100,
                       color: CompraMeInventoryTheme.deactivatedText,
-                      child: imageProductPath == "null"
+                      child: imageProductPath == null
                           ? Image.asset("assets/img/placeholder.png")
                           : Image.file(File(imageProductPath.toString())),
                     ),
@@ -323,6 +323,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                     IconButton(
                         onPressed: () {
                           print(productList.length);
+
                           if (_formKey.currentState!.validate()) {
                             final product = Product(
                               id: productList.length == 0
@@ -332,6 +333,8 @@ class _AddProductScreenState extends State<AddProductScreen>
                               units: int.parse(_unidCtrl.text),
                               buy: num.parse(_buyCtrl.text),
                               sale: num.parse(_saleCtrl.text),
+                              img: imageProductPath,
+                              description: _descCtrl.text,
                             );
                             db().insertProduct(product);
                             // Process data.

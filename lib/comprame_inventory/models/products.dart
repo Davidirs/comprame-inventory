@@ -4,14 +4,17 @@ class Product {
   final int? units;
   final num? buy;
   final num? sale;
+  final String? img;
+  final String? description;
 
-  const Product({
-    this.id,
-    this.name,
-    this.units,
-    this.buy,
-    this.sale,
-  });
+  const Product(
+      {this.id,
+      this.name,
+      this.units,
+      this.buy,
+      this.sale,
+      this.img,
+      this.description});
 
   factory Product.fromMap(Map<String, dynamic> json) => Product(
         id: json["id"],
@@ -19,6 +22,8 @@ class Product {
         units: json["units"],
         buy: json["buy"],
         sale: json["sale"],
+        img: json["img"],
+        description: json["description"],
       );
 
   Map<String, dynamic> toMap() {
@@ -28,6 +33,8 @@ class Product {
       'units': units,
       'buy': buy,
       'sale': sale,
+      'img': img,
+      'description': description,
     };
   }
 }

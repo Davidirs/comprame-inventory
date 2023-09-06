@@ -354,16 +354,19 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                               SizedBox(
                                 width: 10,
                               ),
-                              Column(
-                                children: [
-                                  Text("${productList[sItems[index]].name}"),
-                                  Text("${productList[sItems[index]].sale} \$"),
-                                ],
+                              Container(
+                                width: 140,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "${productList[sItems[index]].name}",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text(
+                                        "${productList[sItems[index]].sale} \$"),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                          Row(
-                            children: [
                               Text("X"),
                               SizedBox(
                                 width: 10,
