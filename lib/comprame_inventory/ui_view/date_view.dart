@@ -25,8 +25,6 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
   //llamo a la base de datos y le paso los valores a la lista
   cargarVentas() async {
     List<Venta> auxVenta = await db().getAllVentas();
-
-    print(auxVenta);
     ventaList = auxVenta;
     calcToday();
   }

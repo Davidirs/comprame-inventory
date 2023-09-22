@@ -170,6 +170,52 @@ class _AddProductScreenState extends State<AddProductScreen>
             SizedBox(
               height: 20,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Tipo:",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: CompraMeInventoryTheme.fontName,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      letterSpacing: 0.5,
+                      color: CompraMeInventoryTheme.lightText,
+                    ),
+                  ),
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    elevation: 16,
+                    //style: const TextStyle(color: Colors.black),
+                    underline: Container(
+                      height: 2,
+                      color: Color(0xfff15c22),
+                    ),
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dropdownValue = value!;
+                        print(dropdownValue);
+                      });
+                    },
+                    items:
+                        listType.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             TitleView(
               titleTxt: 'Precios',
               subTxt: 'Detalles',
@@ -185,7 +231,7 @@ class _AddProductScreenState extends State<AddProductScreen>
               child: TextFormField(
                 controller: _buyCtrl,
                 decoration: InputDecoration(
-                  hintText: "Compra",
+                  hintText: "Compra \$",
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -201,7 +247,7 @@ class _AddProductScreenState extends State<AddProductScreen>
               child: TextFormField(
                 controller: _saleCtrl,
                 decoration: InputDecoration(
-                  hintText: "Venta",
+                  hintText: "Venta \$",
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -322,7 +368,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                     ),
                     IconButton(
                         onPressed: () {
-                          print(productList.length);
+                          print("Producto n: ${productList.length}");
 
                           if (_formKey.currentState!.validate()) {
                             final product = Product(
@@ -331,6 +377,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                                   : productList.last.id + 1,
                               name: _nameCtrl.text,
                               units: int.parse(_unidCtrl.text),
+                              type: dropdownValue,
                               buy: num.parse(_buyCtrl.text),
                               sale: num.parse(_saleCtrl.text),
                               img: imageProductPath,
@@ -360,8 +407,8 @@ class _AddProductScreenState extends State<AddProductScreen>
 
 limpiarValores() {
   _nameCtrl.text = "";
-  _unidCtrl.text = "0";
-  _buyCtrl.text = "0";
-  _saleCtrl.text = "0";
+  _unidCtrl.text = "";
+  _buyCtrl.text = "";
+  _saleCtrl.text = "";
   _descCtrl.text = "";
 }

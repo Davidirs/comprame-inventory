@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
@@ -24,7 +28,44 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   void initState() {
     setDrawerListArray();
+    cargarSharedPreferences();
     super.initState();
+  }
+
+  var imageProductPath = null;
+
+  bool isEditing = false;
+  var name = null;
+
+  cargarSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    imageProductPath = await prefs.getString('imageBusiness');
+    name = await prefs.getString('nameText');
+    print("Imagen path: $imageProductPath");
+    setState(() {});
+  }
+
+  guardarTexto(String nameText) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('nameText', nameText);
+  }
+
+// Método para seleccionar una imagen
+  Future selectImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (pickedFile != null) {
+      // Aquí puedes manejar la imagen seleccionada
+      // En este ejemplo, solo mostraremos la ruta de la imagen
+      print(pickedFile.path);
+      imageProductPath = pickedFile.path;
+      await prefs.setString('imageBusiness', pickedFile.path);
+    } else {
+      printMsg("No se seleccionó ninguna imagen.", context);
+    }
+    setState(() {});
   }
 
   void setDrawerListArray() {
@@ -33,6 +74,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
         index: DrawerIndex.HOME,
         labelName: 'Inicio',
         icon: Icon(Icons.home),
+      ),
+      DrawerList(
+        index: DrawerIndex.DolarBS,
+        labelName: 'Dolar - Bs',
+        icon: Icon(Icons.attach_money),
       ),
       DrawerList(
         index: DrawerIndex.Help,
@@ -67,6 +113,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
+    TextEditingController _controller = TextEditingController();
     return Scaffold(
       backgroundColor: AppTheme.notWhite.withOpacity(0.5),
       body: Column(
@@ -90,7 +137,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             (widget.iconAnimationController!.value) * 0.2),
                         child: RotationTransition(
                           turns: AlwaysStoppedAnimation<double>(Tween<double>(
-                                      begin: 0.0, end: 24.0)
+                                      begin: 0.0, end: 50.0)
                                   .animate(CurvedAnimation(
                                       parent: widget.iconAnimationController!,
                                       curve: Curves.fastOutSlowIn))
@@ -103,21 +150,22 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               shape: BoxShape.circle,
                               boxShadow: <BoxShadow>[
                                 BoxShadow(
-                                    color: AppTheme.grey.withOpacity(0.6),
+                                    color: AppTheme.white,
                                     offset: const Offset(2.0, 4.0),
                                     blurRadius: 8),
                               ],
                             ),
                             child: InkWell(
                               onTap: () {
-                                printMsg(
-                                    "Proximamente cambio de imagen.", context);
+                                selectImage();
                               },
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.all(
-                                    Radius.circular(60.0)),
-                                child:
-                                    Image.asset('assets/images/userImage.png'),
+                                    Radius.circular(10.0)),
+                                child: imageProductPath == null
+                                    ? Image.asset('assets/images/userImage.png')
+                                    : Image.file(
+                                        File(imageProductPath.toString())),
                               ),
                             ),
                           ),
@@ -127,18 +175,40 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8, left: 4),
-                    child: InkWell(
-                      onTap: () {
-                        printMsg("Proximamente cambio de Texto.", context);
-                      },
-                      child: Text(
-                        'Nombre de usuario o negocio',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: isLightMode ? AppTheme.grey : AppTheme.white,
-                          fontSize: 18,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 180,
+                          child: isEditing
+                              ? TextFormField(
+                                  controller: _controller,
+                                  maxLines: 2,
+                                  onChanged: (value) {
+                                    name = value;
+                                  },
+                                )
+                              : Text(
+                                  name == null ? 'Usuario o negocio' : name,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: isLightMode
+                                        ? AppTheme.grey
+                                        : AppTheme.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
                         ),
-                      ),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _controller.text = name;
+                                isEditing = !isEditing;
+                                guardarTexto(name);
+                              });
+                            },
+                            icon: Icon(Icons.edit)),
+                      ],
                     ),
                   ),
                 ],
@@ -311,8 +381,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
 enum DrawerIndex {
   HOME,
-  FeedBack,
+  DolarBS,
   Help,
+  FeedBack,
   Share,
   About,
   Invite,

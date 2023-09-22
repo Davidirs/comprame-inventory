@@ -2,6 +2,7 @@ class Product {
   final int? id;
   final String? name;
   final int? units;
+  final String? type;
   final num? buy;
   final num? sale;
   final String? img;
@@ -11,6 +12,7 @@ class Product {
       {this.id,
       this.name,
       this.units,
+      this.type,
       this.buy,
       this.sale,
       this.img,
@@ -20,6 +22,7 @@ class Product {
         id: json["id"],
         name: json["name"],
         units: json["units"],
+        type: json["type"],
         buy: json["buy"],
         sale: json["sale"],
         img: json["img"],
@@ -31,6 +34,7 @@ class Product {
       'id': id,
       'name': name,
       'units': units,
+      'type': type,
       'buy': buy,
       'sale': sale,
       'img': img,

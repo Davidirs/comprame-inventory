@@ -5,6 +5,7 @@ import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:comprame_inventory/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../comprame_inventory_theme.dart';
 import '../models/products.dart';
@@ -54,6 +55,9 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
       }
     });
     cargarProductos();
+
+    cargarDolar();
+
     super.initState();
   }
 
@@ -62,11 +66,11 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   List<int> sItems = [];
   List lineasProductos = []; //producto,cantidad,subtotal,total
 
-  List<num> subTotales = [];
-  List<num> ganancias = [];
+  List<double> subTotales = [];
+  List<double> ganancias = [];
   List<TextEditingController> _controllers = [];
-  num total = 0;
-  num ganancia = 0;
+  double total = 0;
+  double ganancia = 0;
   String detalles = "";
   int method = 0;
   bool isCash = true;
@@ -311,7 +315,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
               ),
               TitleView(
                 titleTxt: 'Lista de productos',
-                subTxt: 'Total: ${num.parse(total.toStringAsFixed(2))} \$',
+                subTxt: 'Total: ${dolarBs(total.toDouble())}',
                 animation: Tween<double>(begin: 0.0, end: 1.0).animate(
                     CurvedAnimation(
                         parent: widget.animationController!,
@@ -328,7 +332,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
             bottom: 62 + MediaQuery.of(context).padding.bottom,
           ),
           margin: EdgeInsets.only(
-              top: (MediaQuery.of(context).size.height / 3) + 60),
+              top: (MediaQuery.of(context).size.height / 3) + 100),
           child: sItems.length == 0
               ? noProduct()
               : ListView.builder(
@@ -362,8 +366,9 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                       "${productList[sItems[index]].name}",
                                       textAlign: TextAlign.center,
                                     ),
-                                    Text(
-                                        "${productList[sItems[index]].sale} \$"),
+                                    Text(dolarBs(productList[sItems[index]]
+                                        .sale!
+                                        .toDouble())),
                                   ],
                                 ),
                               ),
@@ -394,8 +399,8 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                   child: Text(
                                     subTotales.isEmpty ||
                                             index > subTotales.length - 1
-                                        ? "0.00 \$"
-                                        : "${subTotales[index].toStringAsFixed(2)} \$",
+                                        ? "0.00"
+                                        : dolarBs(subTotales[index].toDouble()),
                                     //"${subtotal(index)} \$",
                                     textAlign: TextAlign.right,
                                     style:
@@ -482,25 +487,49 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                         color: CompraMeInventoryTheme.darkerText,
                       ),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          // Process data.
-                          var vacios = true;
-                          for (var i = 0; i < subTotales.length; i++) {
-                            if (subTotales[i] != 0.00) {
-                              vacios = false;
-                            }
-                          }
-                          vacios || sItems.length == 0
-                              ? printMsg(
-                                  "Requiere productos y cantidades", context)
-                              : confirmarVenta();
-                        },
-                        icon: Icon(
-                          Icons.done,
-                          color: HexColor("#ff6600"),
-                          size: 30,
-                        )),
+                    Row(
+                      children: [
+                        // cambiar moneda
+                        IconButton(
+                            onPressed: () async {
+                              //cambiar moneda
+                              final SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              if (await prefs.getBool('dolar') == null) {
+                                await prefs.setBool('dolar', true);
+                              } else {
+                                await prefs.setBool(
+                                    'dolar', !prefs.getBool('dolar')!);
+                              }
+                              isDolar = prefs.getBool('dolar')!;
+                              setState(() {});
+                            },
+                            icon: Icon(
+                              Icons.price_change_outlined,
+                              color: HexColor("#ff6600"),
+                              size: 30,
+                            )),
+                        IconButton(
+                            onPressed: () {
+                              // Process data.
+                              var vacios = true;
+                              for (var i = 0; i < subTotales.length; i++) {
+                                if (subTotales[i] != 0.00) {
+                                  vacios = false;
+                                }
+                              }
+                              vacios || sItems.length == 0
+                                  ? printMsg("Requiere productos y cantidades",
+                                      context)
+                                  : confirmarVenta();
+                            },
+                            icon: Icon(
+                              Icons.done,
+                              color: HexColor("#ff6600"),
+                              size: 30,
+                            )),
+                      ],
+                    )
                   ],
                 ),
               )
@@ -555,18 +584,18 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
       try {
         //calcular subtotal
         subTotales.add(
-            productList[sItems[i]].sale! * num.parse(_controllers[i].text));
+            productList[sItems[i]].sale! * double.parse(_controllers[i].text));
         ganancias.add(
             (productList[sItems[i]].sale! - productList[sItems[i]].buy!) *
-                num.parse(_controllers[i].text));
+                double.parse(_controllers[i].text));
       } catch (e) {
         subTotales.add(0);
         ganancias.add(0);
         print("$e: Cantidad debe ser un número");
       }
       //calcular total
-      total += num.parse(subTotales[i].toStringAsFixed(2));
-      ganancia += num.parse(ganancias[i].toStringAsFixed(2));
+      total += double.parse(subTotales[i].toStringAsFixed(2));
+      ganancia += double.parse(ganancias[i].toStringAsFixed(2));
       //llenar lineasProductos
 
       lineasProductos.add([
@@ -595,8 +624,18 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   cargarVentas() async {
     List<Venta> auxVenta = await db().getAllVentas();
 
-    print(auxVenta);
     ventaList = auxVenta;
+  }
+
+  modificarUnidades() async {
+    for (var i = 0; i < lineasProductos.length; i++) {
+      Product product = await db().getProduct(lineasProductos[i][0].id);
+      final newProduct = Product(
+        id: lineasProductos[i][0].id,
+        units: product.units! - int.parse(lineasProductos[i][1]),
+      );
+      db().decreaseUnitsProduct(newProduct);
+    }
   }
 
   confirmarVenta() async {
@@ -608,6 +647,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
           "${lineasProductos[i][0].sale} \$ = " +
           "${lineasProductos[i][2]} \$ \n";
     }
+
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -655,7 +695,8 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                         .toString(), //0 efectivo, 1 pagomovil,  2 biopago, punto de venta
                   );
                   db().insertVenta(_venta);
-
+                  //RESTAR UNIDADES A LOS PRODUCTOS VENDIDOS
+                  modificarUnidades();
                   Navigator.of(context).pop();
                   printMsg('Venta realizada exitosamente!', context);
                   limpiarValores();

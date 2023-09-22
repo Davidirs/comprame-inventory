@@ -4,7 +4,11 @@ import 'package:comprame_inventory/comprame_inventory/ui_view/area_list_view.dar
 import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/workout_view.dart';
 import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/main.dart';
+import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StadisticScreen extends StatefulWidget {
   const StadisticScreen({Key? key, this.animationController}) : super(key: key);
@@ -54,6 +58,7 @@ class _StadisticScreenState extends State<StadisticScreen>
     });
 
     cargarVentas();
+    cargarDolar();
     super.initState();
   }
 
@@ -81,7 +86,7 @@ class _StadisticScreenState extends State<StadisticScreen>
         animationController: widget.animationController!,
       ),
     );
-    listViews.add(
+    /* listViews.add(
       Column(
         children: <Widget>[
           Padding(
@@ -156,12 +161,12 @@ class _StadisticScreenState extends State<StadisticScreen>
                                 right: 16,
                               ),
                               child: Text(
-                                "Hoy: $today \nVentas Totales: $totalToday \nGanancias Totales: $profitToday",
+                                "Hoy: $today \nVentas Totales: ${dolarBs(totalToday.toDouble())} \nGanancias Totales: ${dolarBs(profitToday.toDouble())}",
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontFamily: CompraMeInventoryTheme.fontName,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   letterSpacing: 0.0,
                                   color: CompraMeInventoryTheme.grey
                                       .withOpacity(0.5),
@@ -190,7 +195,7 @@ class _StadisticScreenState extends State<StadisticScreen>
           ),
         ],
       ),
-    );
+    ); */
 
     listViews.add(
       TitleView(
@@ -227,7 +232,6 @@ class _StadisticScreenState extends State<StadisticScreen>
   cargarVentas() async {
     List<Venta> auxVenta = await db().getAllVentas();
 
-    print(auxVenta);
     ventaList = auxVenta;
     calcToday();
   }
@@ -425,12 +429,12 @@ class _StadisticScreenState extends State<StadisticScreen>
                                   right: 16,
                                 ),
                                 child: Text(
-                                  "Hoy: $today \nVentas Totales: ${num.parse(totalToday.toStringAsFixed(2))} \nGanancias Totales: ${num.parse(profitToday.toStringAsFixed(2))}",
+                                  "Hoy: ${DateFormat('dd-MM-yyyy').format(DateTime.parse(today))} \nVentas Totales: ${dolarBs(totalToday.toDouble())} \nGanancias Totales: ${dolarBs(profitToday.toDouble())}",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: CompraMeInventoryTheme.fontName,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     letterSpacing: 0.0,
                                     color: CompraMeInventoryTheme.grey
                                         .withOpacity(0.5),
@@ -487,8 +491,11 @@ class _StadisticScreenState extends State<StadisticScreen>
                 padding:
                     EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 40,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
@@ -503,6 +510,25 @@ class _StadisticScreenState extends State<StadisticScreen>
                         ),
                       ),
                     ),
+                    IconButton(
+                        onPressed: () async {
+                          //cambiar moneda
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          if (await prefs.getBool('dolar') == null) {
+                            await prefs.setBool('dolar', true);
+                          } else {
+                            await prefs.setBool(
+                                'dolar', !prefs.getBool('dolar')!);
+                          }
+                          isDolar = prefs.getBool('dolar')!;
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.price_change_outlined,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
                   ],
                 ),
               )

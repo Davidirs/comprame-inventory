@@ -5,7 +5,11 @@ import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/global.dart'; /* 
 import 'package:comprame_inventory/utils.dart'; */
+import 'package:comprame_inventory/main.dart';
+import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 /* 
 import '../../main.dart'; */
 
@@ -64,6 +68,7 @@ class _SalesScreenState extends State<SalesScreen>
       }
     }); */
     cargarVentas();
+    cargarDolar();
     super.initState();
   }
 
@@ -148,11 +153,16 @@ class _SalesScreenState extends State<SalesScreen>
                     //reverse: true, //posible solucion
                     itemBuilder: (BuildContext context, int index) {
                       widget.animationController?.forward();
-
+                      String formattedDate = DateFormat('dd-MM-yyyy – kk:mm')
+                          .format(DateTime.parse(
+                              ventaList[ventaList.length - 1 - index].fecha!));
                       return Container(
                         margin:
                             EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                        color: CompraMeInventoryTheme.white,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: CompraMeInventoryTheme.white,
+                        ),
                         child: ListTile(
                           leading: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -164,27 +174,22 @@ class _SalesScreenState extends State<SalesScreen>
                               //Text("${ventaList[ventaList.length-index].method}"),
                             ],
                           ),
-                          title: Text(
-                              "${ventaList[ventaList.length - 1 - index].fecha!.substring(0, 16)}",
+                          title: Text(formattedDate,
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.bold)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                      "Ganancia: ${ventaList[ventaList.length - 1 - index].profit} \$ | ",
-                                      style: TextStyle(
-                                        fontSize: 11.0,
-                                      )),
-                                  Text(
-                                      "Total: ${num.parse(ventaList[ventaList.length - 1 - index].total!.toStringAsFixed(2))} \$ ",
-                                      style: TextStyle(
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
+                              Text(
+                                  "Total: ${dolarBs(ventaList[ventaList.length - 1 - index].total!.toDouble())}",
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                  "Ganancia: ${dolarBs(ventaList[ventaList.length - 1 - index].profit!.toDouble())} | ",
+                                  style: TextStyle(
+                                    fontSize: 11.0,
+                                  )),
                               Text(
                                   "${ventaList[ventaList.length - 1 - index].details}",
                                   style: TextStyle(
@@ -246,12 +251,11 @@ class _SalesScreenState extends State<SalesScreen>
                 padding:
                     EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    /* 
-                            SizedBox(
-                              width: 40,
-                            ), */
+                    SizedBox(
+                      width: 40,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
@@ -267,6 +271,25 @@ class _SalesScreenState extends State<SalesScreen>
                         ),
                       ),
                     ),
+                    IconButton(
+                        onPressed: () async {
+                          //cambiar moneda
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          if (await prefs.getBool('dolar') == null) {
+                            await prefs.setBool('dolar', true);
+                          } else {
+                            await prefs.setBool(
+                                'dolar', !prefs.getBool('dolar')!);
+                          }
+                          isDolar = prefs.getBool('dolar')!;
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.price_change_outlined,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
                     /*  Container(
                               decoration: BoxDecoration(
                                 color: CompraMeInventoryTheme.nearlyWhite,

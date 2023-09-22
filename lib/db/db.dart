@@ -15,22 +15,23 @@ class db {
           await getDatabasesPath(), "productsDatabase.db"), //primaryDatabase.db
       onCreate: (db, version) async {
         await db.execute(
-          "CREATE TABLE $_tableName (id INTEGER PRIMARY KEY, name TEXT, units INTEGER, buy REAL, sale REAL, img TEXT, description TEXT)",
+          "CREATE TABLE $_tableName (id INTEGER PRIMARY KEY, name TEXT, units INTEGER, type TEXT, buy REAL, sale REAL, img TEXT, description TEXT)",
         );
         await db.execute(
           "CREATE TABLE $_tableVentas (id INTEGER PRIMARY KEY, fecha TEXT, details TEXT, total REAL, profit REAL, method TEXT)",
         );
       },
 
-      onUpgrade: (db, oldVersion, newVersion) async {
+      /* onUpgrade: (db, oldVersion, newVersion) async {
         // Aquí puedes agregar las sentencias SQL para actualizar la estructura de la tabla.
-        if (oldVersion < 2) {
-          await db.execute("ALTER TABLE $_tableName ADD COLUMN img TEXT");
+        if (oldVersion < 3) {
+          await db.execute(
+              "ALTER TABLE $_tableName ADD COLUMN type TEXT"); /* 
           await db
-              .execute("ALTER TABLE $_tableName ADD COLUMN description TEXT");
+              .execute("ALTER TABLE $_tableName ADD COLUMN description TEXT"); */
         }
-      },
-      version: 2, // Incrementa la versión de la base de datos.
+      }, */
+      version: 3, // Incrementa la versión de la base de datos.
     );
   }
 
@@ -55,6 +56,7 @@ class db {
         id: productsMap[index]['id'],
         name: productsMap[index]['name'],
         units: productsMap[index]['units'],
+        type: productsMap[index]['type'],
         buy: productsMap[index]['buy'],
         sale: productsMap[index]['sale'],
         img: productsMap[index]['img'],
@@ -73,6 +75,7 @@ class db {
           id: product[0]["id"],
           name: product[0]["name"],
           units: product[0]["units"],
+          type: product[0]["type"],
           buy: product[0]["buy"],
           sale: product[0]["sale"],
           img: product[0]["img"],
@@ -86,7 +89,14 @@ class db {
   Future<void> updateProduct(Product product) async {
     Database db = await getDataBase();
     db.rawUpdate(
-        "UPDATE $_tableName SET name ='${product.name}', units ='${product.units}',buy ='${product.buy}',sale ='${product.sale}',img ='${product.img}',description ='${product.description}' WHERE id ='${product.id}'");
+        "UPDATE $_tableName SET name ='${product.name}', units ='${product.units}', type ='${product.type}', buy ='${product.buy}',sale ='${product.sale}',img ='${product.img}',description ='${product.description}' WHERE id ='${product.id}'");
+  }
+
+  //disminuir cantidad
+  Future<void> decreaseUnitsProduct(Product product) async {
+    Database db = await getDataBase();
+    db.rawUpdate(
+        "UPDATE $_tableName SET units ='${product.units}' WHERE id ='${product.id}'");
   }
 
   //delete method
@@ -119,7 +129,6 @@ class db {
     await db.insert(_tableVentas, venta.toMap()).then((value) {
       ventaId = value;
     });
-    print("venta guardada");
     return ventaId;
   }
 
@@ -129,7 +138,6 @@ class db {
     Database db = await getDataBase();
     List<Map<String, dynamic>> ventasMap = await db.query(_tableVentas);
     return List.generate(ventasMap.length, (index) {
-      print("todo bien");
       return Venta(
         id: ventasMap[index]['id'],
         fecha: ventasMap[index]['fecha'],

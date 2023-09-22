@@ -8,6 +8,7 @@ import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/global.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 
@@ -65,6 +66,7 @@ class _InventoryScreenState extends State<InventoryScreen>
       }
     });
     cargarProductos();
+    cargarDolar();
     super.initState();
   }
 
@@ -144,10 +146,16 @@ class _InventoryScreenState extends State<InventoryScreen>
                       return Container(
                         margin:
                             EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                        color: colorUnits(productList[index].units),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorUnits(productList[index].units),
+                        ),
                         child: Dismissible(
                           background: Container(
-                            color: Colors.green,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.green,
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -163,7 +171,10 @@ class _InventoryScreenState extends State<InventoryScreen>
                             ),
                           ),
                           secondaryBackground: Container(
-                            color: Colors.red,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.red,
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -252,8 +263,10 @@ class _InventoryScreenState extends State<InventoryScreen>
                               children: [
                                 Row(
                                   children: [
-                                    Text("${productList[index].buy} \$ - "),
-                                    Text("${productList[index].sale} \$"),
+                                    Text(
+                                        "${dolarBs(productList[index].buy!.toDouble())} - "),
+                                    Text(
+                                        "${dolarBs(productList[index].sale!.toDouble())}"),
                                   ],
                                 ),
                                 Text(
@@ -408,6 +421,25 @@ class _InventoryScreenState extends State<InventoryScreen>
                               ),
                             ), */
                     IconButton(
+                        onPressed: () async {
+                          //cambiar moneda
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          if (await prefs.getBool('dolar') == null) {
+                            await prefs.setBool('dolar', true);
+                          } else {
+                            await prefs.setBool(
+                                'dolar', !prefs.getBool('dolar')!);
+                          }
+                          isDolar = prefs.getBool('dolar')!;
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.price_change_outlined,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
+                    IconButton(
                         onPressed: () {
                           // Process data.
                           cargarProductos();
@@ -442,9 +474,9 @@ class _InventoryScreenState extends State<InventoryScreen>
 
   Color colorUnits(units) {
     if (units < 1) {
-      return Colors.red.withOpacity(.2);
+      return Colors.red.withOpacity(.3);
     } else if (units < 5) {
-      return Colors.yellow.withOpacity(.2);
+      return Colors.yellow.withOpacity(.3);
     }
 
     return CompraMeInventoryTheme.white;

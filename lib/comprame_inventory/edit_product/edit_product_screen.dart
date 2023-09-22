@@ -82,6 +82,7 @@ class _EditProductScreenState extends State<EditProductScreen>
 
     _nameCtrl.text = product.name ?? "";
     _unidCtrl.text = "${product.units ?? 0}";
+    dropdownValue = product.type ?? listType.first;
     _buyCtrl.text = "${product.buy ?? 0}";
     _saleCtrl.text = "${product.sale ?? 0}";
     _descCtrl.text = "Descripción";
@@ -182,6 +183,52 @@ class _EditProductScreenState extends State<EditProductScreen>
                   }
                   return null;
                 },
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Tipo:",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: CompraMeInventoryTheme.fontName,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      letterSpacing: 0.5,
+                      color: CompraMeInventoryTheme.lightText,
+                    ),
+                  ),
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    elevation: 16,
+                    //style: const TextStyle(color: Colors.black),
+                    underline: Container(
+                      height: 2,
+                      color: Color(0xfff15c22),
+                    ),
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dropdownValue = value!;
+                        print(dropdownValue);
+                      });
+                    },
+                    items:
+                        listType.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
             ),
             SizedBox(

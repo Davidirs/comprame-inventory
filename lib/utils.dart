@@ -1,5 +1,6 @@
 //Para imprimir mensaje en el ScackBar
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 printMsg(msg, context) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -22,3 +23,26 @@ printMsg(msg, context) {
     ),
   );
 }
+
+late SharedPreferences prefs;
+bool isDolar = true;
+double dolarvalue = 1;
+
+cargarDolar() async {
+  // Obtain shared preferences.
+  prefs = await SharedPreferences.getInstance();
+  isDolar = await prefs.getBool('dolar')!;
+  dolarvalue = await prefs.getDouble('dolarvalue')!;
+}
+
+String dolarBs(double dolares) {
+  String stringValue = isDolar
+      ? "${dolares.toStringAsFixed(2)} \$"
+      : "${(dolares *= dolarvalue).toStringAsFixed(2)} Bs";
+  //print("$dolares x $dolarvalue = $stringValue");
+  return stringValue;
+}
+
+const List<String> listType = <String>['Uno', 'Dos', 'Tres', 'Cuatro'];
+
+String dropdownValue = listType.first;

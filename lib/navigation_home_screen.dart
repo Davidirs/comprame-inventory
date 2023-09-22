@@ -8,13 +8,13 @@ import 'package:comprame_inventory/home_screen.dart';
 import 'package:comprame_inventory/introduction_animation/introduction_animation_screen.dart';
 import 'package:comprame_inventory/invite_friend_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:comprame_inventory/dolar_bs_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationHomeScreen extends StatefulWidget {
   @override
   _NavigationHomeScreenState createState() => _NavigationHomeScreenState();
 }
-
-bool isLogin = true;
 
 class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
   Widget? screenView;
@@ -24,7 +24,20 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
   void initState() {
     drawerIndex = DrawerIndex.HOME;
     screenView = const MyHomePage();
+    isOnce();
     super.initState();
+  }
+
+  bool isFirst = false;
+  isOnce() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("valor: ${prefs.getBool('isfirst')}");
+
+    if (prefs.getBool('isfirst') == null) {
+      setState(() {
+        isFirst = true;
+      });
+    }
   }
 
   @override
@@ -34,11 +47,14 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
       child: SafeArea(
         top: false,
         bottom: false,
-        child: !isLogin
+        child: isFirst
             ? IntroductionAnimationScreen(
-                isLoginFunction: () {
+                isLoginFunction: () async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool('isfirst', true);
                   setState(() {
-                    isLogin = true;
+                    isFirst = false;
                   });
                 },
               )
@@ -66,6 +82,11 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
         case DrawerIndex.HOME:
           setState(() {
             screenView = const MyHomePage();
+          });
+          break;
+        case DrawerIndex.DolarBS:
+          setState(() {
+            screenView = DolarBsScreen();
           });
           break;
         case DrawerIndex.Help:
