@@ -270,7 +270,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                                   ],
                                 ),
                                 Text(
-                                  "${productList[index].description} \$",
+                                  "${productList[index].description}",
                                 ),
                               ],
                             ),

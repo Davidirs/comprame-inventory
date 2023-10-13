@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,8 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]).then((_) => runApp(MyApp()));
+
+  firebaseInitializeApp();
 }
 
 class MyApp extends StatelessWidget {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -97,9 +98,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
         icon: Icon(Icons.group),
       ),
       DrawerList(
-        index: DrawerIndex.Share,
-        labelName: 'Calificar app',
-        icon: Icon(Icons.share),
+        index: DrawerIndex.DB,
+        labelName: 'Base de datos',
+        icon: Icon(Icons.cloud),
       ),
       DrawerList(
         index: DrawerIndex.About,
@@ -114,6 +115,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
     TextEditingController _controller = TextEditingController();
+    final user = currentUser();
     return Scaffold(
       backgroundColor: AppTheme.notWhite.withOpacity(0.5),
       body: Column(
@@ -239,8 +241,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Column(
             children: <Widget>[
               ListTile(
+                leading: Image.network(user!.photoURL.toString()),
                 title: Text(
-                  'Cerrar sesión',
+                  user.displayName ?? "Anónimos",
+                  maxLines: 2,
                   style: TextStyle(
                     fontFamily: AppTheme.fontName,
                     fontWeight: FontWeight.w600,
@@ -268,8 +272,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   void onTapped() {
-    printMsg("Proximamente inicio de sessión.", context);
+    //printMsg("Proximamente inicio de sessión.", context);
     // Print to console.
+    //signInWithGoogle();
+    //authStateChanges();
+    /* currentUser();
+    print(currentUser()); */
+    /* Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => LoginPage())); */
+    logOut();
   }
 
   Widget inkwell(DrawerList listData) {
@@ -384,7 +395,7 @@ enum DrawerIndex {
   DolarBS,
   Help,
   FeedBack,
-  Share,
+  DB,
   About,
   Invite,
   Testing,

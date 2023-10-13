@@ -105,6 +105,20 @@ class db {
     Database db = await getDataBase();
     db.rawDelete("DELETE FROM $_tableName WHERE id ='$productID'");
   }
+
+  Future<bool> checkIfRecordExists(int id) async {
+    final Database db = await getDataBase();
+
+    final List<Map<String, dynamic>> records = await db.query(
+      _tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    //await db.close();
+
+    return records.isNotEmpty;
+  }
 //####################################################################
 //######################REGISTRO DE VENTAS############################
 //####################################################################

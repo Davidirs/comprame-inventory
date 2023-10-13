@@ -43,6 +43,11 @@ String dolarBs(double dolares) {
   return stringValue;
 }
 
+String inBs(double dolares) {
+  String stringValue = "${(dolares *= dolarvalue).toStringAsFixed(2)} Bs";
+  return stringValue;
+}
+
 const List<String> listType = <String>['Uno', 'Dos', 'Tres', 'Cuatro'];
 
 String dropdownValue = listType.first;

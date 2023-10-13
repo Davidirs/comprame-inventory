@@ -88,7 +88,8 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
       items.add(DropdownMenuItem(
         child: ListTile(
           title: Text("${productList[i].name}"),
-          subtitle: Text("${productList[i].sale} \$"),
+          subtitle: Text(
+              "${productList[i].sale} \$  /  ${inBs(productList[i].sale!.toDouble())}"),
           isThreeLine: true,
           trailing: Column(
             mainAxisAlignment: MainAxisAlignment.center,
