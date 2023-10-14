@@ -61,7 +61,9 @@ addUserToDb() async {
   final user = <String, dynamic>{
     "id": _currentUser!.uid,
     "name": _currentUser.displayName,
-    "email": _currentUser.email
+    "email": _currentUser.email,
+    "phone": _currentUser.phoneNumber,
+    "photo": _currentUser.photoURL
   };
   try {
     db.collection("users").doc(_currentUser.email).set(user);

@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/about_screen.dart';
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/database/database_screen.dart';
