@@ -124,7 +124,14 @@ class _DatabasePageState extends State<DatabasePage> {
     for (var i = 0; i < allProducts.length; i++) {
       addProductToDb(allProducts[i]);
       if (i == allProducts.length - 1) {
-        printMsg("Base de datos subida exitosamente", context);
+        printMsg("Productos subidos exitosamente", context);
+      }
+    }
+    List allSales = await db().getAllVentas();
+    for (var i = 0; i < allSales.length; i++) {
+      addSaleToDb(allSales[i]);
+      if (i == allSales.length - 1) {
+        printMsg("Ventas subidas exitosamente", context);
       }
     }
   }

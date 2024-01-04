@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_return_type_for_catch_error
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -74,27 +75,31 @@ addUserToDb() async {
       print(' DocumentSnapshot added with ID: ${doc.id}')); */
 }
 
-addProductToDb(Product p) async {
+addProductToDb(Product producto) async {
   final _currentUser = currentUser();
   final db = FirebaseFirestore.instance;
-/* 
-  final docData = {
-    "id": p.id,
-    "name": p.name,
-    "units": p.units,
-    "type": p.type,
-    "buy": p.buy,
-    "sale": p.sale,
-    "img": p.img,
-    "description": p.description
-  }; */
 
   db
       .collection("users")
       .doc(_currentUser!.email)
       .collection("products")
-      .doc(p.id.toString())
-      .set(p.toMap())
+      .doc(producto.id.toString())
+      .set(producto.toMap())
+      .onError((e, _) => print("Error writing document: $e"));
+  print("object added");
+}
+
+//*********************PENDIENTE*************** */
+addSaleToDb(Venta venta) async {
+  final _currentUser = currentUser();
+  final db = FirebaseFirestore.instance;
+
+  db
+      .collection("users")
+      .doc(_currentUser!.email)
+      .collection("sales")
+      .doc(venta.id.toString())
+      .set(venta.toMap())
       .onError((e, _) => print("Error writing document: $e"));
   print("object added");
 }
@@ -102,16 +107,28 @@ addProductToDb(Product p) async {
 readProductFromDb(context) {
   final _currentUser = currentUser();
   final db = FirebaseFirestore.instance;
-  final docRef =
+  final docRefProduct =
       db.collection("users").doc(_currentUser!.email).collection("products");
-  docRef.get().then((QuerySnapshot<Map<String, dynamic>> snapshot) {
+  docRefProduct.get().then((QuerySnapshot<Map<String, dynamic>> snapshot) {
     snapshot.docs.forEach((DocumentSnapshot doc) {
       final data = doc.data() as Map<String, dynamic>;
 
       updateProduct(data);
     });
 
-    printMsg("Base de datos actualizada", context);
+    printMsg("Productos actualizados", context);
+  }).catchError((e) => print("Error al obtener el documento: $e"));
+
+  final docRefSale =
+      db.collection("users").doc(_currentUser!.email).collection("sales");
+  docRefSale.get().then((QuerySnapshot<Map<String, dynamic>> snapshot) {
+    snapshot.docs.forEach((DocumentSnapshot doc) {
+      final data = doc.data() as Map<String, dynamic>;
+
+      updateSale(data);
+    });
+
+    printMsg("Ventas actualizadas", context);
   }).catchError((e) => print("Error al obtener el documento: $e"));
 }
 
@@ -126,9 +143,27 @@ updateProduct(data) async {
     img: data["img"],
     description: data["description"],
   );
-  bool exist = await db().checkIfRecordExists(data["id"]);
+  bool exist = await db().checkIfProductExists(data["id"]);
   try {
     exist ? db().updateProduct(product) : db().insertProduct(product);
+  } catch (e) {
+    print("Error al actualizar el producto ${data["id"]}: $e");
+  }
+}
+
+updateSale(data) async {
+  final venta = Venta(
+    id: data["id"],
+    fecha: data["fecha"],
+    details: data["details"],
+    total: data["total"],
+    profit: data["profit"],
+    method: data["method"],
+    vendor: data["vendor"],
+  );
+  bool exist = await db().checkIfSaleExists(data["id"]);
+  try {
+    exist ? db().updateVenta(venta) : db().insertVenta(venta);
   } catch (e) {
     print("Error al actualizar el producto ${data["id"]}: $e");
   }

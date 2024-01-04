@@ -168,10 +168,12 @@ class _SalesScreenState extends State<SalesScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              Text("#${ventaList.length - index}",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
                               Text(
-                                  "#${ventaList[ventaList.length - 1 - index].id}"),
-
-                              //Text("${ventaList[ventaList.length-index].method}"),
+                                  "${ventaList[ventaList.length - 1 - index].vendor}"),
                             ],
                           ),
                           title: Text(formattedDate,
@@ -271,6 +273,21 @@ class _SalesScreenState extends State<SalesScreen>
                         ),
                       ),
                     ),
+                    IconButton(
+                        onPressed: () {
+                          db().deleteVenta(ventaList[ventaList.length - 1].id!);
+                          cargarVentas();
+                          setState(() {
+                            print(
+                              "Venta num ${ventaList.length - 1} borrado exitosamente",
+                            );
+                          });
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: HexColor("#ff6600"),
+                          size: 30,
+                        )),
                     IconButton(
                         onPressed: () async {
                           //cambiar moneda

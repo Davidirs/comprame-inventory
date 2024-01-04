@@ -74,6 +74,7 @@ class _EditProductScreenState extends State<EditProductScreen>
   final _buyCtrl = TextEditingController();
   final _saleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
+  //String dropdownValue = listType[0];
   late Product product;
   cargarProductos() async {
     Product auxProduct = await db().getProduct(widget.idProduct);
@@ -82,10 +83,10 @@ class _EditProductScreenState extends State<EditProductScreen>
 
     _nameCtrl.text = product.name ?? "";
     _unidCtrl.text = "${product.units ?? 0}";
-    dropdownValue = product.type ?? listType.first;
+    dropdownValue = "${product.type}"; //product.type ?? listType.first;
     _buyCtrl.text = "${product.buy ?? 0}";
     _saleCtrl.text = "${product.sale ?? 0}";
-    _descCtrl.text = "Descripción";
+    _descCtrl.text = "${product.description ?? 0}";
 
     print(product.units);
   }
@@ -103,7 +104,7 @@ class _EditProductScreenState extends State<EditProductScreen>
       imageProductPath = pickedFile.path;
     } else {
       imageProductPath = null;
-      printMsg("No se seleccionó ninguna imagen.", context);
+      printMsg("No se seleccionó ninguna imagen.", context, true);
     }
     setState(() {});
   }
@@ -217,7 +218,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                       // This is called when the user selects an item.
                       setState(() {
                         dropdownValue = value!;
-                        print(dropdownValue);
+                        print("Value" + dropdownValue);
                       });
                     },
                     items:
@@ -368,6 +369,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                               id: widget.idProduct,
                               name: _nameCtrl.text,
                               units: int.parse(_unidCtrl.text),
+                              type: dropdownValue,
                               buy: num.parse(_buyCtrl.text),
                               sale: num.parse(_saleCtrl.text),
                               img: imageProductPath,

@@ -56,27 +56,47 @@ class _BottomBarViewState extends State<BottomBarView>
                       height: 62,
                       child: Padding(
                         padding:
-                            const EdgeInsets.only(left: 8, right: 8, top: 4),
+                            const EdgeInsets.only(left: 8, right: 8, top: 0),
                         child: Row(
                           children: <Widget>[
                             Expanded(
-                              child: TabIcons(
-                                  tabIconData: widget.tabIconsList?[0],
-                                  removeAllSelect: () {
-                                    setRemoveAllSelection(
-                                        widget.tabIconsList?[0]);
-                                    widget.changeIndex!(0);
-                                  }),
-                            ),
+                                child: Column(
+                              children: [
+                                Container(
+                                  height: 48,
+                                  child: TabIcons(
+                                      tabIconData: widget.tabIconsList?[0],
+                                      removeAllSelect: () {
+                                        setRemoveAllSelection(
+                                            widget.tabIconsList?[0]);
+                                        widget.changeIndex!(0);
+                                      }),
+                                ),
+                                Text(
+                                  "Inventario",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            )),
                             Expanded(
-                              child: TabIcons(
-                                  tabIconData: widget.tabIconsList?[1],
-                                  removeAllSelect: () {
-                                    setRemoveAllSelection(
-                                        widget.tabIconsList?[1]);
-                                    widget.changeIndex!(1);
-                                  }),
-                            ),
+                                child: Column(
+                              children: [
+                                Container(
+                                  height: 48,
+                                  child: TabIcons(
+                                      tabIconData: widget.tabIconsList?[1],
+                                      removeAllSelect: () {
+                                        setRemoveAllSelection(
+                                            widget.tabIconsList?[1]);
+                                        widget.changeIndex!(1);
+                                      }),
+                                ),
+                                Text(
+                                  "Registro",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            )),
                             SizedBox(
                               width: Tween<double>(begin: 0.0, end: 1.0)
                                       .animate(CurvedAnimation(
@@ -86,30 +106,50 @@ class _BottomBarViewState extends State<BottomBarView>
                                   64.0,
                             ),
                             Expanded(
-                              child: TabIcons(
-                                  tabIconData: widget.tabIconsList?[2],
-                                  removeAllSelect: () {
-                                    setRemoveAllSelection(
-                                        widget.tabIconsList?[2]);
-                                    widget.changeIndex!(2);
-                                  }),
-                            ),
+                                child: Column(
+                              children: [
+                                Container(
+                                  height: 48,
+                                  child: TabIcons(
+                                      tabIconData: widget.tabIconsList?[2],
+                                      removeAllSelect: () {
+                                        setRemoveAllSelection(
+                                            widget.tabIconsList?[2]);
+                                        widget.changeIndex!(2);
+                                      }),
+                                ),
+                                Text(
+                                  "Estadística",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            )),
                             Expanded(
-                              child: TabIcons(
-                                  tabIconData: widget.tabIconsList?[3],
-                                  removeAllSelect: () {
-                                    setRemoveAllSelection(
-                                        widget.tabIconsList?[3]);
-                                    widget.changeIndex!(3);
-                                  }),
-                            ),
+                                child: Column(
+                              children: [
+                                Container(
+                                  height: 48,
+                                  child: TabIcons(
+                                      tabIconData: widget.tabIconsList?[3],
+                                      removeAllSelect: () {
+                                        setRemoveAllSelection(
+                                            widget.tabIconsList?[3]);
+                                        widget.changeIndex!(3);
+                                      }),
+                                ),
+                                Text(
+                                  "Vender",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            )),
                           ],
                         ),
                       ),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).padding.bottom,
-                    )
+                    ),
                   ],
                 ),
               ),

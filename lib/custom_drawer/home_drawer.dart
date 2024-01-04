@@ -29,22 +29,22 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   void initState() {
     setDrawerListArray();
-    cargarSharedPreferences();
+    cargarUsuario();
     super.initState();
   }
 
-  var imageProductPath = null;
+  //var imageProductPath = null;
 
   bool isEditing = false;
-  var name = null;
+  //String? name = "";
 
-  cargarSharedPreferences() async {
+  /* cargarSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     imageProductPath = await prefs.getString('imageBusiness');
     name = await prefs.getString('nameText');
     print("Imagen path: $imageProductPath");
     setState(() {});
-  }
+  } */
 
   guardarTexto(String nameText) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -61,10 +61,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
       // Aquí puedes manejar la imagen seleccionada
       // En este ejemplo, solo mostraremos la ruta de la imagen
       print(pickedFile.path);
-      imageProductPath = pickedFile.path;
+      imgUser = pickedFile.path;
       await prefs.setString('imageBusiness', pickedFile.path);
     } else {
-      printMsg("No se seleccionó ninguna imagen.", context);
+      printMsg("No se seleccionó ninguna imagen.", context, true);
     }
     setState(() {});
   }
@@ -81,7 +81,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         labelName: 'Dolar - Bs',
         icon: Icon(Icons.attach_money),
       ),
-      DrawerList(
+      /*  DrawerList(
         index: DrawerIndex.Help,
         labelName: 'Soporte',
         isAssetsImage: true,
@@ -91,7 +91,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         index: DrawerIndex.FeedBack,
         labelName: 'Coméntanos',
         icon: Icon(Icons.help),
-      ),
+      ), */
       DrawerList(
         index: DrawerIndex.Invite,
         labelName: 'Invita amigos',
@@ -164,10 +164,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(10.0)),
-                                child: imageProductPath == null
+                                child: imgUser == null
                                     ? Image.asset('assets/images/userImage.png')
-                                    : Image.file(
-                                        File(imageProductPath.toString())),
+                                    : Image.file(File(imgUser.toString())),
                               ),
                             ),
                           ),
@@ -186,11 +185,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   controller: _controller,
                                   maxLines: 2,
                                   onChanged: (value) {
-                                    name = value;
+                                    nameUser = value;
                                   },
                                 )
                               : Text(
-                                  name == null ? 'Usuario o negocio' : name,
+                                  nameUser == null
+                                      ? 'Usuario o negocio'
+                                      : nameUser.toString(),
                                   maxLines: 2,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -204,9 +205,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         IconButton(
                             onPressed: () {
                               setState(() {
-                                _controller.text = name;
+                                _controller.text = nameUser.toString();
                                 isEditing = !isEditing;
-                                guardarTexto(name);
+                                guardarTexto(nameUser.toString());
                               });
                             },
                             icon: Icon(Icons.edit)),
@@ -216,9 +217,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ],
               ),
             ),
-          ),
-          const SizedBox(
-            height: 4,
           ),
           Divider(
             height: 1,
@@ -280,7 +278,38 @@ class _HomeDrawerState extends State<HomeDrawer> {
     print(currentUser()); */
     /* Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => LoginPage())); */
-    logOut();
+
+    confirmarLogOut();
+    //logOut();
+  }
+
+  confirmarLogOut() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("¿Estás seguro que quieres Salir?"),
+          /* content: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Deberás iniciar sesión con las mismas credenciales para continuar."),
+            ],
+          ), */
+          //"¿Estás seguro que quieres eliminar?, esta acción no la puedes deshacer."),
+          actions: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  logOut();
+                },
+                child: const Text("CERRAR SESIÓN")),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("CANCELAR"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget inkwell(DrawerList listData) {

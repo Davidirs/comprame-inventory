@@ -32,31 +32,10 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
             parent: widget.animationController!,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
 
-    scrollController.addListener(() {
-      if (scrollController.offset >= 24) {
-        if (topBarOpacity != 1.0) {
-          setState(() {
-            topBarOpacity = 1.0;
-          });
-        }
-      } else if (scrollController.offset <= 24 &&
-          scrollController.offset >= 0) {
-        if (topBarOpacity != scrollController.offset / 24) {
-          setState(() {
-            topBarOpacity = scrollController.offset / 24;
-          });
-        }
-      } else if (scrollController.offset <= 0) {
-        if (topBarOpacity != 0.0) {
-          setState(() {
-            topBarOpacity = 0.0;
-          });
-        }
-      }
-    });
     cargarProductos();
 
     cargarDolar();
+    cargarUsuario();
 
     super.initState();
   }
@@ -144,7 +123,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                 selectedItems: sItems,
                 hint: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Text("Burcar producto"),
+                  child: Text("Buscar producto"),
                 ),
                 searchHint: "Nombre del producto",
                 onChanged: (value) {
@@ -250,70 +229,108 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     //Text("Efectivo"),
-                    Container(
-                        height: 30,
-                        width: 30,
-                        child: Image.asset("assets/img/cash.png")),
-                    Checkbox(
-                      checkColor: Colors.white,
-                      value: isCash,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          method = 0;
-                          CambiarCheckBock();
-                        });
-                      },
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                                height: 30,
+                                width: 30,
+                                child: Image.asset("assets/img/cash.png")),
+                            Checkbox(
+                              checkColor: Colors.white,
+                              value: isCash,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  method = 0;
+                                  CambiarCheckBock();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Text("Efectivo")
+                      ],
                     ),
+
                     //Text("Pagomovil"),
-                    Container(
-                        height: 30,
-                        width: 30,
-                        child: Image.asset("assets/img/movil.png")),
-                    Checkbox(
-                      checkColor: Colors.white,
-                      value: isMovil,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          method = 1;
-                          CambiarCheckBock();
-                        });
-                      },
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                                height: 30,
+                                width: 30,
+                                child: Image.asset("assets/img/movil.png")),
+                            Checkbox(
+                              checkColor: Colors.white,
+                              value: isMovil,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  method = 1;
+                                  CambiarCheckBock();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Text("PagoMovil")
+                      ],
                     ),
                     //Text("Biopago"),
-                    Container(
-                        height: 30,
-                        width: 30,
-                        child: Image.asset("assets/img/any.png")),
-                    Checkbox(
-                      checkColor: Colors.white,
-                      value: isAny,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          method = 2;
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                                height: 30,
+                                width: 30,
+                                child: Image.asset("assets/img/any.png")),
+                            Checkbox(
+                              checkColor: Colors.white,
+                              value: isAny,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  method = 2;
 
-                          CambiarCheckBock();
-                        });
-                      },
+                                  CambiarCheckBock();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Text("Biopago")
+                      ],
                     ),
                     //Text("Tarjeta"),
-                    Container(
-                        height: 30,
-                        width: 30,
-                        child: Image.asset("assets/img/card.png")),
-                    Checkbox(
-                      checkColor: Colors.white,
-                      value: isCard,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          method = 3;
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                                height: 30,
+                                width: 30,
+                                child: Image.asset("assets/img/card.png")),
+                            Checkbox(
+                              checkColor: Colors.white,
+                              value: isCard,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  method = 3;
 
-                          CambiarCheckBock();
-                        });
-                      },
+                                  CambiarCheckBock();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Text("Tarjeta")
+                      ],
                     ),
                   ],
                 ),
               ),
+              Divider(),
               TitleView(
                 titleTxt: 'Lista de productos',
                 subTxt: 'Total: ${dolarBs(total.toDouble())}',
@@ -521,7 +538,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                               }
                               vacios || sItems.length == 0
                                   ? printMsg("Requiere productos y cantidades",
-                                      context)
+                                      context, true)
                                   : confirmarVenta();
                             },
                             icon: Icon(
@@ -684,22 +701,21 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
           actions: <Widget>[
             ElevatedButton(
                 onPressed: () {
-                  print("${lineasProductos.length} index en lineasProductos");
-
                   final _venta = Venta(
-                    id: ventaList.length == 0 ? 0 : ventaList.last.id! + 1,
+                    id: timeToID(), //ventaList.length == 0 ? 0 : ventaList.last.id! + 1,
                     fecha: DateTime.now().toString(),
                     details: detalles,
                     total: num.parse(total.toStringAsFixed(2)),
                     profit: num.parse(ganancia.toStringAsFixed(2)),
                     method: method
                         .toString(), //0 efectivo, 1 pagomovil,  2 biopago, punto de venta
+                    vendor: nameUser,
                   );
                   db().insertVenta(_venta);
                   //RESTAR UNIDADES A LOS PRODUCTOS VENDIDOS
                   modificarUnidades();
-                  Navigator.of(context).pop();
                   printMsg('Venta realizada exitosamente!', context);
+                  Navigator.of(context).pop();
                   limpiarValores();
                 },
                 child: const Text("VENDER")),
@@ -754,7 +770,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
         ruta = "assets/img/any.png";
         break;
       default:
-        ruta = "assets/img/card.png";
+        ruta = "assets/img/cash.png";
     }
     return Image.asset(ruta);
   }

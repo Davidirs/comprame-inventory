@@ -98,7 +98,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                               print("${prefs.getDouble('dolarvalue')}");
                             } catch (e) {
                               print(e);
-                              printMsg("Precio Invalido", context);
+                              printMsg("Precio Invalido", context, true);
                             }
                           },
                           child: Center(

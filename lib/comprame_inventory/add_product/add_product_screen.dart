@@ -106,7 +106,7 @@ class _AddProductScreenState extends State<AddProductScreen>
       print(pickedFile.path);
       imageProductPath = pickedFile.path;
     } else {
-      printMsg("No se seleccionó ninguna imagen.", context);
+      printMsg("No se seleccionó ninguna imagen.", context, true);
     }
     setState(() {});
   }

@@ -43,6 +43,7 @@ class TitleView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    //***** texto al lado */
                     InkWell(
                       highlightColor: Colors.transparent,
                       borderRadius: BorderRadius.all(Radius.circular(4.0)),

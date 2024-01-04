@@ -1,4 +1,6 @@
 import 'package:comprame_inventory/app_theme.dart';
+import 'package:comprame_inventory/utils.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 
 class InviteFriend extends StatefulWidget {
@@ -74,9 +76,16 @@ class _InviteFriendState extends State<InviteFriend> {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () {
+                          onTap: () async {
                             //method here for functionality
-                            print('Share Action.');
+                            final result = await Share.shareWithResult(
+                                '👋 Estoy usando Comprame Inventory para administrar mi negocio 😉 y quiero compartirla contigo, descargala desde ✅ http://bit.ly/ComprameInventory, las demás actualizaciones estarán disponible en en el mismo link. 👍',
+                                subject: '¡La mejor APP de Inventario!');
+
+                            if (result.status == ShareResultStatus.success) {
+                              printMsg('¡Gracias por compartir nuestra APP!',
+                                  context);
+                            }
                           },
                           child: Center(
                             child: Row(
