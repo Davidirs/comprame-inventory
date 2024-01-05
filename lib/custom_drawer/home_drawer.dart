@@ -117,7 +117,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     TextEditingController _controller = TextEditingController();
     final user = currentUser();
     return Scaffold(
-      backgroundColor: AppTheme.notWhite.withOpacity(0.5),
+      backgroundColor: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -203,14 +203,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                 ),
                         ),
                         IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _controller.text = nameUser.toString();
-                                isEditing = !isEditing;
-                                guardarTexto(nameUser.toString());
-                              });
-                            },
-                            icon: Icon(Icons.edit)),
+                          onPressed: () {
+                            setState(() {
+                              _controller.text = nameUser.toString();
+                              isEditing = !isEditing;
+                              guardarTexto(nameUser.toString());
+                            });
+                          },
+                          icon: Icon(Icons.edit),
+                          color: AppTheme.primary,
+                        ),
                       ],
                     ),
                   ),
@@ -228,7 +230,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               padding: const EdgeInsets.all(0.0),
               itemCount: drawerList?.length,
               itemBuilder: (BuildContext context, int index) {
-                return inkwell(drawerList![index]);
+                return inkwell(drawerList![index], isLightMode);
               },
             ),
           ),
@@ -247,7 +249,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     fontFamily: AppTheme.fontName,
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    color: AppTheme.darkText,
+                    color: isLightMode ? AppTheme.darkText : AppTheme.white,
                   ),
                   textAlign: TextAlign.left,
                 ),
@@ -312,7 +314,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     );
   }
 
-  Widget inkwell(DrawerList listData) {
+  Widget inkwell(DrawerList listData, bool isLightMode) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -357,7 +359,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       : Icon(listData.icon?.icon,
                           color: widget.screenIndex == listData.index
                               ? CompraMeInventoryTheme.nearlyDarkBlue
-                              : AppTheme.nearlyBlack),
+                              : isLightMode
+                                  ? AppTheme.nearlyBlack
+                                  : AppTheme.nearlyWhite),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
@@ -367,8 +371,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
                       color: widget.screenIndex == listData.index
-                          ? Colors.black
-                          : AppTheme.nearlyBlack,
+                          ? isLightMode
+                              ? Colors.black
+                              : Colors.white
+                          : isLightMode
+                              ? AppTheme.nearlyBlack
+                              : AppTheme.nearlyWhite,
                     ),
                     textAlign: TextAlign.left,
                   ),

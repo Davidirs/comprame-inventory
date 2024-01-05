@@ -59,7 +59,7 @@ String inBs(double dolares) {
 
 const List<String> listType = <String>['Uno', 'Dos', 'Tres', 'Cuatro'];
 
-String dropdownValue = listType[0];
+//String dropdownValue = listType[0];
 
 int timeToID() {
   //convertir la hora actual a string = 2024-01-03 18:42:42.918227

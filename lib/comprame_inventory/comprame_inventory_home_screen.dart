@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/add_product/add_product_screen.dart';
 import 'package:comprame_inventory/comprame_inventory/sales/sales_screen.dart';
 import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
@@ -5,7 +6,6 @@ import 'package:comprame_inventory/comprame_inventory/sale/sale.dart';
 import 'package:comprame_inventory/comprame_inventory/stadistic/stadistic_screen.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
-import 'comprame_inventory_theme.dart';
 import 'inventory/inventory_screen.dart';
 import 'dart:async';
 
@@ -16,7 +16,7 @@ class CompraMeInventoryHomeScreen extends StatefulWidget {
 }
 
 Widget tabBody = Container(
-  color: CompraMeInventoryTheme.background,
+  color: AppTheme.background,
 );
 
 AnimationController? animationController;
@@ -46,8 +46,10 @@ class _CompraMeInventoryHomeScreenState
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: FutureBuilder<bool>(

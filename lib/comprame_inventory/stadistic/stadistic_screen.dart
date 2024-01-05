@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/area_list_view.dart';
@@ -20,42 +21,19 @@ class StadisticScreen extends StatefulWidget {
 
 class _StadisticScreenState extends State<StadisticScreen>
     with TickerProviderStateMixin {
-  Animation<double>? topBarAnimation;
+  // Animation<double>? topBarAnimation;
 
   List<Widget> listViews = <Widget>[];
-  final ScrollController scrollController = ScrollController();
-  double topBarOpacity = 0.0;
+  //final ScrollController scrollController = ScrollController();
+  //double topBarOpacity = 0.0;
 
   @override
   void initState() {
-    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    /* topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController!,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-    addAllListData();
-
-    scrollController.addListener(() {
-      if (scrollController.offset >= 24) {
-        if (topBarOpacity != 1.0) {
-          setState(() {
-            topBarOpacity = 1.0;
-          });
-        }
-      } else if (scrollController.offset <= 24 &&
-          scrollController.offset >= 0) {
-        if (topBarOpacity != scrollController.offset / 24) {
-          setState(() {
-            topBarOpacity = scrollController.offset / 24;
-          });
-        }
-      } else if (scrollController.offset <= 0) {
-        if (topBarOpacity != 0.0) {
-          setState(() {
-            topBarOpacity = 0.0;
-          });
-        }
-      }
-    });
+     */ //addAllListData();
 
     cargarVentas();
     cargarDolar();
@@ -69,11 +47,6 @@ class _StadisticScreenState extends State<StadisticScreen>
       TitleView(
         titleTxt: 'Tu tienes el control',
         subTxt: 'Detalles',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
       ),
     );
 
@@ -201,11 +174,6 @@ class _StadisticScreenState extends State<StadisticScreen>
       TitleView(
         titleTxt: 'Mejores números',
         subTxt: 'más',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
       ),
     );
 
@@ -238,8 +206,10 @@ class _StadisticScreenState extends State<StadisticScreen>
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -291,7 +261,11 @@ class _StadisticScreenState extends State<StadisticScreen>
         bottom: 62 + MediaQuery.of(context).padding.bottom,
       ),
       children: [
-        Container(
+        TitleView(
+          titleTxt: 'Tu tienes el control',
+          subTxt: 'Detalles',
+        ),
+        /*  Container(
           child: Padding(
             padding: const EdgeInsets.only(left: 24, right: 24, bottom: 20),
             child: Row(
@@ -345,6 +319,7 @@ class _StadisticScreenState extends State<StadisticScreen>
             ),
           ),
         ),
+         */
         Column(
           children: <Widget>[
             WorkoutView(
@@ -466,11 +441,13 @@ class _StadisticScreenState extends State<StadisticScreen>
   }
 
   Widget getAppBarUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: CompraMeInventoryTheme.white,
+            color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(32.0),
               bottomRight: Radius.circular(32.0),
@@ -506,7 +483,8 @@ class _StadisticScreenState extends State<StadisticScreen>
                           fontWeight: FontWeight.w700,
                           fontSize: 26,
                           letterSpacing: 1.2,
-                          color: CompraMeInventoryTheme.darkerText,
+                          color:
+                              isLightMode ? AppTheme.darkText : AppTheme.white,
                         ),
                       ),
                     ),

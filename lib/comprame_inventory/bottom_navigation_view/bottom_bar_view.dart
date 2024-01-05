@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/add_product/add_product_screen.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
@@ -32,6 +33,8 @@ class _BottomBarViewState extends State<BottomBarView>
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: <Widget>[
@@ -41,7 +44,7 @@ class _BottomBarViewState extends State<BottomBarView>
             return Transform(
               transform: Matrix4.translationValues(0.0, 0.0, 0.0),
               child: PhysicalShape(
-                color: CompraMeInventoryTheme.white,
+                color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
                 elevation: 16.0,
                 clipper: TabClipper(
                     radius: Tween<double>(begin: 0.0, end: 1.0)
@@ -50,6 +53,7 @@ class _BottomBarViewState extends State<BottomBarView>
                                 curve: Curves.fastOutSlowIn))
                             .value *
                         38.0),
+                shadowColor: Colors.white,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -74,7 +78,12 @@ class _BottomBarViewState extends State<BottomBarView>
                                 ),
                                 Text(
                                   "Inventario",
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isLightMode
+                                        ? AppTheme.darkText
+                                        : AppTheme.white,
+                                  ),
                                 ),
                               ],
                             )),
@@ -93,7 +102,12 @@ class _BottomBarViewState extends State<BottomBarView>
                                 ),
                                 Text(
                                   "Registro",
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isLightMode
+                                        ? AppTheme.darkText
+                                        : AppTheme.white,
+                                  ),
                                 ),
                               ],
                             )),
@@ -120,7 +134,12 @@ class _BottomBarViewState extends State<BottomBarView>
                                 ),
                                 Text(
                                   "Estadística",
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isLightMode
+                                        ? AppTheme.darkText
+                                        : AppTheme.white,
+                                  ),
                                 ),
                               ],
                             )),
@@ -139,7 +158,12 @@ class _BottomBarViewState extends State<BottomBarView>
                                 ),
                                 Text(
                                   "Vender",
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isLightMode
+                                        ? AppTheme.darkText
+                                        : AppTheme.white,
+                                  ),
                                 ),
                               ],
                             )),

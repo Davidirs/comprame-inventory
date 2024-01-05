@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
@@ -87,8 +88,10 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -104,6 +107,8 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   Widget getMainListViewUI() {
     widget.animationController?.forward();
 
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Stack(
       children: [
         Container(
@@ -123,7 +128,10 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                 selectedItems: sItems,
                 hint: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Text("Buscar producto"),
+                  child: Text("Buscar producto",
+                      style: TextStyle(
+                        color: isLightMode ? AppTheme.darkText : AppTheme.white,
+                      )),
                 ),
                 searchHint: "Nombre del producto",
                 onChanged: (value) {
@@ -152,7 +160,9 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                   return Text(
                     "${get(item).name} - ${get(item).sale} \$ - ${get(item).units} uds.",
                     style: TextStyle(
-                      color: CompraMeInventoryTheme.darkText,
+                      color: isLightMode
+                          ? AppTheme.darkText
+                          : AppTheme.nearlyWhite,
                     ),
                   );
                 },
@@ -238,6 +248,9 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                 width: 30,
                                 child: Image.asset("assets/img/cash.png")),
                             Checkbox(
+                              activeColor: AppTheme.primary,
+                              fillColor:
+                                  MaterialStateProperty.all(AppTheme.primary),
                               checkColor: Colors.white,
                               value: isCash,
                               onChanged: (bool? value) {
@@ -249,7 +262,12 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        Text("Efectivo")
+                        Text("Efectivo",
+                            style: TextStyle(
+                              color: isLightMode
+                                  ? AppTheme.lightText
+                                  : AppTheme.white,
+                            ))
                       ],
                     ),
 
@@ -264,6 +282,8 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                 child: Image.asset("assets/img/movil.png")),
                             Checkbox(
                               checkColor: Colors.white,
+                              fillColor:
+                                  MaterialStateProperty.all(AppTheme.primary),
                               value: isMovil,
                               onChanged: (bool? value) {
                                 setState(() {
@@ -274,7 +294,12 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        Text("PagoMovil")
+                        Text("PagoMovil",
+                            style: TextStyle(
+                              color: isLightMode
+                                  ? AppTheme.lightText
+                                  : AppTheme.white,
+                            ))
                       ],
                     ),
                     //Text("Biopago"),
@@ -288,6 +313,8 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                 child: Image.asset("assets/img/any.png")),
                             Checkbox(
                               checkColor: Colors.white,
+                              fillColor:
+                                  MaterialStateProperty.all(AppTheme.primary),
                               value: isAny,
                               onChanged: (bool? value) {
                                 setState(() {
@@ -299,7 +326,12 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        Text("Biopago")
+                        Text("Biopago",
+                            style: TextStyle(
+                              color: isLightMode
+                                  ? AppTheme.lightText
+                                  : AppTheme.white,
+                            ))
                       ],
                     ),
                     //Text("Tarjeta"),
@@ -313,6 +345,8 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                 child: Image.asset("assets/img/card.png")),
                             Checkbox(
                               checkColor: Colors.white,
+                              fillColor:
+                                  MaterialStateProperty.all(AppTheme.primary),
                               value: isCard,
                               onChanged: (bool? value) {
                                 setState(() {
@@ -324,7 +358,12 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        Text("Tarjeta")
+                        Text("Tarjeta",
+                            style: TextStyle(
+                              color: isLightMode
+                                  ? AppTheme.lightText
+                                  : AppTheme.white,
+                            ))
                       ],
                     ),
                   ],
@@ -334,12 +373,6 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
               TitleView(
                 titleTxt: 'Lista de productos',
                 subTxt: 'Total: ${dolarBs(total.toDouble())}',
-                animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                        parent: widget.animationController!,
-                        curve: Interval((1 / 5) * 0, 1.0,
-                            curve: Curves.fastOutSlowIn))),
-                animationController: widget.animationController!,
               ),
             ],
           ),
@@ -383,14 +416,33 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                     Text(
                                       "${productList[sItems[index]].name}",
                                       textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: isLightMode
+                                            ? AppTheme.darkText
+                                            : AppTheme.nearlyWhite,
+                                      ),
                                     ),
-                                    Text(dolarBs(productList[sItems[index]]
-                                        .sale!
-                                        .toDouble())),
+                                    Text(
+                                      dolarBs(productList[sItems[index]]
+                                          .sale!
+                                          .toDouble()),
+                                      style: TextStyle(
+                                        color: isLightMode
+                                            ? AppTheme.darkText
+                                            : AppTheme.nearlyWhite,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
-                              Text("X"),
+                              Text(
+                                "X",
+                                style: TextStyle(
+                                  color: isLightMode
+                                      ? AppTheme.darkText
+                                      : AppTheme.nearlyWhite,
+                                ),
+                              ),
                               SizedBox(
                                 width: 10,
                               ),
@@ -421,8 +473,12 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                         : dolarBs(subTotales[index].toDouble()),
                                     //"${subtotal(index)} \$",
                                     textAlign: TextAlign.right,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: isLightMode
+                                          ? AppTheme.darkText
+                                          : AppTheme.nearlyWhite,
+                                    ),
                                   )),
                             ],
                           ),
@@ -442,11 +498,13 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
 
 // header
   Widget getAppBarUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: CompraMeInventoryTheme.white,
+            color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(32.0),
               bottomRight: Radius.circular(32.0),
@@ -502,7 +560,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                         fontWeight: FontWeight.w700,
                         fontSize: 26,
                         letterSpacing: 1.2,
-                        color: CompraMeInventoryTheme.darkerText,
+                        color: isLightMode ? AppTheme.darkText : AppTheme.white,
                       ),
                     ),
                     Row(
@@ -571,6 +629,10 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
     return _producto;
   }
 
+  Color getColor(Set<MaterialState> states) {
+    return AppTheme.primary;
+  }
+
 /* 
   String subtotal(i) {
     num _subtotal =
@@ -631,8 +693,15 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   }
 
   noProduct() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Center(
-      child: Text("¡No se han seleccionado productos!"),
+      child: Text(
+        "¡No se han seleccionado productos!",
+        style: TextStyle(
+          color: isLightMode ? AppTheme.lightText : AppTheme.white,
+        ),
+      ),
     );
   }
 

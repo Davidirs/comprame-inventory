@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
 import 'package:comprame_inventory/main.dart';
@@ -76,9 +77,11 @@ class _AddProductScreenState extends State<AddProductScreen>
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     cargarProductos();
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -111,7 +114,10 @@ class _AddProductScreenState extends State<AddProductScreen>
     setState(() {});
   }
 
+  String dropdownValue = "Uno";
   Widget getMainListViewUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     widget.animationController?.forward();
     return Container(
       padding: EdgeInsets.only(
@@ -126,22 +132,21 @@ class _AddProductScreenState extends State<AddProductScreen>
           controller: scrollController,
           scrollDirection: Axis.vertical,
           children: <Widget>[
-            TitleView(
-              titleTxt: 'Productos',
-              subTxt: 'Detalles',
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                      parent: widget.animationController!,
-                      curve: Interval((1 / 5) * 0, 1.0,
-                          curve: Curves.fastOutSlowIn))),
-              animationController: widget.animationController!,
-            ),
+            TitleView(titleTxt: 'Productos', subTxt: 'Detalles'),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: TextFormField(
                 controller: _nameCtrl,
                 decoration: InputDecoration(
                   hintText: "Nombre",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
@@ -157,6 +162,14 @@ class _AddProductScreenState extends State<AddProductScreen>
                 controller: _unidCtrl,
                 decoration: InputDecoration(
                   hintText: "Unidades",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -183,14 +196,17 @@ class _AddProductScreenState extends State<AddProductScreen>
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
                       letterSpacing: 0.5,
-                      color: CompraMeInventoryTheme.lightText,
+                      color: isLightMode ? AppTheme.lightText : AppTheme.white,
                     ),
                   ),
                   DropdownButton<String>(
-                    value: dropdownValue,
                     icon: const Icon(Icons.arrow_drop_down),
                     elevation: 16,
-                    //style: const TextStyle(color: Colors.black),
+                    style: TextStyle(
+                      color: isLightMode
+                          ? AppTheme.lightText
+                          : AppTheme.nearlyWhite,
+                    ),
                     underline: Container(
                       height: 2,
                       color: Color(0xfff15c22),
@@ -219,12 +235,6 @@ class _AddProductScreenState extends State<AddProductScreen>
             TitleView(
               titleTxt: 'Precios',
               subTxt: 'Detalles',
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                      parent: widget.animationController!,
-                      curve: Interval((1 / 5) * 0, 1.0,
-                          curve: Curves.fastOutSlowIn))),
-              animationController: widget.animationController!,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -232,6 +242,14 @@ class _AddProductScreenState extends State<AddProductScreen>
                 controller: _buyCtrl,
                 decoration: InputDecoration(
                   hintText: "Compra \$",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -248,6 +266,14 @@ class _AddProductScreenState extends State<AddProductScreen>
                 controller: _saleCtrl,
                 decoration: InputDecoration(
                   hintText: "Venta \$",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -286,6 +312,16 @@ class _AddProductScreenState extends State<AddProductScreen>
                         decoration: InputDecoration(
                           hintText:
                               "Añade una descripción sobre el producto...",
+                          hintStyle: TextStyle(
+                            color: isLightMode
+                                ? AppTheme.lightText
+                                : AppTheme.deactivatedText,
+                          ),
+                        ),
+                        style: TextStyle(
+                          color: isLightMode
+                              ? AppTheme.darkText
+                              : AppTheme.nearlyWhite,
                         ),
                       ),
                     ),
@@ -303,11 +339,13 @@ class _AddProductScreenState extends State<AddProductScreen>
   }
 
   Widget getAppBarUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: CompraMeInventoryTheme.white,
+            color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(32.0),
               bottomRight: Radius.circular(32.0),
@@ -363,7 +401,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                         fontWeight: FontWeight.w700,
                         fontSize: 22 + 6 - 6 * topBarOpacity,
                         letterSpacing: 1.2,
-                        color: CompraMeInventoryTheme.darkerText,
+                        color: isLightMode ? AppTheme.darkText : AppTheme.white,
                       ),
                     ),
                     IconButton(

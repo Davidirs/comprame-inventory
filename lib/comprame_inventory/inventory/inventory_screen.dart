@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/edit_product/edit_product_screen.dart';
 import 'package:comprame_inventory/comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
@@ -107,14 +108,17 @@ class _InventoryScreenState extends State<InventoryScreen>
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: editando
             ? EditProductScreen(
                 idProduct: _idproduct,
                 voidCallback: () {
+                  printMsg('¡Producto actualizdo satisfactoriamente!', context);
                   setState(() {
                     editando = false;
                   });
@@ -135,12 +139,20 @@ class _InventoryScreenState extends State<InventoryScreen>
   Widget buscador() {
     widget.animationController?.forward();
     print(sItems);
+
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return SearchChoices.multiple(
       items: items,
       selectedItems: sItems,
       hint: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Text("Buscar producto"),
+        child: Text(
+          "Buscar producto",
+          style: TextStyle(
+            color: isLightMode ? AppTheme.darkText : AppTheme.white,
+          ),
+        ),
       ),
       searchHint: "Nombre del producto",
       onChanged: (value) {
@@ -169,7 +181,7 @@ class _InventoryScreenState extends State<InventoryScreen>
         return Text(
           "#${get(item).id} ${get(item).name} - ${get(item).buy} \$ - ${get(item).units} uds.",
           style: TextStyle(
-            color: CompraMeInventoryTheme.darkText,
+            color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
           ),
         );
       },
@@ -234,12 +246,14 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 
   Widget getMainListViewUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return FutureBuilder<bool>(
       future: getData(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (!snapshot.hasData) {
           return Container(
-            color: CompraMeInventoryTheme.background,
+            color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Center(
@@ -344,7 +358,7 @@ class _InventoryScreenState extends State<InventoryScreen>
             ],
           ),
         ),
-        key: ValueKey<int>(index),
+        key: UniqueKey(),
         confirmDismiss: (DismissDirection direction) async {
           if (direction == DismissDirection.endToStart) {
             return await showDialog(
@@ -453,11 +467,13 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 
   Widget getAppBarUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: CompraMeInventoryTheme.white,
+            color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(32.0),
               bottomRight: Radius.circular(32.0),
@@ -494,7 +510,8 @@ class _InventoryScreenState extends State<InventoryScreen>
                           fontSize: 26,
                           //Cambié de 22 a 20
                           letterSpacing: 1.2,
-                          color: CompraMeInventoryTheme.darkerText,
+                          color:
+                              isLightMode ? AppTheme.darkText : AppTheme.white,
                         ),
                       ),
                     ),
@@ -561,38 +578,59 @@ class _InventoryScreenState extends State<InventoryScreen>
                                 ),
                               ),
                             ), */
-                    IconButton(
-                        onPressed: () async {
-                          //cambiar moneda
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          if (await prefs.getBool('dolar') == null) {
-                            await prefs.setBool('dolar', true);
-                          } else {
-                            await prefs.setBool(
-                                'dolar', !prefs.getBool('dolar')!);
-                          }
-                          isDolar = prefs.getBool('dolar')!;
-                          setState(() {});
-                        },
-                        icon: Icon(
-                          Icons.price_change_outlined,
-                          color: HexColor("#ff6600"),
-                          size: 30,
-                        )),
-                    IconButton(
-                        onPressed: () {
-                          // Process data.
-                          cargarProductos();
-                          setState(() {
-                            printMsg("Lista actualizada", context);
-                          });
-                        },
-                        icon: Icon(
-                          Icons.refresh,
-                          color: HexColor("#ff6600"),
-                          size: 30,
-                        )),
+                    Row(children: [
+                      /*IconButton(
+                          onPressed: () async {
+                              await sendSalesFirebase(context);
+                            await readSaleFromDb();
+/*  */
+                            Future.delayed(
+                                Duration(seconds: 2),
+                                () => {
+                                      cargarVentas(),
+                                      printMsg("Lista de ventas sincronizada",
+                                          context),
+                                      print("TABLA ACTUALIZADA"),
+                                    }); 
+                          },
+                          icon: Icon(
+                            Icons.cloud_sync,
+                            color: HexColor("#ff6600"),
+                            size: 30,
+                          )),*/
+                      IconButton(
+                          onPressed: () async {
+                            //cambiar moneda
+                            final SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            if (await prefs.getBool('dolar') == null) {
+                              await prefs.setBool('dolar', true);
+                            } else {
+                              await prefs.setBool(
+                                  'dolar', !prefs.getBool('dolar')!);
+                            }
+                            isDolar = prefs.getBool('dolar')!;
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            Icons.price_change_outlined,
+                            color: HexColor("#ff6600"),
+                            size: 30,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            // Process data.
+                            cargarProductos();
+                            setState(() {
+                              printMsg("Lista actualizada", context);
+                            });
+                          },
+                          icon: Icon(
+                            Icons.refresh,
+                            color: HexColor("#ff6600"),
+                            size: 30,
+                          )),
+                    ])
                   ],
                 ),
               )
@@ -614,13 +652,19 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 
   Color colorUnits(units) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     if (units < 1) {
-      return Colors.red.withOpacity(.3);
+      return isLightMode
+          ? Colors.red.withOpacity(.3)
+          : Colors.red.withOpacity(.8);
     } else if (units < 5) {
-      return Colors.yellow.withOpacity(.3);
+      return isLightMode
+          ? Colors.yellow.withOpacity(.3)
+          : Colors.yellow.withOpacity(.8);
     }
 
-    return CompraMeInventoryTheme.white;
+    return isLightMode ? AppTheme.white : AppTheme.white.withOpacity(.8);
   }
 
   Product get(item) {

@@ -1,3 +1,5 @@
+import 'package:comprame_inventory/Firebase/firestore.dart';
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/edit_product/edit_product_screen.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
@@ -89,14 +91,20 @@ class _SalesScreenState extends State<SalesScreen>
   List<Venta> ventaList = [];
   //llamo a la base de datos y le paso los valores a la lista
   cargarVentas() async {
-    List<Venta> auxVenta = await db().getAllVentas();
-    ventaList = auxVenta;
+    ventaList = await db().getAllVentas();
+    Future.delayed(
+        Duration(seconds: 1),
+        () => {
+              setState(() {}),
+            });
   }
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: editando
@@ -121,12 +129,14 @@ class _SalesScreenState extends State<SalesScreen>
   }
 
   Widget getMainListViewUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return FutureBuilder<bool>(
       future: getData(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (!snapshot.hasData) {
           return Container(
-            color: CompraMeInventoryTheme.background,
+            color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Center(
@@ -153,62 +163,166 @@ class _SalesScreenState extends State<SalesScreen>
                     //reverse: true, //posible solucion
                     itemBuilder: (BuildContext context, int index) {
                       widget.animationController?.forward();
+                      int indexInverso = ventaList.length - 1 - index;
+
                       String formattedDate = DateFormat('dd-MM-yyyy – kk:mm')
-                          .format(DateTime.parse(
-                              ventaList[ventaList.length - 1 - index].fecha!));
+                          .format(
+                              DateTime.parse(ventaList[indexInverso].fecha!));
                       return Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: CompraMeInventoryTheme.white,
-                        ),
-                        child: ListTile(
-                          leading: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("#${ventaList.length - index}",
+                          margin: EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: isLightMode
+                                ? AppTheme.white
+                                : AppTheme.white.withOpacity(.8),
+                          ),
+                          child: Dismissible(
+                            background: Container(
+                                /* decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.green,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(Icons.edit, color: Colors.white),
+                                  Text(
+                                    "EDITAR",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                  ),
+                                ],
+                              ), */
+                                ),
+                            secondaryBackground: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.red,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                  ),
+                                  Text(
+                                    "ELIMINAR",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Icon(Icons.delete, color: Colors.white),
+                                ],
+                              ),
+                            ),
+                            key: UniqueKey(),
+                            direction: DismissDirection.endToStart,
+                            confirmDismiss: (DismissDirection direction) async {
+                              //if (direction == DismissDirection.endToStart) {
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Confirmación"),
+                                    content: const Text(
+                                        "¿Estás seguro que quieres eliminar?, esta acción no la puedes deshacer."),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            try {
+                                              print(indexInverso);
+                                              print(ventaList[indexInverso].id);
+                                              db().deleteVenta(
+                                                  ventaList[indexInverso].id!);
+
+                                              cargarVentas();
+
+                                              printMsg(
+                                                  "Venta eliminada exitosamente",
+                                                  context);
+                                              Navigator.of(context).pop(true);
+                                            } catch (e) {
+                                              printMsg(
+                                                  "Error al eliminar venta",
+                                                  context,
+                                                  true);
+                                              Navigator.of(context).pop(false);
+                                            }
+                                          },
+                                          child: const Text("ELIMINAR")),
+                                      ElevatedButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: const Text("CANCELAR"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              /* } else {
+                                print("No hace nada");
+                                /* setState(() {
+                                  _idventa = ventaList[index].id!;
+                                  editando = true;
+                                }); */
+
+                                return false;
+                              } */
+                            },
+                            onDismissed: (DismissDirection direction) {
+                              if (direction == DismissDirection.endToStart) {
+                                //ventaList.removeAt(indexInverso);
+                              } else {}
+                            },
+                            child: ListTile(
+                              leading: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("#${ventaList.length - index}",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("${ventaList[indexInverso].vendor}"),
+                                ],
+                              ),
+                              title: Text(formattedDate,
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 16.0,
                                       fontWeight: FontWeight.bold)),
-                              Text(
-                                  "${ventaList[ventaList.length - 1 - index].vendor}"),
-                            ],
-                          ),
-                          title: Text(formattedDate,
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold)),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  "Total: ${dolarBs(ventaList[ventaList.length - 1 - index].total!.toDouble())}",
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.bold)),
-                              Text(
-                                  "Ganancia: ${dolarBs(ventaList[ventaList.length - 1 - index].profit!.toDouble())} | ",
-                                  style: TextStyle(
-                                    fontSize: 11.0,
-                                  )),
-                              Text(
-                                  "${ventaList[ventaList.length - 1 - index].details}",
-                                  style: TextStyle(
-                                      fontSize: 11.0,
-                                      fontStyle: FontStyle.italic)),
-                            ],
-                          ),
-                          isThreeLine: true,
-                          trailing: Container(
-                            width: 40,
-                            height: 40,
-                            child: Image.asset(imgMethod[int.parse(
-                                ventaList[ventaList.length - 1 - index]
-                                    .method!)]),
-                          ),
-                        ),
-                      );
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      "Total: ${dolarBs(ventaList[indexInverso].total!.toDouble())}",
+                                      style: TextStyle(
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.bold)),
+                                  Text(
+                                      "Ganancia: ${dolarBs(ventaList[indexInverso].profit!.toDouble())} | ",
+                                      style: TextStyle(
+                                        fontSize: 11.0,
+                                      )),
+                                  Text("${ventaList[indexInverso].details}",
+                                      style: TextStyle(
+                                          fontSize: 11.0,
+                                          fontStyle: FontStyle.italic)),
+                                ],
+                              ),
+                              isThreeLine: true,
+                              trailing: Container(
+                                width: 40,
+                                height: 40,
+                                child: Image.asset(imgMethod[int.parse(
+                                    ventaList[indexInverso].method!)]),
+                              ),
+                            ),
+                          ));
                     },
                   ),
           );
@@ -228,11 +342,13 @@ class _SalesScreenState extends State<SalesScreen>
   }
 
   Widget getAppBarUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: CompraMeInventoryTheme.white,
+            color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(32.0),
               bottomRight: Radius.circular(32.0),
@@ -269,44 +385,52 @@ class _SalesScreenState extends State<SalesScreen>
                           fontSize: 26,
                           //Cambié de 22 a 20
                           letterSpacing: 1.2,
-                          color: CompraMeInventoryTheme.darkerText,
+                          color:
+                              isLightMode ? AppTheme.darkText : AppTheme.white,
                         ),
                       ),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          db().deleteVenta(ventaList[ventaList.length - 1].id!);
-                          cargarVentas();
-                          setState(() {
-                            print(
-                              "Venta num ${ventaList.length - 1} borrado exitosamente",
-                            );
-                          });
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          color: HexColor("#ff6600"),
-                          size: 30,
-                        )),
-                    IconButton(
-                        onPressed: () async {
-                          //cambiar moneda
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          if (await prefs.getBool('dolar') == null) {
-                            await prefs.setBool('dolar', true);
-                          } else {
-                            await prefs.setBool(
-                                'dolar', !prefs.getBool('dolar')!);
-                          }
-                          isDolar = prefs.getBool('dolar')!;
-                          setState(() {});
-                        },
-                        icon: Icon(
-                          Icons.price_change_outlined,
-                          color: HexColor("#ff6600"),
-                          size: 30,
-                        )),
+                    Row(children: [
+                      IconButton(
+                          onPressed: () async {
+                            //db().deleteVenta(ventaList[ventaList.length - 1].id!);
+                            await sendSalesFirebase(context);
+                            await readSaleFromDb();
+/*  */
+                            Future.delayed(
+                                Duration(seconds: 2),
+                                () => {
+                                      cargarVentas(),
+                                      printMsg("Lista de ventas sincronizada",
+                                          context),
+                                      print("TABLA ACTUALIZADA"),
+                                    });
+                          },
+                          icon: Icon(
+                            Icons.cloud_sync,
+                            color: HexColor("#ff6600"),
+                            size: 30,
+                          )),
+                      IconButton(
+                          onPressed: () async {
+                            //cambiar moneda
+                            final SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            if (await prefs.getBool('dolar') == null) {
+                              await prefs.setBool('dolar', true);
+                            } else {
+                              await prefs.setBool(
+                                  'dolar', !prefs.getBool('dolar')!);
+                            }
+                            isDolar = prefs.getBool('dolar')!;
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            Icons.price_change_outlined,
+                            color: HexColor("#ff6600"),
+                            size: 30,
+                          )),
+                    ]),
                     /*  Container(
                               decoration: BoxDecoration(
                                 color: CompraMeInventoryTheme.nearlyWhite,

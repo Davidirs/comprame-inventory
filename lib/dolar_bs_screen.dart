@@ -65,7 +65,9 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                       style: TextStyle(
                         fontFamily: AppTheme.fontName,
                         fontSize: 16,
-                        color: AppTheme.dark_grey,
+                        color: isLightMode
+                            ? AppTheme.dark_grey
+                            : AppTheme.nearlyWhite,
                       ),
                       cursorColor: Color(0xfff15c22),
                       controller: _controller,

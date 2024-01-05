@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
@@ -26,43 +27,10 @@ AnimationController? animationController;
 
 class _EditProductScreenState extends State<EditProductScreen>
     with TickerProviderStateMixin {
-  Animation<double>? topBarAnimation;
-
   List<Widget> listViews = <Widget>[];
-  final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
   @override
   void initState() {
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 600), vsync: this);
-    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-            parent: animationController!,
-            curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-
-    scrollController.addListener(() {
-      if (scrollController.offset >= 24) {
-        if (topBarOpacity != 1.0) {
-          setState(() {
-            topBarOpacity = 1.0;
-          });
-        }
-      } else if (scrollController.offset <= 24 &&
-          scrollController.offset >= 0) {
-        if (topBarOpacity != scrollController.offset / 24) {
-          setState(() {
-            topBarOpacity = scrollController.offset / 24;
-          });
-        }
-      } else if (scrollController.offset <= 0) {
-        if (topBarOpacity != 0.0) {
-          setState(() {
-            topBarOpacity = 0.0;
-          });
-        }
-      }
-    });
-
     cargarProductos();
     super.initState();
   }
@@ -74,6 +42,7 @@ class _EditProductScreenState extends State<EditProductScreen>
   final _buyCtrl = TextEditingController();
   final _saleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
+  String _dropdownValue = "";
   //String dropdownValue = listType[0];
   late Product product;
   cargarProductos() async {
@@ -83,7 +52,7 @@ class _EditProductScreenState extends State<EditProductScreen>
 
     _nameCtrl.text = product.name ?? "";
     _unidCtrl.text = "${product.units ?? 0}";
-    dropdownValue = "${product.type}"; //product.type ?? listType.first;
+    _dropdownValue = "${product.type}"; //product.type ?? listType.first;
     _buyCtrl.text = "${product.buy ?? 0}";
     _saleCtrl.text = "${product.sale ?? 0}";
     _descCtrl.text = "${product.description ?? 0}";
@@ -111,9 +80,11 @@ class _EditProductScreenState extends State<EditProductScreen>
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     print("dibujando");
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -130,6 +101,8 @@ class _EditProductScreenState extends State<EditProductScreen>
   }
 
   Widget getMainListViewUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     animationController!.forward();
 
     return Container(
@@ -142,18 +115,11 @@ class _EditProductScreenState extends State<EditProductScreen>
       child: Form(
         key: _formKey,
         child: ListView(
-          controller: scrollController,
           scrollDirection: Axis.vertical,
           children: <Widget>[
             TitleView(
               titleTxt: 'Productos',
               subTxt: 'Detalles',
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                      parent: animationController!,
-                      curve: Interval((1 / 5) * 0, 1.0,
-                          curve: Curves.fastOutSlowIn))),
-              animationController: animationController,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -161,6 +127,14 @@ class _EditProductScreenState extends State<EditProductScreen>
                 controller: _nameCtrl,
                 decoration: InputDecoration(
                   hintText: "Nombre",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
@@ -176,6 +150,14 @@ class _EditProductScreenState extends State<EditProductScreen>
                 controller: _unidCtrl,
                 decoration: InputDecoration(
                   hintText: "Unidades",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -202,14 +184,15 @@ class _EditProductScreenState extends State<EditProductScreen>
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
                       letterSpacing: 0.5,
-                      color: CompraMeInventoryTheme.lightText,
+                      color: isLightMode ? AppTheme.lightText : AppTheme.white,
                     ),
                   ),
                   DropdownButton<String>(
-                    value: dropdownValue,
                     icon: const Icon(Icons.arrow_drop_down),
                     elevation: 16,
-                    //style: const TextStyle(color: Colors.black),
+                    style: TextStyle(
+                      color: isLightMode ? AppTheme.lightText : AppTheme.white,
+                    ),
                     underline: Container(
                       height: 2,
                       color: Color(0xfff15c22),
@@ -217,8 +200,8 @@ class _EditProductScreenState extends State<EditProductScreen>
                     onChanged: (String? value) {
                       // This is called when the user selects an item.
                       setState(() {
-                        dropdownValue = value!;
-                        print("Value" + dropdownValue);
+                        _dropdownValue = value!;
+                        print("Value" + _dropdownValue);
                       });
                     },
                     items:
@@ -238,12 +221,6 @@ class _EditProductScreenState extends State<EditProductScreen>
             TitleView(
               titleTxt: 'Precios',
               subTxt: 'Detalles',
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                      parent: animationController!,
-                      curve: Interval((1 / 5) * 0, 1.0,
-                          curve: Curves.fastOutSlowIn))),
-              animationController: animationController,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -251,6 +228,14 @@ class _EditProductScreenState extends State<EditProductScreen>
                 controller: _buyCtrl,
                 decoration: InputDecoration(
                   hintText: "Compra",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -267,6 +252,14 @@ class _EditProductScreenState extends State<EditProductScreen>
                 controller: _saleCtrl,
                 decoration: InputDecoration(
                   hintText: "Venta",
+                  hintStyle: TextStyle(
+                    color: isLightMode
+                        ? AppTheme.lightText
+                        : AppTheme.deactivatedText,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
                 ),
                 keyboardType: TextInputType.number,
                 validator: (String? value) {
@@ -304,6 +297,16 @@ class _EditProductScreenState extends State<EditProductScreen>
                         decoration: InputDecoration(
                           hintText:
                               "Añade una descripción sobre el producto...",
+                          hintStyle: TextStyle(
+                            color: isLightMode
+                                ? AppTheme.lightText
+                                : AppTheme.deactivatedText,
+                          ),
+                        ),
+                        style: TextStyle(
+                          color: isLightMode
+                              ? AppTheme.darkText
+                              : AppTheme.nearlyWhite,
                         ),
                       ),
                     ),
@@ -321,11 +324,13 @@ class _EditProductScreenState extends State<EditProductScreen>
   }
 
   Widget getAppBarUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: CompraMeInventoryTheme.white,
+            color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(32.0),
               bottomRight: Radius.circular(32.0),
@@ -359,7 +364,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                         fontWeight: FontWeight.w700,
                         fontSize: 22 + 6 - 6 * topBarOpacity,
                         letterSpacing: 1.2,
-                        color: CompraMeInventoryTheme.darkerText,
+                        color: isLightMode ? AppTheme.darkText : AppTheme.white,
                       ),
                     ),
                     IconButton(
@@ -369,7 +374,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                               id: widget.idProduct,
                               name: _nameCtrl.text,
                               units: int.parse(_unidCtrl.text),
-                              type: dropdownValue,
+                              type: _dropdownValue,
                               buy: num.parse(_buyCtrl.text),
                               sale: num.parse(_saleCtrl.text),
                               img: imageProductPath,
@@ -379,8 +384,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                             // Process data.
 /* 
                                     Navigator.pop(context); */
-                            printMsg('¡Producto actualizdo satisfactoriamente!',
-                                context);
+
                             widget.voidCallback();
                           }
                         },

@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
@@ -31,8 +32,10 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Container(
-      color: CompraMeInventoryTheme.background,
+      color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -79,11 +82,13 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
 
   TextEditingController controller = TextEditingController();
   Widget getAppBarUI() {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: CompraMeInventoryTheme.white,
+            color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(32.0),
               bottomRight: Radius.circular(32.0),
@@ -124,7 +129,8 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
                           fontWeight: FontWeight.w700,
                           fontSize: 26,
                           letterSpacing: 1.2,
-                          color: CompraMeInventoryTheme.darkerText,
+                          color:
+                              isLightMode ? AppTheme.darkText : AppTheme.white,
                         ),
                       ),
                     ),

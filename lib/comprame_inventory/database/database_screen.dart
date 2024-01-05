@@ -1,7 +1,5 @@
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/Firebase/firebase.dart';
-import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 
 class DatabasePage extends StatefulWidget {
@@ -67,7 +65,8 @@ class _DatabasePageState extends State<DatabasePage> {
                           actions: <Widget>[
                             ElevatedButton(
                                 onPressed: () {
-                                  sendDb();
+                                  sendProductsFirebase(context);
+                                  sendSalesFirebase(context);
                                   Navigator.of(context).pop(true);
                                 },
                                 child: const Text("SUBIR")),
@@ -97,7 +96,8 @@ class _DatabasePageState extends State<DatabasePage> {
                           actions: <Widget>[
                             ElevatedButton(
                                 onPressed: () {
-                                  receiveDb();
+                                  readProductFromDb();
+                                  readSaleFromDb();
                                   Navigator.of(context).pop(true);
                                 },
                                 child: const Text("DESCARGAR")),
@@ -117,26 +117,5 @@ class _DatabasePageState extends State<DatabasePage> {
         ),
       ),
     );
-  }
-
-  sendDb() async {
-    List allProducts = await db().getAllProducts();
-    for (var i = 0; i < allProducts.length; i++) {
-      addProductToDb(allProducts[i]);
-      if (i == allProducts.length - 1) {
-        printMsg("Productos subidos exitosamente", context);
-      }
-    }
-    List allSales = await db().getAllVentas();
-    for (var i = 0; i < allSales.length; i++) {
-      addSaleToDb(allSales[i]);
-      if (i == allSales.length - 1) {
-        printMsg("Ventas subidas exitosamente", context);
-      }
-    }
-  }
-
-  receiveDb() async {
-    readProductFromDb(context);
   }
 }

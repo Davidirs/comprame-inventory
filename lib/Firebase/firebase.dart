@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -102,34 +101,6 @@ addSaleToDb(Venta venta) async {
       .set(venta.toMap())
       .onError((e, _) => print("Error writing document: $e"));
   print("object added");
-}
-
-readProductFromDb(context) {
-  final _currentUser = currentUser();
-  final db = FirebaseFirestore.instance;
-  final docRefProduct =
-      db.collection("users").doc(_currentUser!.email).collection("products");
-  docRefProduct.get().then((QuerySnapshot<Map<String, dynamic>> snapshot) {
-    snapshot.docs.forEach((DocumentSnapshot doc) {
-      final data = doc.data() as Map<String, dynamic>;
-
-      updateProduct(data);
-    });
-
-    printMsg("Productos actualizados", context);
-  }).catchError((e) => print("Error al obtener el documento: $e"));
-
-  final docRefSale =
-      db.collection("users").doc(_currentUser!.email).collection("sales");
-  docRefSale.get().then((QuerySnapshot<Map<String, dynamic>> snapshot) {
-    snapshot.docs.forEach((DocumentSnapshot doc) {
-      final data = doc.data() as Map<String, dynamic>;
-
-      updateSale(data);
-    });
-
-    printMsg("Ventas actualizadas", context);
-  }).catchError((e) => print("Error al obtener el documento: $e"));
 }
 
 updateProduct(data) async {

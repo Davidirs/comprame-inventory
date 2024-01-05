@@ -32,6 +32,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   ImageFiltered(
                     imageFilter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                     child: Container(
+                      margin: EdgeInsets.only(left: 10),
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height / 2.5,
                       //padding: EdgeInsets.only(top: 200, left: 100, right: 100),
@@ -68,6 +69,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                 ),
               ),
+              Divider(),
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
@@ -79,6 +81,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                 ),
               ),
+              Divider(),
               Image.asset(
                 'assets/images/shopme.png',
                 height: 100,
