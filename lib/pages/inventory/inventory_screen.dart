@@ -603,8 +603,8 @@ class _InventoryScreenState extends State<InventoryScreen>
                                             "Lista de Productos sincronizada",
                                             context),
                                         print("TABLA ACTUALIZADA"),
+                                        setState(() {})
                                       });
-                              setState(() {});
                             },
                             icon: Icon(
                               Icons.cloud_sync,

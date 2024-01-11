@@ -406,8 +406,8 @@ class _SalesScreenState extends State<SalesScreen>
                                         printMsg("Lista de ventas sincronizada",
                                             context),
                                         print("TABLA ACTUALIZADA"),
+                                        setState(() {})
                                       });
-                              setState(() {});
                             },
                             icon: Icon(
                               Icons.cloud_sync,

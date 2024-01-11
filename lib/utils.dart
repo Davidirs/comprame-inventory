@@ -1,4 +1,6 @@
 //Para imprimir mensaje en el ScackBar
+import 'package:comprame_inventory/Firebase/firestore.dart';
+import 'package:comprame_inventory/models/dolar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,5 +94,19 @@ bool isApp() {
     return true;
   } else {
     return false;
+  }
+}
+
+guardarNombreSP(nameText) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('nameText', nameText);
+}
+
+guardarDolarSP() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  double dolarCurrentPrice = prefs.getDouble('dolarvalue') ?? 0;
+  if (dolarCurrentPrice == 0) {
+    Dolar dolarvalue = await firebase().getDolar();
+    await prefs.setDouble('dolarvalue', dolarvalue.own!);
   }
 }

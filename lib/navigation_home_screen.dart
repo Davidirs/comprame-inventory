@@ -47,6 +47,8 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
       prefs.setBool('isfirst', true);
     }
     print("ES PRIMERA VEZ: ${prefs.getBool('isfirst')}");
+    print("NOMBRE DE USUARIO: ${prefs.getString('nameText')}");
+    print("PRECIO DEL DOLAR: ${prefs.getDouble('dolarvalue')}");
     isFirst = prefs.getBool('isfirst')!;
   }
 

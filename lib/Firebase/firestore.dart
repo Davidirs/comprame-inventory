@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/models/dolar.dart';
 import 'package:comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/utils.dart';
@@ -176,5 +177,19 @@ class firebase {
         .set(venta.toMap())
         .onError((e, _) => print("Error writing document: $e"));
     print("object added");
+  }
+
+  Future<Dolar> getDolar() async {
+    final db = FirebaseFirestore.instance;
+    final docRefProduct = db.collection("generals").doc("dolar");
+    Dolar dolar = await docRefProduct.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return dataToDolar(data);
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return dolar;
+    //printMsg("Productos actualizados", context);
   }
 }

@@ -18,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
-    var userCurrent = currentUser();
 
     return Container(
       color: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
@@ -82,59 +81,31 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       child: Material(
-                        color: Colors.transparent,
-                        child: userCurrent == null
-                            ? TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    signInWithGoogle(context);
-                                  });
-                                },
-                                icon: Image.asset("assets/images/google.png"
-                                    /* Icons.info,
+                          color: const Color.fromRGBO(0, 0, 0, 0),
+                          child: TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                signInWithGoogle(context);
+                              });
+                            },
+                            icon: Image.asset("assets/images/google.png"
+                                /* Icons.info,
                                   color:
                                       isLightMode ? Colors.white : Colors.black,
                                   size: 22, */
-                                    ),
-                                label: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    'Inicia sesión con Gmail',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: isLightMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
                                 ),
-                              )
-                            : TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    logOut();
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.logout,
+                            label: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'Inicia sesión con Gmail',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
                                   color:
                                       isLightMode ? Colors.white : Colors.black,
-                                  size: 22,
-                                ),
-                                label: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    'Cerrar sesión',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: isLightMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
                                 ),
                               ),
-                      ),
+                            ),
+                          )),
                     ),
                   ),
                 ),

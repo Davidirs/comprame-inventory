@@ -187,6 +187,24 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   onChanged: (value) {
                                     nameUser = value;
                                   },
+                                  decoration: InputDecoration(
+                                    hintText: "Ingrese su nuevo nombre",
+                                    hintStyle: TextStyle(
+                                      //ontWeight: FontWeight.w600,
+                                      fontStyle: FontStyle.italic,
+                                      color: isLightMode
+                                          ? AppTheme.grey
+                                          : AppTheme.lightText,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: isLightMode
+                                        ? AppTheme.grey
+                                        : AppTheme.white,
+                                    fontSize: 18,
+                                  ),
                                 )
                               : Text(
                                   nameUser == null
@@ -205,12 +223,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         IconButton(
                           onPressed: () {
                             setState(() {
-                              _controller.text = nameUser.toString();
                               isEditing = !isEditing;
                               guardarTexto(nameUser.toString());
+                              _controller.text = nameUser.toString();
                             });
                           },
-                          icon: Icon(Icons.edit),
+                          icon: isEditing ? Icon(Icons.done) : Icon(Icons.edit),
                           color: AppTheme.primary,
                         ),
                       ],

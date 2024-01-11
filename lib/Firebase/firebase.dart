@@ -1,8 +1,10 @@
 // ignore_for_file: invalid_return_type_for_catch_error
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comprame_inventory/models/dolar.dart';
 import 'package:comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -29,7 +31,7 @@ signInWithGoogle(context) async {
   UserCredential userCredential =
       await FirebaseAuth.instance.signInWithCredential(credential);
   print(userCredential.user?.displayName);
-  addUserToDb();
+  addUserToFirebase();
 }
 
 /* authStateChanges() {
@@ -54,7 +56,7 @@ User? currentUser() {
 
 //...FIRESTORE
 
-addUserToDb() async {
+addUserToFirebase() async {
   final _currentUser = currentUser();
 
   final db = FirebaseFirestore.instance;
@@ -67,6 +69,8 @@ addUserToDb() async {
   };
   try {
     db.collection("users").doc(_currentUser.email).set(user);
+    guardarNombreSP(_currentUser.displayName);
+    guardarDolarSP();
   } catch (e) {
     print(' DocumentSnapshot added with ID: $e');
   }
@@ -134,4 +138,14 @@ Venta dataToSale(data) {
     vendor: data["vendor"],
   );
   return venta;
+}
+
+Dolar dataToDolar(data) {
+  final dolar = Dolar(
+    updated: data["updated"],
+    bcv: data["bcv"],
+    paralelo: data["paralelo"],
+    own: data["own"],
+  );
+  return dolar;
 }
