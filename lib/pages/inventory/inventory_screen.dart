@@ -1,12 +1,12 @@
 import 'dart:io';
 
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/edit_product/edit_product_screen.dart';
-import 'package:comprame_inventory/comprame_inventory/models/products.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
+import 'package:comprame_inventory/pages/edit_product/edit_product_screen.dart';
+import 'package:comprame_inventory/models/products.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/models/tabIcon_data.dart';
 import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/global.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:search_choices/search_choices.dart';
@@ -68,13 +68,36 @@ class _InventoryScreenState extends State<InventoryScreen>
       } 
       print(sItems);
     });*/
-    cargarProductos();
+
     cargarDolar();
     super.initState();
   }
 
   Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 1000));
+    if (isApp()) {
+      productList = await db().getAllProducts();
+    } else {
+      productList = await firebase().getAllProducts();
+    }
+    if (items.length < 1) {
+      for (var i = 0; i < productList.length; i++) {
+        items.add(DropdownMenuItem(
+          child: ListTile(
+            leading: Text("#${i + 1}",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            title: Text("${productList[i].name}"),
+            subtitle: Text(
+                "${productList[i].buy} \$  /  ${inBs(productList[i].buy!.toDouble())}"),
+            isThreeLine: true,
+            trailing: Text(
+              "${productList[i].units} uds.",
+            ),
+          ),
+          value: productList[i].name,
+        ));
+      }
+    }
+
     return true;
   }
 
@@ -83,28 +106,6 @@ class _InventoryScreenState extends State<InventoryScreen>
   //llamo a la base de datos y le paso los valores a la lista
   List<int> sItems = [];
   List<DropdownMenuItem<dynamic>> items = [];
-  cargarProductos() async {
-    List<Product> auxProduct = await db().getAllProducts();
-
-    productList = auxProduct;
-
-    for (var i = 0; i < productList.length; i++) {
-      items.add(DropdownMenuItem(
-        child: ListTile(
-          leading: Text("#${productList[i].id}",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          title: Text("${productList[i].name}"),
-          subtitle: Text(
-              "${productList[i].buy} \$  /  ${inBs(productList[i].buy!.toDouble())}"),
-          isThreeLine: true,
-          trailing: Text(
-            "${productList[i].units} uds.",
-          ),
-        ),
-        value: productList[i].name,
-      ));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,12 +118,15 @@ class _InventoryScreenState extends State<InventoryScreen>
         body: editando
             ? EditProductScreen(
                 idProduct: _idproduct,
-                voidCallback: () {
-                  printMsg('¡Producto actualizdo satisfactoriamente!', context);
+                updated: (bool isChanged) {
+                  if (isChanged)
+                    printMsg(
+                        '¡Producto actualizdo satisfactoriamente!', context);
                   setState(() {
                     editando = false;
                   });
-                })
+                },
+              )
             : Stack(
                 children: <Widget>[
                   getMainListViewUI(),
@@ -373,7 +377,13 @@ class _InventoryScreenState extends State<InventoryScreen>
                         onPressed: () {
                           print("Eliminar");
                           print(index);
-                          db().deleteProduct("${productList[index].id}");
+
+                          if (isApp()) {
+                            db().deleteProduct("${productList[index].id}");
+                          } else {
+                            firebase()
+                                .deleteProduct("${productList[index].id}");
+                          }
                           Navigator.of(context).pop(true);
                         },
                         child: const Text("ELIMINAR")),
@@ -404,7 +414,7 @@ class _InventoryScreenState extends State<InventoryScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("#${productList[index].id}"),
+              Text("#${index + 1}"),
               Container(
                   height: 40,
                   width: 40,
@@ -579,25 +589,28 @@ class _InventoryScreenState extends State<InventoryScreen>
                               ),
                             ), */
                     Row(children: [
-                      /*IconButton(
-                          onPressed: () async {
-                              await sendSalesFirebase(context);
-                            await readSaleFromDb();
+                      if (isApp())
+                        IconButton(
+                            onPressed: () async {
+                              await readProductFromDb();
+                              await sendProductsFirebase(context);
 /*  */
-                            Future.delayed(
-                                Duration(seconds: 2),
-                                () => {
-                                      cargarVentas(),
-                                      printMsg("Lista de ventas sincronizada",
-                                          context),
-                                      print("TABLA ACTUALIZADA"),
-                                    }); 
-                          },
-                          icon: Icon(
-                            Icons.cloud_sync,
-                            color: HexColor("#ff6600"),
-                            size: 30,
-                          )),*/
+                              Future.delayed(
+                                  Duration(seconds: 2),
+                                  () => {
+                                        getData(),
+                                        printMsg(
+                                            "Lista de Productos sincronizada",
+                                            context),
+                                        print("TABLA ACTUALIZADA"),
+                                      });
+                              setState(() {});
+                            },
+                            icon: Icon(
+                              Icons.cloud_sync,
+                              color: HexColor("#ff6600"),
+                              size: 30,
+                            )),
                       IconButton(
                           onPressed: () async {
                             //cambiar moneda
@@ -617,7 +630,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                             color: HexColor("#ff6600"),
                             size: 30,
                           )),
-                      IconButton(
+                      /*  IconButton(
                           onPressed: () {
                             // Process data.
                             cargarProductos();
@@ -629,7 +642,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                             Icons.refresh,
                             color: HexColor("#ff6600"),
                             size: 30,
-                          )),
+                          )), */
                     ])
                   ],
                 ),
@@ -642,11 +655,15 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 
   Widget comprobar(File imageFile) {
-    if (imageFile.existsSync()) {
-      // El archivo existe, puedes mostrarlo
-      return Image.file(imageFile);
+    if (isApp()) {
+      if (imageFile.existsSync()) {
+        // El archivo existe, puedes mostrarlo
+        return Image.file(imageFile);
+      } else {
+        // El archivo no existe, puedes mostrar una imagen de respaldo o un mensaje de error
+        return Image.asset("assets/img/placeholder.png");
+      }
     } else {
-      // El archivo no existe, puedes mostrar una imagen de respaldo o un mensaje de error
       return Image.asset("assets/img/placeholder.png");
     }
   }

@@ -29,138 +29,132 @@ class CenterNextButton extends StatelessWidget {
         curve: Curves.fastOutSlowIn,
       ),
     ));
-    final _loginTextMoveAnimation =
-        Tween<Offset>(begin: Offset(0, 5), end: Offset(0, 0))
-            .animate(CurvedAnimation(
-      parent: animationController,
-      curve: Interval(
-        0.6,
-        0.8,
-        curve: Curves.fastOutSlowIn,
-      ),
-    ));
 
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SlideTransition(
-            position: _topMoveAnimation,
-            child: AnimatedBuilder(
-              animation: animationController,
-              builder: (context, child) => AnimatedOpacity(
-                opacity: animationController.value >= 0.2 &&
-                        animationController.value <= 0.6
-                    ? 1
-                    : 0,
-                duration: Duration(milliseconds: 480),
-                child: _pageView(),
+    return Center(
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SlideTransition(
+              position: _topMoveAnimation,
+              child: AnimatedBuilder(
+                animation: animationController,
+                builder: (context, child) => AnimatedOpacity(
+                  opacity: animationController.value >= 0.2 &&
+                          animationController.value <= 0.6
+                      ? 1
+                      : 0,
+                  duration: Duration(milliseconds: 480),
+                  child: _pageView(),
+                ),
               ),
             ),
-          ),
-          SlideTransition(
-            position: _topMoveAnimation,
-            child: AnimatedBuilder(
-              animation: animationController,
-              builder: (context, child) => Padding(
-                padding: EdgeInsets.only(
-                    bottom: 38 - (38 * _signUpMoveAnimation.value)),
-                child: Container(
-                  height: 58,
-                  width: 58 + (200 * _signUpMoveAnimation.value),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                        8 + 32 * (1 - _signUpMoveAnimation.value)),
-                    color: Color(0xffF15C22),
-                  ),
-                  child: PageTransitionSwitcher(
-                    duration: Duration(milliseconds: 480),
-                    reverse: _signUpMoveAnimation.value < 0.7,
-                    transitionBuilder: (
-                      Widget child,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                    ) {
-                      return SharedAxisTransition(
-                        fillColor: Colors.transparent,
-                        child: child,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        transitionType: SharedAxisTransitionType.vertical,
-                      );
-                    },
-                    child: _signUpMoveAnimation.value > 0.7
-                        ? InkWell(
-                            key: ValueKey('Registrate gratis'),
-                            onTap: onNextClick,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Registrate gratis',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+            SlideTransition(
+              position: _topMoveAnimation,
+              child: AnimatedBuilder(
+                animation: animationController,
+                builder: (context, child) => Padding(
+                  padding: EdgeInsets.only(
+                      bottom: 38 - (38 * _signUpMoveAnimation.value)),
+                  child: Container(
+                    height: 58,
+                    width: 58 + (200 * _signUpMoveAnimation.value),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                          8 + 32 * (1 - _signUpMoveAnimation.value)),
+                      color: Color(0xffF15C22),
+                    ),
+                    child: PageTransitionSwitcher(
+                      duration: Duration(milliseconds: 480),
+                      reverse: _signUpMoveAnimation.value < 0.7,
+                      transitionBuilder: (
+                        Widget child,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                      ) {
+                        return SharedAxisTransition(
+                          fillColor: Colors.transparent,
+                          child: child,
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.vertical,
+                        );
+                      },
+                      child: _signUpMoveAnimation.value > 0.7
+                          ? InkWell(
+                              key: ValueKey('Registrate gratis'),
+                              onTap: onNextClick,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: 16.0, right: 16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Registrate gratis',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                  Icon(Icons.arrow_forward_rounded,
-                                      color: Colors.white),
-                                ],
+                                    Icon(Icons.arrow_forward_rounded,
+                                        color: Colors.white),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : InkWell(
+                              key: ValueKey('next button'),
+                              onTap: onNextClick,
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(Icons.arrow_forward_ios_rounded,
+                                    color: Colors.white),
                               ),
                             ),
-                          )
-                        : InkWell(
-                            key: ValueKey('next button'),
-                            onTap: onNextClick,
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.arrow_forward_ios_rounded,
-                                  color: Colors.white),
-                            ),
-                          ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: SlideTransition(
-              position: _loginTextMoveAnimation,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '¿Ya tienes una cuenta? ',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      'Inicia sesión',
+            /* Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: SlideTransition(
+                position: _loginTextMoveAnimation,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '¿Ya tienes una cuenta? ',
                       style: TextStyle(
-                        color: Color(0xff132137),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
-                  )
-                ],
+                    InkWell(
+                      onTap: () {},
+                      child: Text(
+                        'Inicia sesión',
+                        style: TextStyle(
+                          color: Color(0xff132137),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+           */
+          ],
+        ),
       ),
     );
   }

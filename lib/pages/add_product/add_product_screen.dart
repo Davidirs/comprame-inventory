@@ -1,15 +1,16 @@
 import 'dart:io';
 
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
+import 'package:comprame_inventory/pages/ui_view/title_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../comprame_inventory_theme.dart';
-import '../models/products.dart';
+import '../../models/products.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({Key? key, this.animationController})
@@ -36,41 +37,16 @@ class _AddProductScreenState extends State<AddProductScreen>
 
   @override
   void initState() {
-    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-            parent: widget.animationController!,
-            curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-
-    scrollController.addListener(() {
-      if (scrollController.offset >= 24) {
-        if (topBarOpacity != 1.0) {
-          setState(() {
-            topBarOpacity = 1.0;
-          });
-        }
-      } else if (scrollController.offset <= 24 &&
-          scrollController.offset >= 0) {
-        if (topBarOpacity != scrollController.offset / 24) {
-          setState(() {
-            topBarOpacity = scrollController.offset / 24;
-          });
-        }
-      } else if (scrollController.offset <= 0) {
-        if (topBarOpacity != 0.0) {
-          setState(() {
-            topBarOpacity = 0.0;
-          });
-        }
-      }
-    });
     super.initState();
   }
 
   List productList = [];
   cargarProductos() async {
-    List<Product> auxProduct = await db().getAllProducts();
-
-    productList = auxProduct;
+    if (isApp()) {
+      productList = await db().getAllProducts();
+    } else {
+      productList = await firebase().getAllProducts();
+    }
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -79,7 +55,7 @@ class _AddProductScreenState extends State<AddProductScreen>
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
-    cargarProductos();
+    //cargarProductos();
     return Container(
       color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
@@ -200,8 +176,12 @@ class _AddProductScreenState extends State<AddProductScreen>
                     ),
                   ),
                   DropdownButton<String>(
+                    value: dropdownValue,
                     icon: const Icon(Icons.arrow_drop_down),
                     elevation: 16,
+                    dropdownColor: isLightMode
+                        ? AppTheme.nearlyWhite
+                        : AppTheme.nearlyBlack,
                     style: TextStyle(
                       color: isLightMode
                           ? AppTheme.lightText
@@ -410,9 +390,7 @@ class _AddProductScreenState extends State<AddProductScreen>
 
                           if (_formKey.currentState!.validate()) {
                             final product = Product(
-                              id: productList.length == 0
-                                  ? 0
-                                  : productList.last.id + 1,
+                              id: timeToID(),
                               name: _nameCtrl.text,
                               units: int.parse(_unidCtrl.text),
                               type: dropdownValue,
@@ -421,7 +399,11 @@ class _AddProductScreenState extends State<AddProductScreen>
                               img: imageProductPath,
                               description: _descCtrl.text,
                             );
-                            db().insertProduct(product);
+                            if (isApp()) {
+                              db().insertProduct(product);
+                            } else {
+                              firebase().addProduct(product);
+                            }
                             // Process data.
                             printMsg(
                                 '¡Producto agregado exitosamente!', context);

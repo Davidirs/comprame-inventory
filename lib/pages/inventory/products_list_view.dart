@@ -1,5 +1,5 @@
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/produc_list_data.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/models/produc_list_data.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 

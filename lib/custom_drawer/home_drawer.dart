@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
@@ -241,7 +241,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Column(
             children: <Widget>[
               ListTile(
-                leading: Image.network(user!.photoURL.toString()),
+                leading: Image.network(
+                  user!.photoURL.toString(),
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.person,
+                      size: 40,
+                      color: isLightMode ? AppTheme.darkText : AppTheme.white,
+                    );
+                  },
+                ),
                 title: Text(
                   user.displayName ?? "Anónimos",
                   maxLines: 2,
@@ -300,8 +309,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
           //"¿Estás seguro que quieres eliminar?, esta acción no la puedes deshacer."),
           actions: <Widget>[
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool('isfirst', true);
                   logOut();
+                  setState(() {});
                 },
                 child: const Text("CERRAR SESIÓN")),
             ElevatedButton(

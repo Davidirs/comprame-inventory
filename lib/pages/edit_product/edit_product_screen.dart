@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/products.dart';
+import 'package:comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
+import 'package:comprame_inventory/pages/ui_view/title_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
@@ -12,18 +13,15 @@ import 'package:image_picker/image_picker.dart';
 import '../comprame_inventory_theme.dart';
 
 class EditProductScreen extends StatefulWidget {
-  EditProductScreen(
-      {Key? key, required this.idProduct, required this.voidCallback})
+  EditProductScreen({Key? key, required this.idProduct, required this.updated})
       : super(key: key);
 
   final int idProduct;
-  final VoidCallback voidCallback;
+  final Function(bool) updated;
 
   @override
   _EditProductScreenState createState() => _EditProductScreenState();
 }
-
-AnimationController? animationController;
 
 class _EditProductScreenState extends State<EditProductScreen>
     with TickerProviderStateMixin {
@@ -46,9 +44,11 @@ class _EditProductScreenState extends State<EditProductScreen>
   //String dropdownValue = listType[0];
   late Product product;
   cargarProductos() async {
-    Product auxProduct = await db().getProduct(widget.idProduct);
-
-    product = auxProduct;
+    if (isApp()) {
+      product = await db().getProduct(widget.idProduct);
+    } else {
+      product = await firebase().getProduct(widget.idProduct.toString());
+    }
 
     _nameCtrl.text = product.name ?? "";
     _unidCtrl.text = "${product.units ?? 0}";
@@ -100,10 +100,10 @@ class _EditProductScreenState extends State<EditProductScreen>
     );
   }
 
+  String dropdownValue = "Uno";
   Widget getMainListViewUI() {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
-    animationController!.forward();
 
     return Container(
       padding: EdgeInsets.only(
@@ -188,10 +188,16 @@ class _EditProductScreenState extends State<EditProductScreen>
                     ),
                   ),
                   DropdownButton<String>(
+                    value: dropdownValue,
                     icon: const Icon(Icons.arrow_drop_down),
                     elevation: 16,
+                    dropdownColor: isLightMode
+                        ? AppTheme.nearlyWhite
+                        : AppTheme.nearlyBlack,
                     style: TextStyle(
-                      color: isLightMode ? AppTheme.lightText : AppTheme.white,
+                      color: isLightMode
+                          ? AppTheme.lightText
+                          : AppTheme.nearlyWhite,
                     ),
                     underline: Container(
                       height: 2,
@@ -367,32 +373,49 @@ class _EditProductScreenState extends State<EditProductScreen>
                         color: isLightMode ? AppTheme.darkText : AppTheme.white,
                       ),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            final product = Product(
-                              id: widget.idProduct,
-                              name: _nameCtrl.text,
-                              units: int.parse(_unidCtrl.text),
-                              type: _dropdownValue,
-                              buy: num.parse(_buyCtrl.text),
-                              sale: num.parse(_saleCtrl.text),
-                              img: imageProductPath,
-                              description: _descCtrl.text,
-                            );
-                            db().updateProduct(product);
-                            // Process data.
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              widget.updated(false);
+                            },
+                            icon: Icon(
+                              Icons.cancel_outlined,
+                              color: HexColor("#ff6600"),
+                              size: 30,
+                            )),
+                        IconButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                final product = Product(
+                                  id: widget.idProduct,
+                                  name: _nameCtrl.text,
+                                  units: int.parse(_unidCtrl.text),
+                                  type: _dropdownValue,
+                                  buy: num.parse(_buyCtrl.text),
+                                  sale: num.parse(_saleCtrl.text),
+                                  img: imageProductPath,
+                                  description: _descCtrl.text,
+                                );
+                                if (isApp()) {
+                                  db().updateProduct(product);
+                                } else {
+                                  firebase().addProduct(product);
+                                }
+                                // Process data.
 /* 
                                     Navigator.pop(context); */
 
-                            widget.voidCallback();
-                          }
-                        },
-                        icon: Icon(
-                          Icons.done,
-                          color: HexColor("#ff6600"),
-                          size: 30,
-                        )),
+                                widget.updated(true);
+                              }
+                            },
+                            icon: Icon(
+                              Icons.done,
+                              color: HexColor("#ff6600"),
+                              size: 30,
+                            )),
+                      ],
+                    ),
                   ],
                 ),
               )

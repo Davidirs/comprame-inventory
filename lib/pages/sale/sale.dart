@@ -1,7 +1,8 @@
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
+import 'package:comprame_inventory/pages/ui_view/title_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 import 'package:search_choices/search_choices.dart';
@@ -9,7 +10,7 @@ import 'package:comprame_inventory/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../comprame_inventory_theme.dart';
-import '../models/products.dart';
+import '../../models/products.dart';
 
 class SaleScreen extends StatefulWidget {
   const SaleScreen({Key? key, this.animationController}) : super(key: key);
@@ -28,11 +29,6 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-            parent: widget.animationController!,
-            curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-
     cargarProductos();
 
     cargarDolar();
@@ -60,9 +56,11 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
 
   List<DropdownMenuItem<dynamic>> items = [];
   cargarProductos() async {
-    List<Product> auxProduct = await db().getAllProducts();
-
-    productList = auxProduct;
+    if (isApp()) {
+      productList = await db().getAllProducts();
+    } else {
+      productList = await firebase().getAllProducts();
+    }
 
     for (var i = 0; i < productList.length; i++) {
       items.add(DropdownMenuItem(
@@ -109,281 +107,52 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
 
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
-    return Stack(
+    return ListView(
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height / 3,
-          /* color: Colors.red, */
-          padding: EdgeInsets.only(
-            top: AppBar().preferredSize.height +
-                MediaQuery.of(context).padding.top,
-          ),
-          child: ListView(
-            controller: scrollController,
-            scrollDirection: Axis.vertical,
-            children: <Widget>[
-              //########################### SELECTOR
-              SearchChoices.multiple(
-                items: items,
-                selectedItems: sItems,
-                hint: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text("Buscar producto",
-                      style: TextStyle(
-                        color: isLightMode ? AppTheme.darkText : AppTheme.white,
-                      )),
-                ),
-                searchHint: "Nombre del producto",
-                onChanged: (value) {
-                  setState(() {
-                    sItems = value;
-                  });
-                },
-                displayItem: (item, selected) {
-                  return (Row(children: [
-                    selected
-                        ? Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          )
-                        : Icon(
-                            Icons.check_box_outline_blank,
-                            color: Colors.grey,
-                          ),
-                    SizedBox(width: 7),
-                    Expanded(
-                      child: item,
-                    ),
-                  ]));
-                },
-                selectedValueWidgetFn: (item) {
-                  return Text(
-                    "${get(item).name} - ${get(item).sale} \$ - ${get(item).units} uds.",
-                    style: TextStyle(
-                      color: isLightMode
-                          ? AppTheme.darkText
-                          : AppTheme.nearlyWhite,
-                    ),
-                  );
-                },
-                doneButton: (selectedItemsDone, doneContext) {
-                  return (ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(doneContext);
-                        setState(() {});
-                      },
-                      child: Text("Listo")));
-                },
-                closeButton: null,
-                style: TextStyle(fontStyle: FontStyle.italic),
-                searchFn: (String keyword, items) {
-                  List<int> ret = [];
-                  if (items != null && keyword.isNotEmpty) {
-                    keyword.split(" ").forEach((k) {
-                      int i = 0;
-                      items.forEach((item) {
-                        if (k.isNotEmpty &&
-                            (item.value
-                                .toString()
-                                .toLowerCase()
-                                .contains(k.toLowerCase()))) {
-                          ret.add(i);
-                        }
-                        i++;
-                      });
-                    });
-                  }
-                  if (keyword.isEmpty) {
-                    ret = Iterable<int>.generate(items.length).toList();
-                  }
-                  return (ret);
-                },
-                onClear: () {
-                  limpiarValores();
-                },
-                clearIcon: Icon(
-                  Icons.clear_all,
-                  size: 44,
-                ),
-                icon: Icon(
-                  Icons.arrow_drop_down_circle,
-                  size: 44,
-                ),
-                /* label: "Carrito de compras",
-                underline: Container(
-                  height: 1.0,
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.teal, width: 3.0))),
-                ), */
-                iconDisabledColor: Colors.brown,
-                iconEnabledColor: Color(0xFFF15C22),
-                dropDownDialogPadding: EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 0,
-                ),
-                isExpanded: true,
-              ),
-            ],
-          ),
-        ),
+        //#############################   Buscador
+        Buscador(isLightMode),
 
-        //LISTA DE PRODUCTOS
-        Container(
-          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        isApp()
+            ? Container(
+                height: 500,
+                child: ListView(
                   children: [
-                    //Text("Efectivo"),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 30,
-                                child: Image.asset("assets/img/cash.png")),
-                            Checkbox(
-                              activeColor: AppTheme.primary,
-                              fillColor:
-                                  MaterialStateProperty.all(AppTheme.primary),
-                              checkColor: Colors.white,
-                              value: isCash,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  method = 0;
-                                  CambiarCheckBock();
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Text("Efectivo",
-                            style: TextStyle(
-                              color: isLightMode
-                                  ? AppTheme.lightText
-                                  : AppTheme.white,
-                            ))
-                      ],
-                    ),
-
-                    //Text("Pagomovil"),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 30,
-                                child: Image.asset("assets/img/movil.png")),
-                            Checkbox(
-                              checkColor: Colors.white,
-                              fillColor:
-                                  MaterialStateProperty.all(AppTheme.primary),
-                              value: isMovil,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  method = 1;
-                                  CambiarCheckBock();
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Text("PagoMovil",
-                            style: TextStyle(
-                              color: isLightMode
-                                  ? AppTheme.lightText
-                                  : AppTheme.white,
-                            ))
-                      ],
-                    ),
-                    //Text("Biopago"),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 30,
-                                child: Image.asset("assets/img/any.png")),
-                            Checkbox(
-                              checkColor: Colors.white,
-                              fillColor:
-                                  MaterialStateProperty.all(AppTheme.primary),
-                              value: isAny,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  method = 2;
-
-                                  CambiarCheckBock();
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Text("Biopago",
-                            style: TextStyle(
-                              color: isLightMode
-                                  ? AppTheme.lightText
-                                  : AppTheme.white,
-                            ))
-                      ],
-                    ),
-                    //Text("Tarjeta"),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 30,
-                                child: Image.asset("assets/img/card.png")),
-                            Checkbox(
-                              checkColor: Colors.white,
-                              fillColor:
-                                  MaterialStateProperty.all(AppTheme.primary),
-                              value: isCard,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  method = 3;
-
-                                  CambiarCheckBock();
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Text("Tarjeta",
-                            style: TextStyle(
-                              color: isLightMode
-                                  ? AppTheme.lightText
-                                  : AppTheme.white,
-                            ))
-                      ],
-                    ),
+                    //#########################    Metodos de pago
+                    metodosDePago(isLightMode),
+                    listadoDeProductos(isLightMode)
                   ],
                 ),
-              ),
-              Divider(),
-              TitleView(
-                titleTxt: 'Lista de productos',
-                subTxt: 'Total: ${dolarBs(total.toDouble())}',
-              ),
-            ],
-          ),
+              )
+            : Row(
+                children: [
+                  //#########################    Metodos de pago
+                  listadoDeProductos(isLightMode),
+                  metodosDePago(isLightMode),
+                ],
+              )
+      ],
+    );
+  }
+
+  listadoDeProductos(bool isLightMode) {
+    return Column(
+      children: [
+        //#################    tITULO LISTA DE PRODUCTOS
+        if (isApp()) Divider(),
+        TitleView(
+          titleTxt: 'Lista de productos',
+          subTxt: 'Total: ${dolarBs(total.toDouble())}',
         ),
         //#############################   LISTADOS DE PRODUCTOS
+
         Container(
           padding: EdgeInsets.only(
             bottom: 62 + MediaQuery.of(context).padding.bottom,
           ),
-          margin: EdgeInsets.only(
-              top: (MediaQuery.of(context).size.height / 3) + 100),
+          width: isApp()
+              ? MediaQuery.of(context).size.width
+              : MediaQuery.of(context).size.width / 2,
+          height: 400,
           child: sItems.length == 0
               ? noProduct()
               : ListView.builder(
@@ -491,8 +260,261 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                   )
                   } */
                   ),
-        )
+        ),
       ],
+    );
+  }
+
+  metodosDePago(bool isLightMode) {
+    return Column(
+      children: [
+        if (isApp()) Divider(),
+        TitleView(
+          titleTxt: 'Métodos de Pago',
+          subTxt: '',
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          width: isApp()
+              ? MediaQuery.of(context).size.width
+              : MediaQuery.of(context).size.width / 2,
+          height: isApp() ? 75 : 400,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //Text("Efectivo"),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                          height: 30,
+                          width: 30,
+                          child: Image.asset("assets/img/cash.png")),
+                      Checkbox(
+                        activeColor: AppTheme.primary,
+                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        checkColor: Colors.white,
+                        value: isCash,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            method = 0;
+                            CambiarCheckBock();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Text("Efectivo",
+                      style: TextStyle(
+                        color:
+                            isLightMode ? AppTheme.lightText : AppTheme.white,
+                      ))
+                ],
+              ),
+
+              //Text("Pagomovil"),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                          height: 30,
+                          width: 30,
+                          child: Image.asset("assets/img/movil.png")),
+                      Checkbox(
+                        checkColor: Colors.white,
+                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        value: isMovil,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            method = 1;
+                            CambiarCheckBock();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Text("PagoMovil",
+                      style: TextStyle(
+                        color:
+                            isLightMode ? AppTheme.lightText : AppTheme.white,
+                      ))
+                ],
+              ),
+              //Text("Biopago"),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                          height: 30,
+                          width: 30,
+                          child: Image.asset("assets/img/any.png")),
+                      Checkbox(
+                        checkColor: Colors.white,
+                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        value: isAny,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            method = 2;
+
+                            CambiarCheckBock();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Text("Biopago",
+                      style: TextStyle(
+                        color:
+                            isLightMode ? AppTheme.lightText : AppTheme.white,
+                      ))
+                ],
+              ),
+              //Text("Tarjeta"),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                          height: 30,
+                          width: 30,
+                          child: Image.asset("assets/img/card.png")),
+                      Checkbox(
+                        checkColor: Colors.white,
+                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        value: isCard,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            method = 3;
+
+                            CambiarCheckBock();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Text("Tarjeta",
+                      style: TextStyle(
+                        color:
+                            isLightMode ? AppTheme.lightText : AppTheme.white,
+                      ))
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Buscador(bool isLightMode) {
+    return Container(
+      padding: EdgeInsets.only(
+        top: AppBar().preferredSize.height +
+            MediaQuery.of(context).padding.top +
+            24,
+      ),
+      child: SearchChoices.multiple(
+        items: items,
+        selectedItems: sItems,
+        hint: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text("Buscar producto",
+              style: TextStyle(
+                color: isLightMode ? AppTheme.darkText : AppTheme.white,
+              )),
+        ),
+        searchHint: "Nombre del producto",
+        onChanged: (value) {
+          setState(() {
+            sItems = value;
+          });
+        },
+        displayItem: (item, selected) {
+          return (Row(children: [
+            selected
+                ? Icon(
+                    Icons.check,
+                    color: Colors.green,
+                  )
+                : Icon(
+                    Icons.check_box_outline_blank,
+                    color: Colors.grey,
+                  ),
+            SizedBox(width: 7),
+            Expanded(
+              child: item,
+            ),
+          ]));
+        },
+        selectedValueWidgetFn: (item) {
+          return Text(
+            "${get(item).name} - ${get(item).sale} \$ - ${get(item).units} uds.",
+            style: TextStyle(
+              color: isLightMode ? AppTheme.darkText : AppTheme.nearlyWhite,
+            ),
+          );
+        },
+        doneButton: (selectedItemsDone, doneContext) {
+          return (ElevatedButton(
+              onPressed: () {
+                Navigator.pop(doneContext);
+                //setState(() {});
+              },
+              child: Text("Listo")));
+        },
+        closeButton: null,
+        style: TextStyle(fontStyle: FontStyle.italic),
+        searchFn: (String keyword, items) {
+          List<int> ret = [];
+          if (items != null && keyword.isNotEmpty) {
+            keyword.split(" ").forEach((k) {
+              int i = 0;
+              items.forEach((item) {
+                if (k.isNotEmpty &&
+                    (item.value
+                        .toString()
+                        .toLowerCase()
+                        .contains(k.toLowerCase()))) {
+                  ret.add(i);
+                }
+                i++;
+              });
+            });
+          }
+          if (keyword.isEmpty) {
+            ret = Iterable<int>.generate(items.length).toList();
+          }
+          return (ret);
+        },
+        onClear: () {
+          limpiarValores();
+        },
+        clearIcon: Icon(
+          Icons.clear_all,
+          size: 44,
+        ),
+        icon: Icon(
+          Icons.arrow_drop_down_circle,
+          size: 44,
+        ),
+        /* label: "Carrito de compras",
+                underline: Container(
+                  height: 1.0,
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.teal, width: 3.0))),
+                ), */
+        iconDisabledColor: Colors.brown,
+        iconEnabledColor: Color(0xFFF15C22),
+        dropDownDialogPadding: EdgeInsets.symmetric(
+          vertical: 0,
+          horizontal: 0,
+        ),
+        isExpanded: true,
+      ),
     );
   }
 
@@ -706,27 +728,43 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
   }
 
 //creo lista vacia
-  List<Venta> ventaList = [];
+  //List<Venta> ventaList = [];
   //llamo a la base de datos y le paso los valores a la lista
-  cargarVentas() async {
+  /* cargarVentas() async {
     List<Venta> auxVenta = await db().getAllVentas();
 
     ventaList = auxVenta;
-  }
+  } */
 
   modificarUnidades() async {
     for (var i = 0; i < lineasProductos.length; i++) {
-      Product product = await db().getProduct(lineasProductos[i][0].id);
-      final newProduct = Product(
-        id: lineasProductos[i][0].id,
-        units: product.units! - int.parse(lineasProductos[i][1]),
-      );
-      db().decreaseUnitsProduct(newProduct);
+      if (isApp()) {
+        Product product = await db().getProduct(lineasProductos[i][0].id);
+        final newProduct = Product(
+          id: lineasProductos[i][0].id,
+          units: product.units! - int.parse(lineasProductos[i][1]),
+        );
+        db().decreaseUnitsProduct(newProduct);
+      } else {
+        Product product =
+            await firebase().getProduct(lineasProductos[i][0].id.toString());
+        final newProduct = Product(
+          id: product.id,
+          name: product.name,
+          units: product.units! - int.parse(lineasProductos[i][1]),
+          type: product.type,
+          buy: product.buy,
+          sale: product.sale,
+          img: product.img,
+          description: product.description,
+        );
+        firebase().addProduct(newProduct);
+      }
     }
   }
 
   confirmarVenta() async {
-    cargarVentas();
+    //cargarVentas();
     detalles = "";
     for (var i = 0; i < lineasProductos.length; i++) {
       detalles += "${lineasProductos[i][1]} " +
@@ -742,6 +780,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
           title: const Text("Confirmación"),
           content: Container(
             height: 150,
+            width: 150,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -780,7 +819,11 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                         .toString(), //0 efectivo, 1 pagomovil,  2 biopago, punto de venta
                     vendor: nameUser,
                   );
-                  db().insertVenta(_venta);
+                  if (isApp()) {
+                    db().insertVenta(_venta);
+                  } else {
+                    firebase().addVenta(_venta);
+                  }
                   //RESTAR UNIDADES A LOS PRODUCTOS VENDIDOS
                   modificarUnidades();
                   printMsg('Venta realizada exitosamente!', context);
@@ -839,7 +882,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
         ruta = "assets/img/any.png";
         break;
       default:
-        ruta = "assets/img/cash.png";
+        ruta = "assets/img/card.png";
     }
     return Image.asset(ruta);
   }

@@ -1,12 +1,9 @@
 import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/edit_product/edit_product_screen.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
-import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/models/tabIcon_data.dart';
+import 'package:comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
-import 'package:comprame_inventory/global.dart'; /* 
-import 'package:comprame_inventory/utils.dart'; */
 import 'package:comprame_inventory/main.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +30,6 @@ class _SalesScreenState extends State<SalesScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 1.0;
-  int _idventa = 0;
 
   bool salirEdit(editando) {
     return false;
@@ -69,13 +65,17 @@ class _SalesScreenState extends State<SalesScreen>
         }
       }
     }); */
-    cargarVentas();
+
     cargarDolar();
     super.initState();
   }
 
   Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 1000));
+    if (isApp()) {
+      ventaList = await db().getAllVentas();
+    } else {
+      ventaList = await firebase().getAllVentas();
+    }
     return true;
   }
 
@@ -90,14 +90,6 @@ class _SalesScreenState extends State<SalesScreen>
 //creo lista vacia
   List<Venta> ventaList = [];
   //llamo a la base de datos y le paso los valores a la lista
-  cargarVentas() async {
-    ventaList = await db().getAllVentas();
-    Future.delayed(
-        Duration(seconds: 1),
-        () => {
-              setState(() {}),
-            });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +99,7 @@ class _SalesScreenState extends State<SalesScreen>
       color: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: editando
+        body: /* editando
             ? EditProductScreen(
                 idProduct: _idventa,
                 voidCallback: () {
@@ -115,15 +107,16 @@ class _SalesScreenState extends State<SalesScreen>
                     editando = false;
                   });
                 })
-            : Stack(
-                children: <Widget>[
-                  getMainListViewUI(),
-                  getAppBarUI(),
-                  SizedBox(
-                    height: MediaQuery.of(context).padding.bottom,
-                  )
-                ],
-              ),
+            :  */
+            Stack(
+          children: <Widget>[
+            getMainListViewUI(),
+            getAppBarUI(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -237,10 +230,18 @@ class _SalesScreenState extends State<SalesScreen>
                                             try {
                                               print(indexInverso);
                                               print(ventaList[indexInverso].id);
-                                              db().deleteVenta(
-                                                  ventaList[indexInverso].id!);
+                                              if (isApp()) {
+                                                db().deleteVenta(
+                                                    ventaList[indexInverso]
+                                                        .id!);
+                                              } else {
+                                                firebase().deleteVenta(
+                                                    ventaList[indexInverso]
+                                                        .id!
+                                                        .toString());
+                                              }
 
-                                              cargarVentas();
+                                              getData();
 
                                               printMsg(
                                                   "Venta eliminada exitosamente",
@@ -391,26 +392,28 @@ class _SalesScreenState extends State<SalesScreen>
                       ),
                     ),
                     Row(children: [
-                      IconButton(
-                          onPressed: () async {
-                            //db().deleteVenta(ventaList[ventaList.length - 1].id!);
-                            await sendSalesFirebase(context);
-                            await readSaleFromDb();
+                      if (isApp())
+                        IconButton(
+                            onPressed: () async {
+                              //db().deleteVenta(ventaList[ventaList.length - 1].id!);
+                              await readSaleFromDb();
+                              await sendSalesFirebase(context);
 /*  */
-                            Future.delayed(
-                                Duration(seconds: 2),
-                                () => {
-                                      cargarVentas(),
-                                      printMsg("Lista de ventas sincronizada",
-                                          context),
-                                      print("TABLA ACTUALIZADA"),
-                                    });
-                          },
-                          icon: Icon(
-                            Icons.cloud_sync,
-                            color: HexColor("#ff6600"),
-                            size: 30,
-                          )),
+                              Future.delayed(
+                                  Duration(seconds: 2),
+                                  () => {
+                                        getData(),
+                                        printMsg("Lista de ventas sincronizada",
+                                            context),
+                                        print("TABLA ACTUALIZADA"),
+                                      });
+                              setState(() {});
+                            },
+                            icon: Icon(
+                              Icons.cloud_sync,
+                              color: HexColor("#ff6600"),
+                              size: 30,
+                            )),
                       IconButton(
                           onPressed: () async {
                             //cambiar moneda

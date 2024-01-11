@@ -1,4 +1,5 @@
 //Para imprimir mensaje en el ScackBar
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,12 +31,13 @@ bool isDolar = true;
 double dolarvalue = 1;
 String? imgUser = null;
 String? nameUser = null;
+bool editando = false;
 
 cargarDolar() async {
   // Obtain shared preferences.
   prefs = await SharedPreferences.getInstance();
-  isDolar = await prefs.getBool('dolar')!;
-  dolarvalue = await prefs.getDouble('dolarvalue')!;
+  isDolar = await prefs.getBool('dolar') ?? true;
+  dolarvalue = await prefs.getDouble('dolarvalue') ?? 1.00;
 }
 
 cargarUsuario() async {
@@ -73,4 +75,22 @@ int timeToID() {
   id = id.substring(2, 15);
   print(id);
   return int.parse(id);
+}
+
+/* bool isMobile(context) {
+  bool isMobile = prefs.getBool('isfirst') ?? true;
+  if (isMobile) {
+    return true;
+  } else {
+    return false;
+  }
+} */
+
+bool isApp() {
+  if (defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS) {
+    return true;
+  } else {
+    return false;
+  }
 }

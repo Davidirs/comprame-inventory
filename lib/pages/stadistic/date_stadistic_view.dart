@@ -1,17 +1,20 @@
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 
-class DateView extends StatefulWidget {
-  const DateView({Key? key}) : super(key: key);
+class DateStadisticView extends StatefulWidget {
+  const DateStadisticView({Key? key}) : super(key: key);
 
   @override
-  _DateViewState createState() => _DateViewState();
+  _DateStadisticViewState createState() => _DateStadisticViewState();
 }
 
-class _DateViewState extends State<DateView> with TickerProviderStateMixin {
+class _DateStadisticViewState extends State<DateStadisticView>
+    with TickerProviderStateMixin {
   List<Widget> listViews = <Widget>[];
 
   @override
@@ -25,8 +28,11 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
   List<Venta> ventaList = [];
   //llamo a la base de datos y le paso los valores a la lista
   cargarVentas() async {
-    List<Venta> auxVenta = await db().getAllVentas();
-    ventaList = auxVenta;
+    if (isApp()) {
+      ventaList = await db().getAllVentas();
+    } else {
+      ventaList = await firebase().getAllVentas();
+    }
     calcToday();
   }
 
@@ -146,8 +152,11 @@ class _DateViewState extends State<DateView> with TickerProviderStateMixin {
                                   firstDate:
                                       DateTime(DateTime.now().year - 100),
                                   lastDate: DateTime(DateTime.now().year + 1))
-                              .then((value) => controller.text =
-                                  '${value!.day.toString()}/${value.month.toString()}/${value.year.toString()}');
+                              .then((value) {
+                            if (value != null)
+                              controller.text =
+                                  '${value.day.toString()}/${value.month.toString()}/${value.year.toString()}';
+                          });
                         },
                         style: TextStyle(
                           color: CompraMeInventoryTheme.nearlyDarkBlue,

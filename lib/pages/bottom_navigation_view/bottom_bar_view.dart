@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/add_product/add_product_screen.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/tabIcon_data.dart';
+import 'package:comprame_inventory/pages/add_product/add_product_screen.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/models/tabIcon_data.dart';
 import 'package:flutter/material.dart';
 
 class BottomBarView extends StatefulWidget {

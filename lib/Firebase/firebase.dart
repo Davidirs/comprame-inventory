@@ -1,13 +1,13 @@
 // ignore_for_file: invalid_return_type_for_catch_error
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/models/venta.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:firebase_core/firebase_core.dart';
-import '../comprame_inventory/models/products.dart';
+import '../models/products.dart';
 import '../firebase_options.dart';
 
 firebaseInitializeApp() async {
@@ -74,20 +74,6 @@ addUserToDb() async {
       print(' DocumentSnapshot added with ID: ${doc.id}')); */
 }
 
-addProductToDb(Product producto) async {
-  final _currentUser = currentUser();
-  final db = FirebaseFirestore.instance;
-
-  db
-      .collection("users")
-      .doc(_currentUser!.email)
-      .collection("products")
-      .doc(producto.id.toString())
-      .set(producto.toMap())
-      .onError((e, _) => print("Error writing document: $e"));
-  print("object added");
-}
-
 //*********************PENDIENTE*************** */
 addSaleToDb(Venta venta) async {
   final _currentUser = currentUser();
@@ -104,6 +90,16 @@ addSaleToDb(Venta venta) async {
 }
 
 updateProduct(data) async {
+  final product = dataToProduct(data);
+  bool exist = await db().checkIfProductExists(data["id"]);
+  try {
+    exist ? db().updateProduct(product) : db().insertProduct(product);
+  } catch (e) {
+    print("Error al actualizar el producto ${data["id"]}: $e");
+  }
+}
+
+Product dataToProduct(data) {
   final product = Product(
     id: data["id"],
     name: data["name"],
@@ -114,15 +110,20 @@ updateProduct(data) async {
     img: data["img"],
     description: data["description"],
   );
-  bool exist = await db().checkIfProductExists(data["id"]);
+  return product;
+}
+
+updateSale(data) async {
+  final venta = dataToSale(data);
+  bool exist = await db().checkIfSaleExists(data["id"]);
   try {
-    exist ? db().updateProduct(product) : db().insertProduct(product);
+    exist ? db().updateVenta(venta) : db().insertVenta(venta);
   } catch (e) {
     print("Error al actualizar el producto ${data["id"]}: $e");
   }
 }
 
-updateSale(data) async {
+Venta dataToSale(data) {
   final venta = Venta(
     id: data["id"],
     fecha: data["fecha"],
@@ -132,10 +133,5 @@ updateSale(data) async {
     method: data["method"],
     vendor: data["vendor"],
   );
-  bool exist = await db().checkIfSaleExists(data["id"]);
-  try {
-    exist ? db().updateVenta(venta) : db().insertVenta(venta);
-  } catch (e) {
-    print("Error al actualizar el producto ${data["id"]}: $e");
-  }
+  return venta;
 }

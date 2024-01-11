@@ -1,13 +1,13 @@
-import 'package:comprame_inventory/comprame_inventory/ui_view/date_view.dart';
+import 'package:comprame_inventory/pages/stadistic/date_stadistic_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
 import '../comprame_inventory_theme.dart';
 
-class WorkoutView extends StatelessWidget {
+class NuevasView extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
 
-  const WorkoutView({Key? key, this.animationController, this.animation})
+  const NuevasView({Key? key, this.animationController, this.animation})
       : super(key: key);
 
   @override
@@ -130,7 +130,8 @@ class WorkoutView extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => DateView(),
+                                        builder: (context) =>
+                                            DateStadisticView(),
                                       ),
                                     );
                                   },

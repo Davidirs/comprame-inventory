@@ -1,9 +1,9 @@
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
-import 'package:comprame_inventory/comprame_inventory/ui_view/area_list_view.dart';
-import 'package:comprame_inventory/comprame_inventory/ui_view/title_view.dart';
-import 'package:comprame_inventory/comprame_inventory/ui_view/workout_view.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/pages/ui_view/title_view.dart';
+import 'package:comprame_inventory/pages/ui_view/nuevas_view.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:comprame_inventory/utils.dart';
@@ -40,17 +40,17 @@ class _StadisticScreenState extends State<StadisticScreen>
     super.initState();
   }
 
-  void addAllListData() {
+  /*  void addAllListData() {
     const int count = 5;
 
-    listViews.add(
+    /* listViews.add(
       TitleView(
         titleTxt: 'Tu tienes el control',
         subTxt: 'Detalles',
       ),
-    );
+    ); */
 
-    listViews.add(
+    /*   listViews.add(
       WorkoutView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -58,7 +58,7 @@ class _StadisticScreenState extends State<StadisticScreen>
                 Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController!,
       ),
-    );
+    ); */
     /* listViews.add(
       Column(
         children: <Widget>[
@@ -188,7 +188,7 @@ class _StadisticScreenState extends State<StadisticScreen>
       ),
     );
   }
-
+ */
   Future<bool> getData() async {
     await Future<dynamic>.delayed(const Duration(milliseconds: 500));
     return true;
@@ -198,9 +198,12 @@ class _StadisticScreenState extends State<StadisticScreen>
   List<Venta> ventaList = [];
   //llamo a la base de datos y le paso los valores a la lista
   cargarVentas() async {
-    List<Venta> auxVenta = await db().getAllVentas();
+    if (isApp()) {
+      ventaList = await db().getAllVentas();
+    } else {
+      ventaList = await firebase().getAllVentas();
+    }
 
-    ventaList = auxVenta;
     calcToday();
   }
 
@@ -322,7 +325,7 @@ class _StadisticScreenState extends State<StadisticScreen>
          */
         Column(
           children: <Widget>[
-            WorkoutView(
+            NuevasView(
               animation: Tween<double>(begin: 1.0, end: 1.0).animate(
                   //animation: Tween<double>(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(

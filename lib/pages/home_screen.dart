@@ -1,7 +1,7 @@
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_home_screen.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_home_screen.dart';
 import 'package:flutter/material.dart';
-import 'model/homelist.dart';
+import 'package:comprame_inventory/models/homelist.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);

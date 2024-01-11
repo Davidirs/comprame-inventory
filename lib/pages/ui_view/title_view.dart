@@ -1,5 +1,5 @@
 import 'package:comprame_inventory/app_theme.dart';
-import 'package:comprame_inventory/comprame_inventory/comprame_inventory_theme.dart';
+import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
 import 'package:flutter/material.dart';
 
 class TitleView extends StatelessWidget {
@@ -14,21 +14,21 @@ class TitleView extends StatelessWidget {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
     return Container(
+      //width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.only(left: 24, right: 24),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: Text(
-                titleTxt,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontFamily: CompraMeInventoryTheme.fontName,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                  letterSpacing: 0.5,
-                  color: isLightMode ? AppTheme.lightText : AppTheme.white,
-                ),
+            Text(
+              titleTxt,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontFamily: CompraMeInventoryTheme.fontName,
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+                letterSpacing: 0.5,
+                color: isLightMode ? AppTheme.lightText : AppTheme.white,
               ),
             ),
             //***** texto al lado */

@@ -1,7 +1,7 @@
-import 'package:comprame_inventory/comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/models/venta.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:comprame_inventory/comprame_inventory/models/products.dart';
+import 'package:comprame_inventory/models/products.dart';
 //import 'products.dart';
 
 class db {
@@ -99,8 +99,17 @@ class db {
   //delete method
 
   Future<void> deleteProduct(String productID) async {
-    Database db = await getDataBase();
-    db.rawDelete("DELETE FROM $_tableProductos WHERE id ='$productID'");
+    try {
+      Database db = await getDataBase();
+      db.rawDelete("DELETE FROM $_tableProductos WHERE id ='$productID'");
+      print(
+        "Producto eliminado",
+      );
+    } catch (e) {
+      print(
+        "Error al eliminar producto",
+      );
+    }
   }
 
   Future<bool> checkIfProductExists(int id) async {
