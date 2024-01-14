@@ -140,7 +140,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
         //#################    tITULO LISTA DE PRODUCTOS
         if (isApp()) Divider(),
         TitleView(
-          titleTxt: 'Lista de productos',
+          titleTxt: 'Productos',
           subTxt: 'Total: ${dolarBs(total.toDouble())}',
         ),
         //#############################   LISTADOS DE PRODUCTOS
@@ -168,89 +168,86 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                  height: 30,
-                                  width: 30,
-                                  child: Image.asset(
-                                      "assets/img/placeholder.png")),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                width: 140,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "${productList[sItems[index]].name}",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: isLightMode
-                                            ? AppTheme.darkText
-                                            : AppTheme.nearlyWhite,
-                                      ),
-                                    ),
-                                    Text(
-                                      dolarBs(productList[sItems[index]]
-                                          .sale!
-                                          .toDouble()),
-                                      style: TextStyle(
-                                        color: isLightMode
-                                            ? AppTheme.darkText
-                                            : AppTheme.nearlyWhite,
-                                      ),
-                                    ),
-                                  ],
+                          Container(
+                              height: 30,
+                              width: 30,
+                              child: Image.asset("assets/img/placeholder.png")),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            color: Colors.red,
+                            width: 130,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "${productList[sItems[index]].name}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: isLightMode
+                                        ? AppTheme.darkText
+                                        : AppTheme.nearlyWhite,
+                                  ),
                                 ),
+                                Text(
+                                  dolarBs(productList[sItems[index]]
+                                      .sale!
+                                      .toDouble()),
+                                  style: TextStyle(
+                                    color: isLightMode
+                                        ? AppTheme.darkText
+                                        : AppTheme.nearlyWhite,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            "X",
+                            style: TextStyle(
+                              color: isLightMode
+                                  ? AppTheme.darkText
+                                  : AppTheme.nearlyWhite,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            color: Colors.white,
+                            width: 40,
+                            child: TextField(
+                              controller: _controllers[index],
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                hintText: "0",
                               ),
-                              Text(
-                                "X",
+                              onChanged: (String) {
+                                calcularTotal();
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                              width: 60,
+                              color: Colors.blue,
+                              child: Text(
+                                subTotales.isEmpty ||
+                                        index > subTotales.length - 1
+                                    ? "0.00"
+                                    : dolarBs(subTotales[index].toDouble()),
+                                //"${subtotal(index)} \$",
+                                textAlign: TextAlign.right,
                                 style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   color: isLightMode
                                       ? AppTheme.darkText
                                       : AppTheme.nearlyWhite,
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                color: Colors.white,
-                                width: 40,
-                                child: TextField(
-                                  controller: _controllers[index],
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    hintText: "0",
-                                  ),
-                                  onChanged: (String) {
-                                    calcularTotal();
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                  width: 60,
-                                  child: Text(
-                                    subTotales.isEmpty ||
-                                            index > subTotales.length - 1
-                                        ? "0.00"
-                                        : dolarBs(subTotales[index].toDouble()),
-                                    //"${subtotal(index)} \$",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: isLightMode
-                                          ? AppTheme.darkText
-                                          : AppTheme.nearlyWhite,
-                                    ),
-                                  )),
-                            ],
-                          ),
+                              )),
                         ],
                       ),
                     );

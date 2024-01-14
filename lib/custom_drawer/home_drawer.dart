@@ -1,12 +1,15 @@
 import 'dart:io';
 
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
+import 'package:comprame_inventory/models/appinfo.dart';
 import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
@@ -27,15 +30,37 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList>? drawerList;
   @override
-  void initState() {
+  initState() {
     setDrawerListArray();
     cargarUsuario();
+    cargarAppInfo();
     super.initState();
   }
 
-  //var imageProductPath = null;
+  String lastedVersion = "";
 
+  Uri linkUpdate = Uri.parse('');
+  cargarAppInfo() async {
+    AppInfo appinfo = await firebase().getAppInfo();
+    print(appinfo.version);
+    lastedVersion = appinfo.version!;
+    linkUpdate = Uri.parse(appinfo.linkupdate!);
+    ;
+    setState(() {
+      print("LastedVersion: " + lastedVersion);
+      print("currentVersion: " + currentVersion);
+    });
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(linkUpdate)) {
+      throw Exception('Could not launch $linkUpdate');
+    }
+  }
+
+  //var imageProductPath = null;
   bool isEditing = false;
+
   //String? name = "";
 
   /* cargarSharedPreferences() async {
@@ -116,6 +141,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     bool isLightMode = brightness == Brightness.light;
     TextEditingController _controller = TextEditingController();
     final user = currentUser();
+
     return Scaffold(
       backgroundColor: isLightMode ? AppTheme.background : AppTheme.nearlyBlack,
       body: Column(
@@ -252,6 +278,22 @@ class _HomeDrawerState extends State<HomeDrawer> {
               },
             ),
           ),
+          Text(
+            "Versión actual: ${currentVersion}",
+            textAlign: TextAlign.center,
+          ),
+          if (lastedVersion != currentVersion)
+            ElevatedButton.icon(
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
+                foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+              ),
+              onPressed: () {
+                _launchUrl();
+              },
+              icon: Icon(Icons.download),
+              label: Text("Nueva versión " + lastedVersion),
+            ),
           Divider(
             height: 1,
             color: AppTheme.grey.withOpacity(0.6),

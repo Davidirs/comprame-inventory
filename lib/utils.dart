@@ -34,6 +34,7 @@ double dolarvalue = 1;
 String? imgUser = null;
 String? nameUser = null;
 bool editando = false;
+String currentVersion = "0.0.2";
 
 cargarDolar() async {
   // Obtain shared preferences.

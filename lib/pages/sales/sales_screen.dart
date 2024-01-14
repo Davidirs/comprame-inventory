@@ -289,7 +289,12 @@ class _SalesScreenState extends State<SalesScreen>
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold)),
-                                  Text("${ventaList[indexInverso].vendor}"),
+                                  Container(
+                                      width: 60,
+                                      child: Text(
+                                        "${ventaList[indexInverso].vendor}",
+                                        overflow: TextOverflow.ellipsis,
+                                      )),
                                 ],
                               ),
                               title: Text(formattedDate,

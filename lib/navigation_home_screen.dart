@@ -32,7 +32,7 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
     super.initState();
   }
 
-  bool isFirst = false;
+  bool isFirst = true;
   bool isLogin = false;
   isOnce() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,7 +49,7 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
     print("ES PRIMERA VEZ: ${prefs.getBool('isfirst')}");
     print("NOMBRE DE USUARIO: ${prefs.getString('nameText')}");
     print("PRECIO DEL DOLAR: ${prefs.getDouble('dolarvalue')}");
-    isFirst = prefs.getBool('isfirst')!;
+    isFirst = prefs.getBool('isfirst') ?? true;
   }
 
   login() {

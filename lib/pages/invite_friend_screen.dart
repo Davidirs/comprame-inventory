@@ -79,7 +79,7 @@ class _InviteFriendState extends State<InviteFriend> {
                           onTap: () async {
                             //method here for functionality
                             final result = await Share.shareWithResult(
-                                '👋 Estoy usando Comprame Inventory para administrar mi negocio 😉 y quiero compartirla contigo, descargala desde ✅ http://bit.ly/ComprameInventory, las demás actualizaciones estarán disponible en en el mismo link. 👍',
+                                '👋 Estoy usando Comprame Inventory para administrar mi negocio 😉 y quiero compartirla contigo, descargala desde ✅ https://bit.ly/Comprame-Inventory, las demás actualizaciones estarán disponible en en el mismo link. 👍',
                                 subject: '¡La mejor APP de Inventario!');
 
                             if (result.status == ShareResultStatus.success) {

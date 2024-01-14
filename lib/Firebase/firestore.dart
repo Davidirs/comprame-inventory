@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/db/db.dart';
+import 'package:comprame_inventory/models/appinfo.dart';
 import 'package:comprame_inventory/models/dolar.dart';
 import 'package:comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/models/venta.dart';
@@ -190,6 +191,25 @@ class firebase {
       onError: (e) => print("Error getting document: $e"),
     );
     return dolar;
+    //printMsg("Productos actualizados", context);
+  }
+
+  Future<AppInfo> getAppInfo() async {
+    final db = FirebaseFirestore.instance;
+    final docRefProduct = db.collection("generals").doc("appinfo");
+    AppInfo appinfo = await docRefProduct.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        AppInfo appinfo = AppInfo(
+          version: data["version"],
+          linkupdate: data["linkupdate"],
+        );
+        return appinfo;
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+
+    return appinfo;
     //printMsg("Productos actualizados", context);
   }
 }
