@@ -142,7 +142,7 @@ class _SalesScreenState extends State<SalesScreen>
           return Container(
             width: MediaQuery.of(context).size.width,
             child: ventaList.length == 0
-                ? noVenta()
+                ? noVenta(isLightMode)
                 : ListView.builder(
                     controller: scrollController,
                     padding: EdgeInsets.only(
@@ -337,12 +337,20 @@ class _SalesScreenState extends State<SalesScreen>
     );
   }
 
-  Column noVenta() {
+  Column noVenta(isLightMode) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("¡No hay productos registrados!"),
+        Text(
+          "¡No hay productos registrados!",
+          style: TextStyle(
+            fontFamily: AppTheme.fontName,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            color: isLightMode ? AppTheme.darkText : AppTheme.white,
+          ),
+        ),
       ],
     );
   }
@@ -405,13 +413,13 @@ class _SalesScreenState extends State<SalesScreen>
                               await sendSalesFirebase(context);
 /*  */
                               Future.delayed(
-                                  Duration(seconds: 2),
+                                  Duration(seconds: 5),
                                   () => {
                                         getData(),
-                                        printMsg("Lista de ventas sincronizada",
-                                            context),
                                         print("TABLA ACTUALIZADA"),
-                                        setState(() {})
+                                        setState(() {}),
+                                        printMsg("Sincronizado con la nube ",
+                                            context),
                                       });
                             },
                             icon: Icon(

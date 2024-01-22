@@ -176,7 +176,6 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                             width: 5,
                           ),
                           Container(
-                            color: Colors.red,
                             width: 130,
                             child: Column(
                               children: [
@@ -233,7 +232,6 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                           ),
                           Container(
                               width: 60,
-                              color: Colors.blue,
                               child: Text(
                                 subTotales.isEmpty ||
                                         index > subTotales.length - 1

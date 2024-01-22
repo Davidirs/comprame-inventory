@@ -2,6 +2,7 @@ import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/pages/comprame_inventory_theme.dart';
 import 'package:comprame_inventory/models/venta.dart';
+import 'package:comprame_inventory/pages/stadistic/stadistic_controller.dart';
 import 'package:comprame_inventory/pages/ui_view/title_view.dart';
 import 'package:comprame_inventory/pages/ui_view/nuevas_view.dart';
 import 'package:comprame_inventory/db/db.dart';
@@ -197,6 +198,7 @@ class _StadisticScreenState extends State<StadisticScreen>
 //creo lista vacia
   List<Venta> ventaList = [];
   //llamo a la base de datos y le paso los valores a la lista
+  //String date = DateTime.now().toString().substring(0, 10);
   cargarVentas() async {
     if (isApp()) {
       ventaList = await db().getAllVentas();
@@ -204,7 +206,8 @@ class _StadisticScreenState extends State<StadisticScreen>
       ventaList = await firebase().getAllVentas();
     }
 
-    calcToday();
+    calcDate(date, ventaList);
+    setState(() {});
   }
 
   @override
@@ -407,7 +410,7 @@ class _StadisticScreenState extends State<StadisticScreen>
                                   right: 16,
                                 ),
                                 child: Text(
-                                  "Hoy: ${DateFormat('dd-MM-yyyy').format(DateTime.parse(today))} \nVentas Totales: ${dolarBs(totalToday.toDouble())} \nGanancias Totales: ${dolarBs(profitToday.toDouble())}",
+                                  "Hoy: ${ordenarFecha(date)} \nVentas Totales: ${dolarBs(totalSales.toDouble())} \nGanancias Totales: ${dolarBs(profitSales.toDouble())}",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: CompraMeInventoryTheme.fontName,
@@ -518,23 +521,5 @@ class _StadisticScreenState extends State<StadisticScreen>
         ),
       ],
     );
-  }
-
-  num totalToday = 0;
-  num profitToday = 0;
-  String today = DateTime.now().toString().substring(0, 10);
-  void calcToday() {
-    print(today);
-
-    totalToday = 0;
-    profitToday = 0;
-    for (var i = 0; i < ventaList.length; i++) {
-      String fecha = ventaList[i].fecha!.substring(0, 10);
-      if (fecha == today) {
-        totalToday += num.parse(ventaList[i].total!.toStringAsFixed(2));
-        profitToday += num.parse(ventaList[i].profit!.toStringAsFixed(2));
-      }
-    }
-    setState(() {});
   }
 }

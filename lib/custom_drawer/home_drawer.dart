@@ -281,6 +281,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Text(
             "Versión actual: ${currentVersion}",
             textAlign: TextAlign.center,
+            style: TextStyle(
+              color: isLightMode ? AppTheme.grey : AppTheme.white,
+            ),
           ),
           if (lastedVersion != currentVersion)
             ElevatedButton.icon(
@@ -292,7 +295,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 _launchUrl();
               },
               icon: Icon(Icons.download),
-              label: Text("Nueva versión " + lastedVersion),
+              label: Text(
+                "Nueva versión " + lastedVersion,
+                style: TextStyle(
+                  fontFamily: AppTheme.fontName,
+                  fontWeight: FontWeight.w600,
+                  color: isLightMode ? AppTheme.darkText : AppTheme.white,
+                ),
+              ),
             ),
           Divider(
             height: 1,

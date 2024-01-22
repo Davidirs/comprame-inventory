@@ -270,7 +270,7 @@ class _InventoryScreenState extends State<InventoryScreen>
           return Container(
             width: MediaQuery.of(context).size.width,
             child: productList.length == 0
-                ? noProduct()
+                ? noProduct(isLightMode)
                 : Container(
                     padding: EdgeInsets.only(
                       top: AppBar().preferredSize.height +
@@ -466,12 +466,20 @@ class _InventoryScreenState extends State<InventoryScreen>
     );
   }
 
-  Column noProduct() {
+  Column noProduct(isLightMode) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("¡No hay productos registrados!"),
+        Text(
+          "¡No hay productos registrados!",
+          style: TextStyle(
+            fontFamily: AppTheme.fontName,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            color: isLightMode ? AppTheme.darkText : AppTheme.white,
+          ),
+        ),
       ],
     );
   }

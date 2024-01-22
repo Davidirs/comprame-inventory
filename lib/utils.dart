@@ -63,6 +63,7 @@ String inBs(double dolares) {
 }
 
 const List<String> listType = <String>['Uno', 'Dos', 'Tres', 'Cuatro'];
+const List<String> listDate = <String>['Día', 'Intervalo'];
 
 //String dropdownValue = listType[0];
 
