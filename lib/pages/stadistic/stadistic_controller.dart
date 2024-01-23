@@ -13,7 +13,7 @@ String date1 = DateTime.now().toString().substring(0, 10);
 bool isInterval = false;
 
 List vendors = [];
-List bestvendor = [];
+List bestvendor = ["Vendedor"];
 
 int numSales = 0;
 double totalSales = 0;

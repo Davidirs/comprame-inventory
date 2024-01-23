@@ -1,11 +1,11 @@
 {
-    "name": "best_flutter_ui_templates",
-    "short_name": "best_flutter_ui_templates",
+    "name": "comprame_inventory_web",
+    "short_name": "comprame_inventory_web",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Al alcance de tu mano.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
