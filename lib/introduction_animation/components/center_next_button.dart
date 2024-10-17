@@ -85,7 +85,7 @@ class CenterNextButton extends StatelessWidget {
                       },
                       child: _signUpMoveAnimation.value > 0.7
                           ? InkWell(
-                              key: ValueKey('Registrate gratis'),
+                              key: ValueKey('Vamos gratis'),
                               onTap: onNextClick,
                               child: Padding(
                                 padding:
@@ -95,7 +95,7 @@ class CenterNextButton extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Registrate gratis',
+                                      'Vamos gratis',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,

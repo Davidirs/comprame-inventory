@@ -21,6 +21,7 @@ firebaseInitializeApp() async {
 // ... AUTENTICATION
 
 signInWithGoogle(context) async {
+  print('Imprimir un logg');
   GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
   GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
   AuthCredential credential = await GoogleAuthProvider.credential(
@@ -28,11 +29,50 @@ signInWithGoogle(context) async {
     idToken: googleAuth?.idToken,
   );
 
+  print('Imprimir un logg');
   UserCredential userCredential =
       await FirebaseAuth.instance.signInWithCredential(credential);
+  print('Imprimir un logg');
   print(userCredential.user?.displayName);
   addUserToFirebase();
 }
+
+//crear usuario con usuario y contraseña
+logInWithUserPass(context,emailAddress,password) async {
+try {
+  final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: emailAddress,
+    password: password
+  );
+
+} on FirebaseAuthException catch (e) {
+  if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+    printMsg('Correo o contraseña erronea.', context, true);
+  } else if (e.code == 'wrong-password') {
+    print('Wrong password provided for that user.');
+  }
+  print(e);
+  print(e.code);
+}
+}
+//crear usuario con usuario y contraseña
+signInWithUserPass(context,emailAddress,password) async {
+
+try {
+  final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: emailAddress,
+    password: password,
+  );
+
+} on FirebaseAuthException catch (e) {
+  if (e.code == 'weak-password') {
+    print('The password provided is too weak.');
+  } else if (e.code == 'email-already-in-use') {
+    printMsg('Ya existe una cuenta para este correo.', context,true);
+  }
+} catch (e) {
+  print(e);
+}}
 
 /* authStateChanges() {
   FirebaseAuth.instance.authStateChanges().listen((User? user) {

@@ -9,10 +9,13 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await firebaseInitializeApp();
-  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+  /* await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
-  ]).then((_) => runApp(MyApp()));
+  ]).then((_) => 
+  runApp(MyApp())
+  ); */
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

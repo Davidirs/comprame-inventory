@@ -353,7 +353,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
   void onTapped() {
     //printMsg("Proximamente inicio de sessión.", context);
     // Print to console.
-    //signInWithGoogle();
     //authStateChanges();
     /* currentUser();
     print(currentUser()); */
