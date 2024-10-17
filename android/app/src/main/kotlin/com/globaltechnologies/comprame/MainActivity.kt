@@ -1,4 +1,4 @@
-package com.example.comprame_inventory
+package com.globaltechnologies.comprame
 
 import io.flutter.embedding.android.FlutterActivity
 
