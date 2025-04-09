@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "827644606074",
+    "project_id": "inventory-b3c4f",
+    "storage_bucket": "inventory-b3c4f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827644606074:android:558d320fd02b9fb4436dc3",
+        "android_client_info": {
+          "package_name": "com.marketglobal.comprame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827644606074-0pj57hotqtqgl1424nl1o8m01k0s86ra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCibUAZWtiLdb0V5qn99EcVIi1-gEfXvGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827644606074-0pj57hotqtqgl1424nl1o8m01k0s86ra.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

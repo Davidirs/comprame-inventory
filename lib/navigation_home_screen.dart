@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:comprame_inventory/app_theme.dart';
+import 'package:comprame_inventory/models/conversion_rate_model.dart';
 import 'package:comprame_inventory/pages/about_screen.dart';
 import 'package:comprame_inventory/pages/database/database_screen.dart';
 import 'package:comprame_inventory/pages/dolar_bs_screen.dart';
@@ -14,6 +17,7 @@ import 'package:comprame_inventory/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class NavigationHomeScreen extends StatefulWidget {
   @override
@@ -28,7 +32,9 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
   void initState() {
     drawerIndex = DrawerIndex.HOME;
     screenView = const MyHomePage();
+
     isOnce();
+
     super.initState();
   }
 
@@ -36,6 +42,7 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
   bool isLogin = false;
   isOnce() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
     /* double width = MediaQuery.of(context).size.width;
     if (width < 768) {
       prefs.setBool('ismobile', true);
@@ -45,6 +52,16 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
     print("ES MOBILE : " + isMobile(context).toString()); */
     if (prefs.getBool('isfirst') == null) {
       prefs.setBool('isfirst', true);
+    }
+    ConversionRateModel? conversionRate = await dataFromAlCambio();
+
+    print("ES conversionRate: ${conversionRate}");
+    if (conversionRate != null) {
+      prefs.setString('bcv', conversionRate.bcv.toString());
+      prefs.setString('paralelo', conversionRate.paralelo.toString());
+      prefs.setString('promedio', conversionRate.promedio.toString());
+      prefs.setInt('dateParalelo', conversionRate.dateParalelo!);
+      prefs.setInt('dateBcvFees', conversionRate.dateBcvFees!);
     }
     print("ES PRIMERA VEZ: ${prefs.getBool('isfirst')}");
     print("NOMBRE DE USUARIO: ${prefs.getString('nameText')}");
@@ -168,5 +185,64 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
           break;
       }
     }
+  }
+
+  Future<ConversionRateModel?> dataFromAlCambio() async {
+    final String originalUrl = "https://api.alcambio.app/graphql";
+
+    final Map<String, dynamic> postData = {
+      "operationName": "getCountryConversions",
+      "query":
+          "query getCountryConversions(\$countryCode: String!) { getCountryConversions(payload: {countryCode: \$countryCode}) { _id baseCurrency { code decimalDigits name rounding symbol symbolNative __typename } country { code dial_code flag name __typename } conversionRates { baseValue official principal rateCurrency { code decimalDigits name rounding symbol symbolNative __typename } rateValue type __typename } dateBcvFees dateParalelo dateBcv createdAt __typename } }",
+      "variables": {"countryCode": "VE"}
+    };
+
+    final Map<String, String> headers = {
+      'Accept': '*/*',
+      'Content-Type': 'application/json',
+      'Apollographql-Client-Name': 'web',
+      'Apollographql-Client-Version': '1.0.0',
+      // 'Authorization': 'Bearer ' + tuToken, // Si necesitas token
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(originalUrl),
+        headers: headers,
+        body: jsonEncode(postData),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> json = jsonDecode(response.body);
+        ConversionRateModel conversionRate =
+            await filtrarDataAlCambio(json['data']['getCountryConversions']);
+        return conversionRate;
+      } else {
+        throw Exception('La solicitud falló con estado ${response.statusCode}');
+      }
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<ConversionRateModel> filtrarDataAlCambio(dynamic data) async {
+    double paralelo = data['conversionRates'][0]['baseValue'];
+    double bcv = data['conversionRates'][1]['baseValue'];
+    double promedio = ((paralelo - bcv) / 2) + bcv;
+
+    ConversionRateModel conversionRate = ConversionRateModel(
+      bcv: bcv.toStringAsFixed(2),
+      paralelo: paralelo.toStringAsFixed(2),
+      promedio: promedio.toStringAsFixed(2),
+      dateParalelo: data['dateParalelo'],
+      dateBcvFees: data['dateBcvFees'],
+    );
+    /* 
+    String dateParalelo =
+        await toLocaleDate(data['dateParalelo']); // Ejemplo: Imprime los datos
+    String dateBcvFees =
+        await toLocaleDate(data['dateBcvFees']); // Ejemplo: Imprime los datos
+    logger.white(conversionRate.toJson()); */
+    return conversionRate;
   }
 }

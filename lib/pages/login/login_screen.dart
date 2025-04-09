@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (value!.isEmpty) {
                                 return 'Por favor, ingresa tu contraseña';
                               }
-                              if (value!.length < 6) {
+                              if (value.length < 6) {
                                 return 'La contraseña debe tener almenos 6 dígitos';
                               }
                               // Puedes agregar más validaciones aquí, como requerir una contraseña fuerte
@@ -154,8 +154,8 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(onPressed: (){
                 Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => RegisterPage()));
-              }, child: Text('¿Aún no tienes cuenta?, Regístrate.'))
-                        /* Container(
+              }, child: Text('¿Aún no tienes cuenta?, Regístrate.')),
+                         Container(
                           margin: EdgeInsets.only(top: 8),
                           width: 250,
                           height: 40,
@@ -197,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               )),
-                        ), */
+                        ), 
                       ],
                     ),
                   ),

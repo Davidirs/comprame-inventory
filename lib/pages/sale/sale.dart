@@ -288,7 +288,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                           child: Image.asset("assets/img/cash.png")),
                       Checkbox(
                         activeColor: AppTheme.primary,
-                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        fillColor: WidgetStateProperty.all(AppTheme.primary),
                         checkColor: Colors.white,
                         value: isCash,
                         onChanged: (bool? value) {
@@ -319,7 +319,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                           child: Image.asset("assets/img/movil.png")),
                       Checkbox(
                         checkColor: Colors.white,
-                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        fillColor: WidgetStateProperty.all(AppTheme.primary),
                         value: isMovil,
                         onChanged: (bool? value) {
                           setState(() {
@@ -348,7 +348,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                           child: Image.asset("assets/img/any.png")),
                       Checkbox(
                         checkColor: Colors.white,
-                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        fillColor: WidgetStateProperty.all(AppTheme.primary),
                         value: isAny,
                         onChanged: (bool? value) {
                           setState(() {
@@ -378,7 +378,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                           child: Image.asset("assets/img/card.png")),
                       Checkbox(
                         checkColor: Colors.white,
-                        fillColor: MaterialStateProperty.all(AppTheme.primary),
+                        fillColor: WidgetStateProperty.all(AppTheme.primary),
                         value: isCard,
                         onChanged: (bool? value) {
                           setState(() {
@@ -646,7 +646,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
     return _producto;
   }
 
-  Color getColor(Set<MaterialState> states) {
+  Color getColor(Set<WidgetState> states) {
     return AppTheme.primary;
   }
 

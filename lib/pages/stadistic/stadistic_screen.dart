@@ -9,7 +9,6 @@ import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StadisticScreen extends StatefulWidget {

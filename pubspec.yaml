@@ -30,7 +30,7 @@ dependencies:
     cupertino_icons: ^1.0.2
     font_awesome_flutter: ^10.1.0
     flutter_rating_bar: ^4.0.1
-    intl: ^0.17.0
+    intl: ^0.19.0
     animations: ^2.0.3
     # provider
     path_provider: ^2.0.15
@@ -44,11 +44,11 @@ dependencies:
     # Picker
     image_picker: ^1.0.4
     
-    share_plus: ^7.1.0
+    share_plus: ^10.1.1
     shared_preferences: ^2.2.1
-    firebase_auth: ^4.10.1
+    firebase_auth: ^5.3.1
     google_sign_in: ^6.1.5
-    cloud_firestore: ^4.9.3
+    cloud_firestore: ^5.4.4
     internet_connection_checker_plus: ^2.1.0
     url_launcher: ^6.2.3
     flutter_launcher_icons: ^0.14.1
@@ -58,8 +58,18 @@ dev_dependencies:
     flutter_test:
         sdk: flutter
 flutter_launcher_icons:
-  android: true
+  flutter_launcher_icons:
+  android: "launcher_icon"
+  # ios: true
   image_path: "assets/images/logo.png"
+  min_sdk_android: 24 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/logo.png"
+    background_color: "#00897B"
+    theme_color: "#263238"
+  adaptive_icon_background: "#ffffff" # You can use a color or image for the background
+  adaptive_icon_foreground: "assets/images/logo.png" # For adaptive icons on Android
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

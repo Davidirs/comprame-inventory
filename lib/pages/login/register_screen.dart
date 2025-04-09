@@ -114,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     if (value!.isEmpty) {
                                       return 'Por favor, ingresa tu contraseña';
                                     }
-                                    if (value!.length < 6) {
+                                    if (value.length < 6) {
                                       return 'La contraseña debe tener almenos 6 dígitos';
                                     }
                                     // Puedes agregar más validaciones aquí, como requerir una contraseña fuerte
@@ -135,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     if (value!.isEmpty) {
                                       return 'Por favor, ingresa tu contraseña';
                                     }
-                                    if (value!.length < 6) {
+                                    if (value.length < 6) {
                                       return 'La contraseña debe tener almenos 6 dígitos';
                                     }
                                     if (value != _passwordController.text) {

@@ -324,7 +324,7 @@ class _InventoryScreenState extends State<InventoryScreen>
         color: colorUnits(productList[index].units),
       ),
       child: Dismissible(
-        /*  background: Container(
+         background: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.green,
@@ -342,7 +342,7 @@ class _InventoryScreenState extends State<InventoryScreen>
               ),
             ],
           ),
-        ), */
+        ),
         secondaryBackground: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),

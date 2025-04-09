@@ -1,4 +1,4 @@
-package com.globaltechnologies.comprame
+package com.marketglobal.comprame
 
 import io.flutter.embedding.android.FlutterActivity
 

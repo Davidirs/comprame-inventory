@@ -288,8 +288,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
           if (lastedVersion != currentVersion)
             ElevatedButton.icon(
               style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+                backgroundColor: WidgetStatePropertyAll<Color>(Colors.green),
+                foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
               ),
               onPressed: () {
                 _launchUrl();
