@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class SplashView extends StatefulWidget {
@@ -69,7 +70,7 @@ class _SplashViewState extends State<SplashView> {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(38.0),
-                    color: Color(0xfff15c22),
+                    color: AppTheme.primary,
                   ),
                   child: Text(
                     "Comencemos",

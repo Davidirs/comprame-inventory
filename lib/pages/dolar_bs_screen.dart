@@ -30,6 +30,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
     });
     super.initState();
   }
+
   Future<void> _loadData() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -40,27 +41,43 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
       // Initialize selected value to a default or previously selected one
       _selectedValue = _prefs.getString('selected_currency_type') ?? 'bcv';
       if (_selectedValue == 'custom') {
-        _customController.text = _prefs.getDouble('custom_dolarvalue')?.toString() ?? '';
+       // _customController.text = _prefs.getDouble('custom')?.toString() ?? '';
       }
     });
   }
 
   Future<void> _saveSelectedValue(String? value) async {
-    if (value != null) {
+    try {
+      if (value != null) {
+      
+      print(value);
       await _prefs.setString('selected_currency_type', value);
+      String precioSelected = _prefs.getString(value) ?? '0';
+      print(precioSelected);
+      await _prefs.setString('dolarvalue', precioSelected);
+      //PENDIENTE AQUI
+      await prefs.setDouble('dolarvalue', double.parse(_controller.text));
+      printMsg("Precio del dolar actualizado.", context);
+
       setState(() {
         _selectedValue = value;
       });
     }
+    } catch (e) {
+      print(e);
+    }
+    
   }
+  
 
   Future<void> _saveCustomValue(String value) async {
     try {
-      final customValue = double.parse(value);
-      await _prefs.setDouble('custom_dolarvalue', customValue);
+      //final customValue = double.parse(value);
+      await _prefs.setString('custom', value);
+
       _saveSelectedValue('custom');
-      printMsg("Precio personalizado guardado", context);
-      print("${_prefs.getDouble('custom_dolarvalue')}");
+      //printMsg("Precio personalizado guardado", context);
+      //print("${_prefs.getDouble('custom')}");
     } catch (e) {
       print(e);
       printMsg("Precio Invalido", context, true);
@@ -76,7 +93,6 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
@@ -86,58 +102,61 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
         child: SafeArea(
             top: false,
             child: Scaffold(
-              backgroundColor:
-                  isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
-              body: Center(
-                child: 
-                Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.attach_money,
-          color: isLightMode ? const Color(0xfff15c22) : Colors.black,
-          size: 120,
-          shadows: [
-            Shadow(
-                color: Colors.grey.withOpacity(0.6),
-                offset: const Offset(4, 4),
-                blurRadius: 8.0),
-          ],
-        ),
-        // Bcv
-        if (_bcvRate != null)
-          RadioListTile<String>(
-            title: Text('BCV: ${_bcvRate?.toStringAsFixed(2)}'),
-            value: 'bcv',
-            groupValue: _selectedValue,
-            onChanged: (value) => _saveSelectedValue(value),
-          ),
-        // Paralelo
-        if (_paraleloRate != null)
-          RadioListTile<String>(
-            title: Text('Paralelo: ${_paraleloRate?.toStringAsFixed(2)}'),
-            value: 'paralelo',
-            groupValue: _selectedValue,
-            onChanged: (value) => _saveSelectedValue(value),
-          ),
-        // Promedio
-        if (_promedioRate != null)
-          RadioListTile<String>(
-            title: Text('Promedio: ${_promedioRate?.toStringAsFixed(2)}'),
-            value: 'promedio',
-            groupValue: _selectedValue,
-            onChanged: (value) => _saveSelectedValue(value),
-          ),
-        // Custom
-        
-          RadioListTile<String>(
-            title: Text('Precio Personalizado:'),
-            value: 'custom',
-            groupValue: _selectedValue,
-            onChanged: (value) => _saveCustomValue(_controller.text),
-          ),
-        /* Container(
+                backgroundColor:
+                    isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+                body: Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.attach_money,
+                      color:
+                          isLightMode ?  AppTheme.primary : Colors.black,
+                      size: 120,
+                      shadows: [
+                        Shadow(
+                            color: Colors.grey.withOpacity(0.6),
+                            offset: const Offset(4, 4),
+                            blurRadius: 8.0),
+                      ],
+                    ),
+                    // Bcv
+                    if (_bcvRate != null)
+                      RadioListTile<String>(
+                        title: Text('BCV: ${_bcvRate?.toStringAsFixed(2)}'),
+                        value: 'bcv',
+                        groupValue: _selectedValue,
+                        onChanged: (value) => _saveSelectedValue(value),
+                      ),
+                    // Paralelo
+                    if (_paraleloRate != null)
+                      RadioListTile<String>(
+                        title: Text(
+                            'Paralelo: ${_paraleloRate?.toStringAsFixed(2)}'),
+                        value: 'paralelo',
+                        groupValue: _selectedValue,
+                        onChanged: (value) => _saveSelectedValue(value),
+                      ),
+                    // Promedio
+                    if (_promedioRate != null)
+                      RadioListTile<String>(
+                        title: Text(
+                            'Promedio: ${_promedioRate?.toStringAsFixed(2)}'),
+                        value: 'promedio',
+                        groupValue: _selectedValue,
+                        onChanged: (value) => _saveSelectedValue(value),
+                      ),
+                    // Custom
+
+                    RadioListTile<String>(
+                      title: Text('Precio Personalizado:'),
+                      value: 'custom',
+                      groupValue: _selectedValue,
+                      onChanged: (value) =>
+                          {_saveCustomValue(_controller.text)},
+                    ),
+                    /* Container(
           padding: const EdgeInsets.only(top: 8),
           child: Text(
             '"Precio Personalizado"',
@@ -147,79 +166,83 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                 color: isLightMode ? Colors.black : Colors.white),
           ),
         ), */
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: TextFormField(
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'AppTheme.fontName', // Replace with your actual font family
-              fontSize: 16,
-              color: isLightMode ? Colors.black : Colors.white, // Adjusted colors
-            ),
-            enabled: _selectedValue == 'custom',
-            cursorColor: const Color(0xfff15c22),
-            controller: _controller,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), hintText: 'Ingrese el valor'),
-          ),
-        ),
-        const SizedBox(height: 16),
-       if (_selectedValue == 'custom')SizedBox(
-          width: 200,
-          height: 40,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: isLightMode ? Colors.white : Colors.black,
-              backgroundColor: isLightMode ? const Color(0xfff15c22) : Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
-              ),
-              /* shadows: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: TextFormField(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily:
+                              'AppTheme.fontName', // Replace with your actual font family
+                          fontSize: 16,
+                          color: isLightMode
+                              ? Colors.black
+                              : Colors.white, // Adjusted colors
+                        ),
+                        enabled: _selectedValue == 'custom',
+                        cursorColor: AppTheme.primary,
+                        controller: _controller,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Ingrese el valor'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    if (_selectedValue == 'custom')
+                      SizedBox(
+                        width: 200,
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor:
+                                isLightMode ? Colors.white : Colors.black,
+                            backgroundColor: isLightMode
+                                ? AppTheme.primary
+                                : Colors.white,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0)),
+                            ),
+                            /* shadows: [
                 BoxShadow(
                     color: Colors.grey.withOpacity(0.6),
                     offset: const Offset(4, 4),
                     blurRadius: 8.0),
               ], */
-            ),
-            onPressed: () => _saveCustomValue(_controller.text),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Text(
-                    'Guardar Precio',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const Icon(
-                  Icons.check,
-                  size: 22,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    )
-    )
-    )
-    )
-    );
-    
-    
+                          ),
+                          onPressed: () => _saveCustomValue(_controller.text),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Text(
+                                  'Guardar Precio',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.check,
+                                size: 22,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                )))));
+
     /* Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.attach_money,
-                      color: isLightMode ? Color(0xfff15c22) : Colors.black,
+                      color: isLightMode ? AppTheme.primary : Colors.black,
                       size: 120,
                       shadows: [
                         Shadow(
@@ -250,7 +273,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                             ? AppTheme.dark_grey
                             : AppTheme.nearlyWhite,
                       ),
-                      cursorColor: Color(0xfff15c22),
+                      cursorColor: AppTheme.primary,
                       controller: _controller,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
@@ -260,7 +283,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                       width: 200,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: isLightMode ? Color(0xfff15c22) : Colors.white,
+                        color: isLightMode ? AppTheme.primary : Colors.white,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(4.0)),
                         boxShadow: <BoxShadow>[

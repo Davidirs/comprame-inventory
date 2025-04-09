@@ -63,7 +63,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         width: 120,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: isLightMode ? Color(0xfff15c22) : Colors.white,
+                          color: isLightMode ? AppTheme.primary : Colors.white,
                           borderRadius:
                               const BorderRadius.all(Radius.circular(4.0)),
                           boxShadow: <BoxShadow>[
@@ -138,7 +138,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   fontSize: 16,
                   color: AppTheme.dark_grey,
                 ),
-                cursorColor: Color(0xfff15c22),
+                cursorColor: AppTheme.primary,
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Escribe tu feedback...'),

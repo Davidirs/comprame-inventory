@@ -60,7 +60,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       width: 140,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: isLightMode ? Color(0xfff15c22) : Colors.white,
+                        color: isLightMode ? AppTheme.primary : Colors.white,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(4.0)),
                         boxShadow: <BoxShadow>[

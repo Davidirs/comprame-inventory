@@ -240,7 +240,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                           bottom: BorderSide(color: Colors.teal, width: 3.0))),
                 ), */
       iconDisabledColor: Colors.brown,
-      iconEnabledColor: Color(0xFFF15C22),
+      iconEnabledColor: AppTheme.primary,
       dropDownDialogPadding: EdgeInsets.symmetric(
         vertical: 0,
         horizontal: 0,

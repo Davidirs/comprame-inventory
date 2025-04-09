@@ -391,7 +391,7 @@ class _DateStadisticViewState extends State<DateStadisticView>
                           ),
                           underline: Container(
                             height: 2,
-                            color: Color(0xfff15c22),
+                            color: AppTheme.primary,
                           ),
                           onChanged: (String? value) {
                             // This is called when the user selects an item.

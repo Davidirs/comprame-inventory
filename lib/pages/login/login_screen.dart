@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(38.0),
-                    color: Color(0xfff15c22),
+                    color: AppTheme.primary,
                   ),
                   child: Text(
                     "Iniciar sesión",

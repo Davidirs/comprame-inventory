@@ -38,7 +38,7 @@ class _AboutScreenState extends State<AboutScreen> {
                       //padding: EdgeInsets.only(top: 200, left: 100, right: 100),
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage('assets/images/userImage.jpg'),
+                            image: AssetImage('assets/images/logo-globaltech.png'),
                             fit: BoxFit.cover),
                       ),
                     ),
@@ -52,7 +52,7 @@ class _AboutScreenState extends State<AboutScreen> {
                           width: 5,
                         ),
                         image: DecorationImage(
-                            image: AssetImage('assets/images/userImage.jpg'),
+                            image: AssetImage('assets/images/logo-globaltech.png'),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                   ),
@@ -61,7 +61,7 @@ class _AboutScreenState extends State<AboutScreen> {
               Container(
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
-                  'Ing. David Reyes',
+                  'Al alcance de tu mano',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -73,7 +73,21 @@ class _AboutScreenState extends State<AboutScreen> {
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
-                  'Esta aplicación está en desarrollo se seguirán agregando detalles y mejorando  las siguientes versiones serán descargadas desde el mismo link\n \nEspero sea de tu agrado.\n \n Éxito en tus ventas',
+                  'Éxito en tus ventas',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isLightMode ? Colors.black : Colors.white,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  "globaltechonogieshd@gmail.com\n" +
+                      "Medellin -Colombia, Santiago - Chile, \n" +
+                      "Barinas - Venezuela\n" +
+                      "Éxito en tus ventas",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,

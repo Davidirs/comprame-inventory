@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CenterNextButton extends StatelessWidget {
@@ -65,7 +66,7 @@ class CenterNextButton extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(
                           8 + 32 * (1 - _signUpMoveAnimation.value)),
-                      color: Color(0xffF15C22),
+                      color: AppTheme.primary,
                     ),
                     child: PageTransitionSwitcher(
                       duration: Duration(milliseconds: 480),
