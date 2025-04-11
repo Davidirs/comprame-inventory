@@ -208,7 +208,7 @@ class _BottomBarViewState extends State<BottomBarView>
                             colors: [
                               CompraMeInventoryTheme.nearlyDarkBlue,
                               /*  HexColor('#6F56E8'),*/
-                              Color.fromARGB(255, 159, 18, 1),
+                              AppTheme.background,
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight),
@@ -216,8 +216,8 @@ class _BottomBarViewState extends State<BottomBarView>
                         boxShadow: <BoxShadow>[
                           BoxShadow(
                               color: CompraMeInventoryTheme.nearlyDarkBlue
-                                  .withOpacity(0.4),
-                              offset: const Offset(8.0, 16.0),
+                                  .withOpacity(0.5),
+                              offset: const Offset(8.0, 8.0),
                               blurRadius: 16.0),
                         ],
                       ),

@@ -616,7 +616,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                             },
                             icon: Icon(
                               Icons.cloud_sync,
-                              color: HexColor("#ff6600"),
+                              color: AppTheme.primary,
                               size: 30,
                             )),
                       IconButton(
@@ -635,7 +635,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                           },
                           icon: Icon(
                             Icons.price_change_outlined,
-                            color: HexColor("#ff6600"),
+                            color: AppTheme.primary,
                             size: 30,
                           )),
                       /*  IconButton(
@@ -648,7 +648,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                           },
                           icon: Icon(
                             Icons.refresh,
-                            color: HexColor("#ff6600"),
+                            color: AppTheme.primary,
                             size: 30,
                           )), */
                     ])

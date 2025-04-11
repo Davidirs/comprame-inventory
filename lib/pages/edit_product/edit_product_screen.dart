@@ -73,7 +73,7 @@ class _EditProductScreenState extends State<EditProductScreen>
       imageProductPath = pickedFile.path;
     } else {
       imageProductPath = null;
-      printMsg("No se seleccionó ninguna imagen.", context, true);
+      printMsg("No se seleccionó ninguna imagen.", context, error:true);
     }
     setState(() {});
   }
@@ -381,7 +381,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                             },
                             icon: Icon(
                               Icons.cancel_outlined,
-                              color: HexColor("#ff6600"),
+                              color: AppTheme.primary,
                               size: 30,
                             )),
                         IconButton(
@@ -411,7 +411,7 @@ class _EditProductScreenState extends State<EditProductScreen>
                             },
                             icon: Icon(
                               Icons.done,
-                              color: HexColor("#ff6600"),
+                              color: AppTheme.primary,
                               size: 30,
                             )),
                       ],

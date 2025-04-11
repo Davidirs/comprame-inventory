@@ -62,7 +62,7 @@ try {
 
 } on FirebaseAuthException catch (e) {
   if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-    printMsg('Correo o contraseña erronea.', context, true);
+    printMsg('Correo o contraseña erronea.', context, error:true);
   } else if (e.code == 'wrong-password') {
     print('Wrong password provided for that user.');
   }
@@ -83,7 +83,7 @@ try {
   if (e.code == 'weak-password') {
     print('The password provided is too weak.');
   } else if (e.code == 'email-already-in-use') {
-    printMsg('Ya existe una cuenta para este correo.', context,true);
+    printMsg('Ya existe una cuenta para este correo.', context,error:true);
   }
 } catch (e) {
   print(e);

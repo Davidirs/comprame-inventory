@@ -4,7 +4,7 @@ import 'package:comprame_inventory/models/dolar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+/*
 printMsg(msg, context, [error = false]) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
@@ -26,6 +26,46 @@ printMsg(msg, context, [error = false]) {
       duration: Duration(milliseconds: 2000),
     ),
   );
+}*/
+
+void printMsg( String msg,BuildContext context, {bool error = false}) {
+  OverlayState? overlayState = Overlay.of(context);
+  OverlayEntry overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      bottom: 50,
+      left: 20,
+      right: 20,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: error ? Colors.red.withOpacity(0.8) : Colors.green.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                error ? Icons.cancel_outlined : Icons.check_circle_outline,
+                color: Colors.white,
+              ),
+              SizedBox(width: 10),
+              Text(
+                msg,
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
+  overlayState?.insert(overlayEntry);
+
+  Future.delayed(Duration(milliseconds: 2000), () {
+    overlayEntry.remove();
+  });
 }
 
 late SharedPreferences prefs;
@@ -34,13 +74,13 @@ double dolarvalue = 1;
 String? imgUser = null;
 String? nameUser = null;
 bool editando = false;
-String currentVersion = "0.1.4";
+//String currentVersion = "0.1.4";
 
 cargarDolar() async {
   // Obtain shared preferences.
   prefs = await SharedPreferences.getInstance();
   isDolar = await prefs.getBool('dolar') ?? true;
-  dolarvalue = await prefs.getDouble('dolarvalue') ?? 1.00;
+  dolarvalue = await prefs.getDouble('dolarvalue') ?? 1;
 }
 
 cargarUsuario() async {
@@ -106,7 +146,7 @@ guardarNombreSP(nameText) async {
 
 guardarDolarSP() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  double dolarCurrentPrice = prefs.getDouble('dolarvalue') ?? 0;
+  double dolarCurrentPrice = double.parse( prefs.getString('dolarvalue') ?? '0');
   if (dolarCurrentPrice == 0) {
     Dolar dolarvalue = await firebase().getDolar();
     await prefs.setDouble('dolarvalue', dolarvalue.own!);

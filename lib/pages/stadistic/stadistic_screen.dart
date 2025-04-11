@@ -509,7 +509,7 @@ class _StadisticScreenState extends State<StadisticScreen>
                         },
                         icon: Icon(
                           Icons.price_change_outlined,
-                          color: HexColor("#ff6600"),
+                          color: AppTheme.primary,
                           size: 30,
                         )),
                   ],

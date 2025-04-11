@@ -561,7 +561,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                                 padding: const EdgeInsets.all(0.0),
                                 child: Icon(
                                   Icons.arrow_left,
-                                  color: HexColor("#ff6600"),
+                                  color: AppTheme.primary,
                                   size: 44,
                                 ),
                               ),
@@ -613,7 +613,7 @@ class _SaleScreenState extends State<SaleScreen> with TickerProviderStateMixin {
                               }
                               vacios || sItems.length == 0
                                   ? printMsg("Requiere productos y cantidades",
-                                      context, true)
+                                      context, error:true)
                                   : confirmarVenta();
                             },
                             icon: Icon(

@@ -251,7 +251,7 @@ class _SalesScreenState extends State<SalesScreen>
                                               printMsg(
                                                   "Error al eliminar venta",
                                                   context,
-                                                  true);
+                                                  error:true);
                                               Navigator.of(context).pop(false);
                                             }
                                           },
@@ -424,7 +424,7 @@ class _SalesScreenState extends State<SalesScreen>
                             },
                             icon: Icon(
                               Icons.cloud_sync,
-                              color: HexColor("#ff6600"),
+                              color: AppTheme.primary,
                               size: 30,
                             )),
                       IconButton(
@@ -443,7 +443,7 @@ class _SalesScreenState extends State<SalesScreen>
                           },
                           icon: Icon(
                             Icons.price_change_outlined,
-                            color: HexColor("#ff6600"),
+                            color: AppTheme.primary,
                             size: 30,
                           )),
                     ]),
@@ -472,7 +472,7 @@ class _SalesScreenState extends State<SalesScreen>
                                     },
                                     icon: Icon(
                                       Icons.refresh,
-                                      color: HexColor("#ff6600"),
+                                      color: AppTheme.primary,
                                       size: 30,
                                     )),
                               ),

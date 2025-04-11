@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/db/db.dart';
 import 'package:comprame_inventory/models/appinfo.dart';
+import 'package:comprame_inventory/models/conversion_rate_model.dart';
 import 'package:comprame_inventory/models/dolar.dart';
 import 'package:comprame_inventory/models/products.dart';
 import 'package:comprame_inventory/models/venta.dart';
@@ -97,6 +98,42 @@ class firebase {
         .onError((e, _) => print("Error writing document: $e"));
     print("object added");
   }
+  updateAppVersion( newVersion) async {
+    
+    final db = FirebaseFirestore.instance;
+
+    db
+        .collection("generals")
+        .doc('appinfo')
+        .set({'version': newVersion}, SetOptions(merge: true));
+  }
+  savePriceDolar( ConversionRateModel? conversionRate) async {
+    
+    final db = FirebaseFirestore.instance;
+
+    db.collection("dolarBcv")
+        .doc(conversionRate!.dateBcvFees.toString())
+        .set(
+          {
+            'bcv': conversionRate.bcv,
+            'dateBcv': conversionRate.dateBcvFees
+          }, SetOptions(merge: true));
+    db.collection("dolarParalelo")
+    .doc(conversionRate.dateParalelo.toString()) // Especifica el ID del documento
+    .set(
+      {
+        'paralelo': conversionRate.paralelo,
+        'dateParalelo': conversionRate.dateParalelo,
+      },
+      SetOptions(merge: true), // La opción merge va como segundo argumento
+    ).then((_) {
+      print('Precio del dolar guardado');
+    }).catchError((error) {
+      print('Error al guardar el precio del dolar: $error');
+    });
+  }
+
+
 
   getProduct(id) async {
     final _currentUser = currentUser();

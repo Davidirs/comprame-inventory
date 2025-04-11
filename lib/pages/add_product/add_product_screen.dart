@@ -85,7 +85,7 @@ class _AddProductScreenState extends State<AddProductScreen>
       print(pickedFile.path);
       imageProductPath = pickedFile.path;
     } else {
-      printMsg("No se seleccionó ninguna imagen.", context, true);
+      printMsg("No se seleccionó ninguna imagen.", context, error:true);
     }
     setState(() {});
   }
@@ -365,7 +365,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                                 padding: const EdgeInsets.all(0.0),
                                 child: Icon(
                                   Icons.arrow_left,
-                                  color: HexColor("#ff6600"),
+                                  color: AppTheme.primary,
                                   size: 44,
                                 ),
                               ),
@@ -411,7 +411,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                         },
                         icon: Icon(
                           Icons.done,
-                          color: HexColor("#ff6600"),
+                          color: AppTheme.primary,
                           size: 30,
                         )),
                   ],

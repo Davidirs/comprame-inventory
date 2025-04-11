@@ -12,6 +12,7 @@ class DolarBsScreen extends StatefulWidget {
 
 class _DolarBsScreenState extends State<DolarBsScreen> {
   final _controller = TextEditingController();
+
   //late final SharedPreferences prefs;
   String? _selectedValue;
   TextEditingController _customController = TextEditingController();
@@ -19,6 +20,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
   double? _bcvRate;
   double? _paraleloRate;
   double? _promedioRate;
+
   //double? _customRate;
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
       // Initialize selected value to a default or previously selected one
       _selectedValue = _prefs.getString('selected_currency_type') ?? 'bcv';
       if (_selectedValue == 'custom') {
-       // _customController.text = _prefs.getDouble('custom')?.toString() ?? '';
+        // _customController.text = _prefs.getDouble('custom')?.toString() ?? '';
       }
     });
   }
@@ -49,26 +51,21 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
   Future<void> _saveSelectedValue(String? value) async {
     try {
       if (value != null) {
-      
-      print(value);
-      await _prefs.setString('selected_currency_type', value);
-      String precioSelected = _prefs.getString(value) ?? '0';
-      print(precioSelected);
-      await _prefs.setString('dolarvalue', precioSelected);
-      //PENDIENTE AQUI
-      await prefs.setDouble('dolarvalue', double.parse(_controller.text));
-      printMsg("Precio del dolar actualizado.", context);
+        print(value);
+        await _prefs.setString('selected_currency_type', value);
+        String precioSelected = _prefs.getString(value) ?? '0';
+        print(precioSelected);
+        await _prefs.setDouble('dolarvalue', double.parse(precioSelected));
 
-      setState(() {
-        _selectedValue = value;
-      });
-    }
+        setState(() {
+          _selectedValue = value;
+        });
+        printMsg("Precio del dolar actualizado.", context);
+      }
     } catch (e) {
       print(e);
     }
-    
   }
-  
 
   Future<void> _saveCustomValue(String value) async {
     try {
@@ -111,8 +108,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                   children: [
                     Icon(
                       Icons.attach_money,
-                      color:
-                          isLightMode ?  AppTheme.primary : Colors.black,
+                      color: isLightMode ? AppTheme.primary : Colors.black,
                       size: 120,
                       shadows: [
                         Shadow(
@@ -171,8 +167,8 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily:
-                              'AppTheme.fontName', // Replace with your actual font family
+                          fontFamily: 'AppTheme.fontName',
+                          // Replace with your actual font family
                           fontSize: 16,
                           color: isLightMode
                               ? Colors.black
@@ -196,9 +192,8 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                           style: ElevatedButton.styleFrom(
                             foregroundColor:
                                 isLightMode ? Colors.white : Colors.black,
-                            backgroundColor: isLightMode
-                                ? AppTheme.primary
-                                : Colors.white,
+                            backgroundColor:
+                                isLightMode ? AppTheme.primary : Colors.white,
                             shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4.0)),
@@ -301,7 +296,7 @@ class _DolarBsScreenState extends State<DolarBsScreen> {
                               await prefs.setDouble(
                                   'dolarvalue', double.parse(_controller.text));
                               printMsg("Precio del dolar actualizado", context);
-                              print("${prefs.getDouble('dolarvalue')}");
+                              print("${prefs.getString('dolarvalue')}");
                             } catch (e) {
                               print(e);
                               printMsg("Precio Invalido", context, true);

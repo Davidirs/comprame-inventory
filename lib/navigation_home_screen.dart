@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:comprame_inventory/Firebase/firestore.dart';
 import 'package:comprame_inventory/app_theme.dart';
+import 'package:comprame_inventory/models/appinfo.dart';
 import 'package:comprame_inventory/models/conversion_rate_model.dart';
 import 'package:comprame_inventory/pages/about_screen.dart';
 import 'package:comprame_inventory/pages/database/database_screen.dart';
@@ -18,6 +20,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
 
 class NavigationHomeScreen extends StatefulWidget {
   @override
@@ -67,10 +70,50 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
     print("NOMBRE DE USUARIO: ${prefs.getString('nameText')}");
     print("PRECIO DEL DOLAR: ${prefs.getDouble('dolarvalue')}");
     isFirst = prefs.getBool('isfirst') ?? true;
+    
+    getAppVersion();
+    firebase().savePriceDolar(conversionRate);
   }
 
   login() {
     isLogin = !isLogin;
+  }
+
+  String lastedVersion = "";
+  bool isUpdated = true;
+  getAppVersion() async {
+    AppInfo appinfo = await firebase().getAppInfo();
+    print(appinfo.version);
+    lastedVersion = appinfo.version!;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    print('version de la app $version');
+
+    switch (version.compareTo(lastedVersion)) {
+      case 1:
+        isUpdated = true;
+      print("Actualizar en firebase");
+      updateAppVersion(version);
+        break;
+      case -1:
+      print("Hay una nueva version de la app");
+        isUpdated = false;
+
+        break;
+      default:
+      print("La aplicación está actualizada");
+        isUpdated = true;
+        break;
+    }
+    
+  }
+  updateAppVersion(newVersion) async {
+    try {
+      await firebase().updateAppVersion(newVersion);
+      print("Versión actualizada en Firebase");
+    } catch (error) {
+      print("Error al actualizar la versión: $error");
+    }
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;

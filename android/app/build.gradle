@@ -33,12 +33,19 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.marketglobal.comprame"
-    compileSdk = 34//flutter.compileSdkVersion
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
+         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        /*
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17*/
+    }
+    // copiado de otro proyecto
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
@@ -50,8 +57,13 @@ android {
         targetSdk = 34//flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
-    }
+        multiDexEnabled true
 
+    }
+    dependencies {
+        implementation 'com.android.support:multidex:2.0.1'
+    }
+/*
     signingConfigs {
         release {
             keyAlias = keystoreProperties['keyAlias']
@@ -59,14 +71,14 @@ android {
             storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword = keystoreProperties['storePassword']
         }
-    }
+    }*/
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now,
             // so `flutter run --release` works.
             signingConfig = signingConfigs.debug
-            signingConfig = signingConfigs.release
+            //signingConfig = signingConfigs.release
         }
     }
 }

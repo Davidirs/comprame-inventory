@@ -8,6 +8,7 @@ import 'package:comprame_inventory/Firebase/firebase.dart';
 import 'package:comprame_inventory/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,20 +39,24 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   String lastedVersion = "";
-
+  String currentVersion = "";
   Uri linkUpdate = Uri.parse('');
   cargarAppInfo() async {
     AppInfo appinfo = await firebase().getAppInfo();
     print(appinfo.version);
     lastedVersion = appinfo.version!;
     linkUpdate = Uri.parse(appinfo.linkupdate!);
-    ;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    currentVersion = packageInfo.version;
     setState(() {
       print("LastedVersion: " + lastedVersion);
       print("currentVersion: " + currentVersion);
     });
+
+    
   }
 
+  
   Future<void> _launchUrl() async {
     if (!await launchUrl(linkUpdate)) {
       throw Exception('Could not launch $linkUpdate');
@@ -89,7 +94,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       imgUser = pickedFile.path;
       await prefs.setString('imageBusiness', pickedFile.path);
     } else {
-      printMsg("No se seleccionó ninguna imagen.", context, true);
+      printMsg("No se seleccionó ninguna imagen.", context, error:true);
     }
     setState(() {});
   }

@@ -1,3 +1,4 @@
+import 'package:comprame_inventory/app_theme.dart';
 import 'package:comprame_inventory/pages/stadistic/date_stadistic_view.dart';
 import 'package:comprame_inventory/main.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class NuevasView extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
                     CompraMeInventoryTheme.nearlyDarkBlue,
-                    Color.fromARGB(255, 159, 18, 1),
+                    AppTheme.background,
                   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(8.0),
@@ -121,7 +122,7 @@ class NuevasView extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(0.0),
                                 child: IconButton(
-                                  color: HexColor("#ff6600"),
+                                  color: AppTheme.primary,
                                   icon: Icon(
                                     Icons.arrow_right,
                                     size: 34,
